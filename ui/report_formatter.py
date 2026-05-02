@@ -1,20 +1,14 @@
 """
-Rich terminal formatter for CVE agent reports.
+Rich terminal formatter for CVE agent audit logs.
 Usage:
-    from ui.report_formatter import format_report
-    format_report(report_str, owner_repo="owner/repo")
-
-    # or from CLI:
-    python -m ui.report_formatter result.json
-    echo '{"owner_repo":"x","report":"..."}' | python -m ui.report_formatter
+    uv run python -m ui.report_formatter agent/audit7_tidy.log
 """
-import json
+
 import re
 import sys
 from dataclasses import dataclass, field
 
 from rich import box
-from rich.columns import Columns
 from rich.console import Console
 from rich.panel import Panel
 from rich.rule import Rule
@@ -34,33 +28,27 @@ class Finding:
     description: str = ""
 
 
-def _cells(row: str) -> list[str]:
-    """Split a markdown table row into stripped cell strings."""
-    return [c.strip() for c in row.strip().strip("|").split("|")]
-
-
-def _parse_table_rows(content: str) -> list[list[str]]:
-    """Return data rows from a markdown table (skip header and separator rows)."""
+def _table_rows(content: str) -> list[list[str]]:
     rows = []
     for line in content.splitlines():
         line = line.strip()
         if not line.startswith("|"):
             continue
-        if re.match(r"^\|[\s:|-]+\|", line):  # separator row
+        if re.match(r"^\|[\s:|-]+\|", line):
             continue
-        cells = _cells(line)
-        if any(h in cells[0].lower() for h in ("id", "cve id", "vulnerability")):
-            continue  # header row
+        cells = [c.strip() for c in line.strip("|").split("|")]
+        if cells and cells[0].lower().strip("* ") in ("id", "cve id", "vulnerability"):
+            continue
         rows.append(cells)
     return rows
 
 
-def _parse_confirmed_likely_table(content: str, tier: str) -> list[Finding]:
-    """Parse markdown table format: | ID | Severity/Package | File:Line | Snippet | Fix |"""
+def _parse_findings(content: str, tier: str) -> list[Finding]:
     findings = []
-    for cells in _parse_table_rows(content):
+    for cells in _table_rows(content):
         if len(cells) < 3:
             continue
+
         id_cell = cells[0]
         pkg_cell = cells[1] if len(cells) > 1 else ""
         file_cell = cells[2] if len(cells) > 2 else ""
@@ -71,10 +59,13 @@ def _parse_confirmed_likely_table(content: str, tier: str) -> list[Finding]:
         cwe_ids = re.findall(r"CWE-\d+", id_cell)
         file_lines = re.findall(r"`([^`]+)`", file_cell)
 
-        # Build a readable title from IDs + package
         pkg = re.sub(r"`", "", pkg_cell).split("/")[-1].strip()
-        ids_label = " / ".join(cve_ids + cwe_ids) or re.sub(r"\*\*|`", "", id_cell).strip()
-        title = f"{ids_label}  ({pkg})" if pkg and pkg.lower() != "custom" else ids_label
+        ids_label = (
+            " / ".join(cve_ids + cwe_ids) or re.sub(r"\*\*|`", "", id_cell).strip()
+        )
+        title = (
+            f"{ids_label}  ({pkg})" if pkg and pkg.lower() != "custom" else ids_label
+        )
 
         description = re.sub(r"`", "", snippet_cell).strip()
         if fix_cell:
@@ -93,67 +84,14 @@ def _parse_confirmed_likely_table(content: str, tier: str) -> list[Finding]:
     return findings
 
 
-def _parse_confirmed_likely(content: str, tier: str) -> list[Finding]:
-    # Detect markdown table format vs numbered-list format
-    if re.search(r"^\s*\|", content, re.MULTILINE):
-        return _parse_confirmed_likely_table(content, tier)
-
-    findings = []
-    # Split on numbered list items: "1.  **Title**"
-    items = re.split(r"\n\d+\.\s+\*\*", content)
-    for item in items[1:]:
-        title_match = re.match(r"(.*?)\*\*", item)
-        title = title_match.group(1).strip() if title_match else item[:60]
-
-        cve_raw = re.search(r"\*\*CVE ID\(?s?\)?\*\*\s*:\s*(.*?)(?:\n|$)", item)
-        cwe_raw = re.search(r"\*\*CWE ID\*\*\s*:\s*(.*?)(?:\n|$)", item)
-        desc_raw = re.search(
-            r"\*\*Description\*\*:\s*(.*?)(?=\*\*Fix\*\*|\Z)", item, re.DOTALL
-        )
-
-        cve_ids = re.findall(r"CVE-[\d-]+", cve_raw.group(1) if cve_raw else "")
-        cwe_ids = re.findall(r"CWE-\d+", cwe_raw.group(1) if cwe_raw else "")
-        file_lines = re.findall(r"`([^`]+:\d+(?:-\d+)?[^`]*)`", item)
-        description = ""
-        if desc_raw:
-            description = re.sub(r"\s+", " ", desc_raw.group(1)).strip()
-
-        findings.append(
-            Finding(
-                tier=tier,
-                title=title,
-                cve_ids=list(dict.fromkeys(cve_ids)),
-                cwe_ids=list(dict.fromkeys(cwe_ids)),
-                file_lines=file_lines[:4],
-                description=description,
-            )
-        )
-    return findings
-
-
 def _parse_unreached(content: str) -> list[Finding]:
-    # Markdown table format
-    if re.search(r"^\s*\|", content, re.MULTILINE):
-        findings = []
-        for cells in _parse_table_rows(content):
-            if len(cells) < 2:
-                continue
-            cve_ids = re.findall(r"CVE-[\d-]+", cells[0])
-            title = re.sub(r"\*\*", "", cells[0]).strip()
-            desc = cells[3] if len(cells) > 3 else (cells[2] if len(cells) > 2 else "")
-            findings.append(
-                Finding(tier="UNREACHED", title=title, cve_ids=cve_ids, description=desc)
-            )
-        return findings
-
-    # Bullet list format
     findings = []
-    for m in re.finditer(
-        r"\*\s+\*\*(.*?)\*\*\s*:?\s*(.*?)(?=\n\*\s+\*\*|\n##|\Z)", content, re.DOTALL
-    ):
-        title = m.group(1).strip()
-        desc = re.sub(r"\s+", " ", m.group(2)).strip()
-        cve_ids = re.findall(r"CVE-[\d-]+", title)
+    for cells in _table_rows(content):
+        if len(cells) < 2:
+            continue
+        cve_ids = re.findall(r"CVE-[\d-]+", cells[0])
+        title = re.sub(r"\*\*", "", cells[0]).strip()
+        desc = cells[3] if len(cells) > 3 else (cells[1] if len(cells) > 1 else "")
         findings.append(
             Finding(tier="UNREACHED", title=title, cve_ids=cve_ids, description=desc)
         )
@@ -161,19 +99,9 @@ def _parse_unreached(content: str) -> list[Finding]:
 
 
 def parse_report(report: str) -> dict[str, list[Finding]]:
-    """Parse agent report text into structured findings by tier.
-
-    Handles both real strings (from invoke()) and log-escaped strings
-    where newlines are stored as literal \\n two-char sequences.
-    """
-    # Normalize literal \\n sequences (from log files) into real newlines
-    if "\\n" in report and "\n" not in report:
-        report = report.replace("\\n", "\n").replace("\\t", "\t")
-
     result: dict[str, list[Finding]] = {"CONFIRMED": [], "LIKELY": [], "UNREACHED": []}
 
-    parts = re.split(r"#{2,3}\s+(CONFIRMED|LIKELY|UNREACHED)\b", report)
-
+    parts = re.split(r"##\s+(CONFIRMED|LIKELY|UNREACHED)\b", report)
     i = 1
     while i + 1 < len(parts):
         tier = parts[i].strip()
@@ -182,16 +110,12 @@ def parse_report(report: str) -> dict[str, list[Finding]]:
         if tier == "UNREACHED":
             result[tier] = _parse_unreached(content)
         elif tier in result:
-            result[tier] = _parse_confirmed_likely(content, tier)
+            result[tier] = _parse_findings(content, tier)
 
     return result
 
 
-def _findings_table(
-    findings: list[Finding],
-    color: str,
-    show_cve: bool = True,
-) -> Table:
+def _findings_table(findings: list[Finding], color: str) -> Table:
     t = Table(
         box=box.SIMPLE_HEAVY,
         show_lines=True,
@@ -200,57 +124,34 @@ def _findings_table(
     )
     t.add_column("#", style="dim", width=3, no_wrap=True)
     t.add_column("Vulnerability", min_width=28, max_width=40)
-    t.add_column("CVE / CWE" if show_cve else "CWE", min_width=18, max_width=22)
+    t.add_column("CVE / CWE", min_width=18, max_width=22)
     t.add_column("File : Line", min_width=28, max_width=38, style="cyan")
     t.add_column("Description", min_width=36, overflow="fold")
 
     for i, f in enumerate(findings, 1):
-        ids = []
-        if show_cve:
-            ids += f.cve_ids
-        ids += f.cwe_ids
-        id_str = "\n".join(ids) if ids else "—"
-
-        files_str = "\n".join(f.file_lines) if f.file_lines else "—"
-
-        desc = f.description
-        if len(desc) > 220:
-            desc = desc[:220] + "…"
-
-        t.add_row(
-            str(i),
-            Text(f.title, style="bold"),
-            id_str,
-            files_str,
-            desc,
-        )
+        ids = "\n".join(f.cve_ids + f.cwe_ids) or "—"
+        files = "\n".join(f.file_lines) or "—"
+        desc = f.description[:220] + "…" if len(f.description) > 220 else f.description
+        t.add_row(str(i), Text(f.title, style="bold"), ids, files, desc)
 
     return t
 
 
 def _unreached_table(findings: list[Finding]) -> Table:
-    t = Table(
-        box=box.SIMPLE,
-        show_lines=False,
-        header_style="dim",
-        border_style="dim",
-    )
-    t.add_column("Dependency / Pattern", min_width=38, max_width=50, style="dim")
-    t.add_column("CVEs", min_width=22, max_width=28, style="dim")
-    t.add_column("Note", min_width=40, overflow="fold", style="dim")
+    t = Table(box=box.SIMPLE, show_lines=False, header_style="dim", border_style="dim")
+    t.add_column("CVE", min_width=20, max_width=24, style="dim")
+    t.add_column("Package", min_width=14, max_width=18, style="dim")
+    t.add_column("Summary", min_width=50, overflow="fold", style="dim")
 
     for f in findings:
-        cve_str = "  ".join(f.cve_ids) if f.cve_ids else "—"
-        note = f.description
-        if len(note) > 120:
-            note = note[:120] + "…"
-        t.add_row(f.title, cve_str, note)
+        cve = "\n".join(f.cve_ids) if f.cve_ids else f.title
+        pkg = re.sub(r"CVE-[\d-]+", "", f.title).strip(" /()") or "—"
+        t.add_row(cve, pkg, f.description[:120])
 
     return t
 
 
 def format_report(report: str, owner_repo: str = "") -> None:
-    """Print a Rich colored security report to the terminal."""
     findings = parse_report(report)
     confirmed = findings["CONFIRMED"]
     likely = findings["LIKELY"]
@@ -258,14 +159,11 @@ def format_report(report: str, owner_repo: str = "") -> None:
 
     console.print()
 
-    # ── Header ──────────────────────────────────────────────────────────────
-    header = Text()
-    header.append("  🔍 CVE Security Audit", style="bold white")
+    header = Text("  🔍 CVE Security Audit", style="bold white")
     if owner_repo:
         header.append(f"   ·   {owner_repo}", style="bold bright_blue")
     console.print(Panel(header, style="blue", padding=(0, 1)))
 
-    # ── Summary counters ────────────────────────────────────────────────────
     summary = Table(box=box.ROUNDED, show_header=False, padding=(0, 4), expand=False)
     summary.add_column(justify="center", min_width=18)
     summary.add_column(justify="center", min_width=18)
@@ -278,20 +176,21 @@ def format_report(report: str, owner_repo: str = "") -> None:
     console.print(summary)
     console.print()
 
-    # ── CONFIRMED ───────────────────────────────────────────────────────────
     if confirmed:
         console.print(Rule("[bold red]🔴  CONFIRMED Vulnerabilities[/]", style="red"))
-        console.print(_findings_table(confirmed, "red", show_cve=True))
+        console.print(_findings_table(confirmed, "red"))
 
-    # ── LIKELY ──────────────────────────────────────────────────────────────
     if likely:
-        console.print(Rule("[bold yellow]🟡  LIKELY Vulnerabilities[/]", style="yellow"))
-        console.print(_findings_table(likely, "yellow", show_cve=False))
+        console.print(
+            Rule("[bold yellow]🟡  LIKELY Vulnerabilities[/]", style="yellow")
+        )
+        console.print(_findings_table(likely, "yellow"))
 
-    # ── UNREACHED ───────────────────────────────────────────────────────────
     if unreached:
         console.print(
-            Rule("[dim]⚪  UNREACHED  (in deps, no reachable call site)[/]", style="dim")
+            Rule(
+                "[dim]⚪  UNREACHED  (in deps, no reachable call site)[/]", style="dim"
+            )
         )
         console.print(_unreached_table(unreached))
 
@@ -299,38 +198,20 @@ def format_report(report: str, owner_repo: str = "") -> None:
 
 
 def _extract_report(raw: str) -> tuple[str, str]:
-    """Return (owner_repo, report_text) from any supported input format:
-    - JSON:  {"owner_repo": "...", "report": "..."}
-    - Audit log: LangChain message log containing 'text': '...' dict literal
-    - Plain markdown report text
-    """
-    # JSON result from invoke()
-    try:
-        data = json.loads(raw)
-        return data.get("owner_repo", ""), data.get("report", raw)
-    except (json.JSONDecodeError, AttributeError):
-        pass
-
     # Audit log format: Python dict literal with 'text': '...' key
     m = re.search(r"'text':\s*'(.*?)'\s*,\s*'extras'", raw, re.DOTALL)
     if m:
-        return "", m.group(1)
-
-    # Plain report — look for a markdown section header as anchor
-    for anchor in ("# Security Audit Report", "## CONFIRMED", "### CONFIRMED"):
+        text = m.group(1).replace("\\n", "\n").replace("\\t", "\t")
+        return "", text
+    # Fallback: find markdown anchor
+    for anchor in ("# Security Audit Report", "## CONFIRMED"):
         idx = raw.find(anchor)
         if idx != -1:
             return "", raw[idx:]
-
     return "", raw
 
 
-if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        with open(sys.argv[1]) as fh:
-            raw = fh.read()
-    else:
-        raw = sys.stdin.read()
-
+def main():
+    raw = open(sys.argv[1]).read() if len(sys.argv) > 1 else sys.stdin.read()
     owner_repo, report_text = _extract_report(raw)
     format_report(report_text, owner_repo)
