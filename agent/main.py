@@ -1,3 +1,4 @@
+import argparse
 import os
 from functools import lru_cache
 
@@ -117,10 +118,12 @@ def lookup_cve(package: str, version: str, ecosystem: str = "PyPI") -> str:
 
 @tool
 def search_advisories(query: str, k: int = 4) -> str:
-    """Semantic search over historical CVE/GHSA advisory descriptions.
+    """Semantic search over the CWE weakness catalog (and any OSV advisories).
 
-    Use this to confirm whether a code pattern you found in `search_code` matches a
-    known vulnerability class.
+    Use this to map a code pattern you found in `search_code` to a CWE class
+    (e.g. CWE-502 for unsafe deserialization, CWE-78 for command injection).
+    Each match returns the CWE description, common consequences, and recommended
+    mitigations — useful for justifying findings and picking a fix.
     """
     store = _advisories_store()
     results = store.similarity_search(query, k=k)
@@ -137,26 +140,87 @@ Tools:
 - list_dependencies(repo): declared deps of the repo
 - lookup_cve(package, version, ecosystem): known CVEs from OSV.dev
 - search_code(query, repo): semantic search over the repo's code
-- search_advisories(query): semantic search over historical advisory text
+- search_advisories(query, k): semantic search over the CWE weakness catalog (returns CWE class, consequences, mitigations)
 
 Approach:
-1. `list_dependencies` to enumerate deps.
+1. Call `list_dependencies` to enumerate deps.
 2. For each dep with a pinned version, call `lookup_cve` (parallel calls are fine).
-3. For each known CVE, use `search_code` to check whether the vulnerable API is
-   actually called in this repo. A CVE in an unused transitive dep is low priority.
-4. Independently, run `search_code` for novel patterns the CVE feed wouldn't catch:
-   pickle/yaml.load, eval/exec on user input, raw SQL concat, shell=True, weak crypto,
-   path traversal, SSRF, hardcoded secrets.
-5. To cross-reference a code finding against known vuln classes, call
+3. For each known CVE, use `search_code` with a query targeting the specific
+   vulnerable API (e.g. "werkzeug.utils.safe_join", "yaml.load with FullLoader") to
+   check whether that API is actually called in this repo. A CVE in an unused
+   transitive dep is low priority.
+4. Independently, run `search_code` to hunt novel patterns the CVE feed wouldn't
+   catch. Cover ALL of the following categories with at least one query each:
+     a. unsafe deserialization: pickle.loads, yaml.load without SafeLoader, marshal.loads
+     b. command injection: subprocess shell=True, os.system, os.popen with user input
+     c. SQL injection: raw cursor.execute with f-string or "+" concatenation
+     d. code injection: eval, exec, compile on user input
+     e. SSTI / template injection: render_template_string, Template().render with f-strings
+     f. XXE / unsafe XML: lxml etree.fromstring with custom parser, xml.etree without defusedxml
+     g. SSRF / TLS: requests with verify=False, urllib.request.urlopen with user URL
+     h. hardcoded secrets: API keys, passwords, tokens in source (regex-style names like
+        SECRET, API_KEY, PASSWORD, TOKEN)
+     i. weak crypto: pycrypto, MD5/SHA1 for security, hardcoded IV/key
+     j. path traversal: open() / Path() with unsanitized user input
+5. For every NOVEL finding from step 4 (not the CVE-driven findings), call
    `search_advisories` with a *prose description* of the pattern (e.g.
-   "yaml.load on untrusted input causes RCE via Python object construction"),
-   not the raw code itself. Advisories are indexed as English text, so prose
-   queries retrieve far better than pasted code.
-6. Report three buckets: CONFIRMED (CVE + reachable call site), LIKELY (novel pattern
-   with evidence), UNREACHED (CVE present but no call site found). Include CWE/CVE
-   ids, file:line, and a fix.
+   "deserialization of untrusted data leading to arbitrary code execution",
+   "improper neutralization of OS command elements"), not the raw code. The
+   advisories index is the MITRE CWE catalog — queries phrased like CWE entry
+   titles retrieve best. Use the returned CWE id, consequences, and mitigations
+   to label the finding and ground the fix.
+6. Before reporting a finding, verify the retrieved code chunk *actually demonstrates*
+   the pattern. `search_code` returns approximate matches — if the chunk doesn't
+   contain the dangerous call, drop it. Do not flag imports, comments, or docstrings.
+7. Report three buckets:
+     CONFIRMED — known CVE in a dep AND a reachable call site in this repo.
+                 Include CVE id, package, file:line, snippet, fix.
+     LIKELY    — novel pattern from step 4 with code evidence.
+                 Include CWE id (from search_advisories cross-ref), file:line,
+                 snippet, fix.
+     UNREACHED — CVE present in deps but no call site found in code.
+                 Include CVE id, package, severity. Lower priority.
+   Be exhaustive: list every finding you have evidence for. Brevity in the prose
+   is fine, but do not omit findings to save tokens.
 """
 
+
+# def main() -> None:
+#     parser = argparse.ArgumentParser(description="Run the vulnerability-audit agent against an ingested repo.")
+#     parser.add_argument("repo", help="Repo slug as ingested (e.g. 'owner/name' or local dir basename).")
+#     parser.add_argument(
+#         "--focus",
+#         default="injection, unsafe deserialization, hardcoded secrets, and known CVEs in dependencies",
+#         help="What to focus the audit on.",
+#     )
+#     args = parser.parse_args()
+
+#     model = ChatGoogleGenerativeAI(
+#         model=os.getenv("GEMINI_MODEL", "gemini-2.5-flash"),
+#         google_api_key=os.environ["GOOGLE_API_KEY"],
+#         max_output_tokens=16384,
+#     )
+
+#     agent = create_agent(
+#         model=model,
+#         tools=[search_code, list_dependencies, lookup_cve, search_advisories],
+#         system_prompt=SYSTEM_PROMPT,
+#     )
+
+#     user_msg = (
+#         f"Audit the repo '{args.repo}' for Python security vulnerabilities. "
+#         f"Focus on {args.focus}."
+#     )
+#     result = agent.invoke({"messages": [{"role": "user", "content": user_msg}]})
+#     for message in result["messages"]:
+#         message.pretty_print()
+
+def main() -> None:
+    result = invoke("cve_agent/demo")
+    print("\n" + "=" * 60)
+    print(f"SECURITY AUDIT REPORT — {result['owner_repo']}")
+    print("=" * 60)
+    print(result["report"])
 
 def invoke(owner_repo: str) -> dict:
     """Invoke the agent to audit a repository.
@@ -198,15 +262,6 @@ def invoke(owner_repo: str) -> dict:
         "owner_repo": owner_repo,
         "report": report,
     }
-
-
-def main() -> None:
-    result = invoke("psf/requests")
-    print("\n" + "=" * 60)
-    print(f"SECURITY AUDIT REPORT — {result['owner_repo']}")
-    print("=" * 60)
-    print(result["report"])
-
 
 if __name__ == "__main__":
     main()
