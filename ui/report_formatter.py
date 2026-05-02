@@ -215,3 +215,5 @@ def main():
     raw = open(sys.argv[1]).read() if len(sys.argv) > 1 else sys.stdin.read()
     owner_repo, report_text = _extract_report(raw)
     format_report(report_text, owner_repo)
+if __name__ == "__main__":
+    main()
