@@ -1,0 +1,26 @@
+{
+  "Comment": "API Gateway → Lambda webhook for GitHub push/PR events",
+  "Description": "GitHub sends push and pull_request events to this endpoint. API Gateway proxies to the Lambda, which triggers a CVE scan on the affected repo.",
+
+  "DeployInstructions": {
+    "1_create_api": "aws apigateway create-rest-api --name cve-agent-webhook --endpoint-configuration types=REGIONAL",
+    "2_create_resource": "aws apigateway create-resource --rest-api-id <API_ID> --parent-id <ROOT_RESOURCE_ID> --path-part scan",
+    "3_create_method": "aws apigateway put-method --rest-api-id <API_ID> --resource-id <RESOURCE_ID> --http-method POST --authorization-type NONE",
+    "4_set_integration": "aws apigateway put-integration --rest-api-id <API_ID> --resource-id <RESOURCE_ID> --http-method POST --type AWS_PROXY --integration-http-method POST --uri arn:aws:apigateway:<REGION>:lambda:path/2015-03-31/functions/arn:aws:lambda:<REGION>:<ACCOUNT_ID>:function:cve-auto-fix-agent/invocations",
+    "5_deploy": "aws apigateway create-deployment --rest-api-id <API_ID> --stage-name prod",
+    "6_grant_invoke": "aws lambda add-permission --function-name cve-auto-fix-agent --statement-id apigw-invoke --action lambda:InvokeFunction --principal apigateway.amazonaws.com"
+  },
+
+  "GitHubWebhookSetup": {
+    "url": "https://<API_ID>.execute-api.<REGION>.amazonaws.com/prod/scan",
+    "content_type": "application/json",
+    "events": ["push", "pull_request"],
+    "note": "Set this URL in GitHub repo Settings → Webhooks → Add webhook"
+  },
+
+  "LambdaEventMapping": {
+    "note": "The Lambda handler maps the GitHub webhook payload to the agent's expected format",
+    "github_push_fields_used": ["repository.clone_url", "repository.full_name", "ref"],
+    "github_pr_fields_used": ["pull_request.head.repo.clone_url", "pull_request.head.ref", "repository.full_name"]
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "demo-vulnerable-app",
+  "version": "1.0.0",
+  "description": "Synthetic Express app with intentional CVE patterns for agent demo",
+  "main": "src/app.js",
+  "dependencies": {
+    "express": "4.17.1",
+    "pg": "5.0.0",
+    "hoek": "4.2.0",
+    "sanitize-html": "1.4.2",
+    "lodash": "4.17.4",
+    "axios": "0.19.0",
+    "minimist": "1.2.0",
+    "node-fetch": "2.6.0",
+    "deasync": "0.1.14"
+  }
+}

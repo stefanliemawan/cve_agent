@@ -1,0 +1,16 @@
+[project]
+name = "mongo-db-hackathon"
+version = "0.1.0"
+description = "LangGraph CVE auto-fix agent — MongoDB Atlas + Groq (Llama 3.1) + Voyage AI"
+requires-python = ">=3.12"
+dependencies = [
+    "langchain-core>=0.3.0",
+    "langchain-groq>=1.1.2",
+    "langchain-voyageai>=0.3.3",
+    "langgraph>=0.2.0",
+    "langgraph-checkpoint-mongodb>=0.1.0",
+    "pygithub>=2.3.0",
+    "pymongo[srv]>=4.7.0",
+    "python-dotenv>=1.0.0",
+    "requests>=2.31.0",
+]

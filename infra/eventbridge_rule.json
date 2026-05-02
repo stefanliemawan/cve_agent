@@ -1,0 +1,17 @@
+{
+  "Comment": "EventBridge rule to trigger CVE scan Lambda daily at 08:00 UTC",
+  "ScheduleExpression": "cron(0 8 * * ? *)",
+  "State": "ENABLED",
+  "Targets": [
+    {
+      "Id": "CveAutoFixAgentLambda",
+      "Arn": "arn:aws:lambda:<REGION>:<ACCOUNT_ID>:function:cve-auto-fix-agent",
+      "Input": "{\"git_url\": \"<YOUR_REPO_URL>\"}"
+    }
+  ],
+  "DeployInstructions": {
+    "1_create_rule": "aws events put-rule --name cve-daily-scan --schedule-expression 'cron(0 8 * * ? *)' --state ENABLED",
+    "2_add_target": "aws events put-targets --rule cve-daily-scan --targets file://infra/eventbridge_rule.json",
+    "3_grant_invoke": "aws lambda add-permission --function-name cve-auto-fix-agent --statement-id eventbridge-invoke --action lambda:InvokeFunction --principal events.amazonaws.com --source-arn arn:aws:events:<REGION>:<ACCOUNT_ID>:rule/cve-daily-scan"
+  }
+}
