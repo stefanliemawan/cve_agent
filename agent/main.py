@@ -184,40 +184,54 @@ Approach:
 """
 
 
-# def main() -> None:
-#     parser = argparse.ArgumentParser(description="Run the vulnerability-audit agent against an ingested repo.")
-#     parser.add_argument("repo", help="Repo slug as ingested (e.g. 'owner/name' or local dir basename).")
-#     parser.add_argument(
-#         "--focus",
-#         default="injection, unsafe deserialization, hardcoded secrets, and known CVEs in dependencies",
-#         help="What to focus the audit on.",
-#     )
-#     args = parser.parse_args()
+from s3_utils import upload_report_to_s3
 
-#     model = ChatGoogleGenerativeAI(
-#         model=os.getenv("GEMINI_MODEL", "gemini-2.5-flash"),
-#         google_api_key=os.environ["GOOGLE_API_KEY"],
-#         max_output_tokens=16384,
-#     )
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Run the vulnerability-audit agent against an ingested repo.")
+    parser.add_argument("repo", help="Repo slug as ingested (e.g. 'owner/name' or local dir basename).")
+    parser.add_argument(
+        "--focus",
+        default="injection, unsafe deserialization, hardcoded secrets, and known CVEs in dependencies",
+        help="What to focus the audit on.",
+    )
+    parser.add_argument(
+        "--s3-bucket",
+        metavar="BUCKET",
+        help="Optional S3 bucket name to upload the final report to (as a Markdown file).",
+    )
+    args = parser.parse_args()
 
-#     # model = ChatGroq(
-#     #     model=os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile"),
-#     #     groq_api_key=os.environ["GROQ_API_KEY"],
-#     # )
+    model = ChatGoogleGenerativeAI(
+        model=os.getenv("GEMINI_MODEL", "gemini-2.5-flash"),
+        google_api_key=os.environ["GOOGLE_API_KEY"],
+        max_output_tokens=16384,
+    )
 
-#     agent = create_agent(
-#         model=model,
-#         tools=[search_code, list_dependencies, lookup_cve, search_advisories],
-#         system_prompt=SYSTEM_PROMPT,
-#     )
+    # model = ChatGroq(
+    #     model=os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile"),
+    #     groq_api_key=os.environ["GROQ_API_KEY"],
+    # )
 
-#     user_msg = (
-#         f"Audit the repo '{args.repo}' for Python security vulnerabilities. "
-#         f"Focus on {args.focus}."
-#     )
-#     result = agent.invoke({"messages": [{"role": "user", "content": user_msg}]})
-#     for message in result["messages"]:
-#         message.pretty_print()
+    agent = create_agent(
+        model=model,
+        tools=[search_code, list_dependencies, lookup_cve, search_advisories],
+        system_prompt=SYSTEM_PROMPT,
+    )
+
+    user_msg = (
+        f"Audit the repo '{args.repo}' for Python security vulnerabilities. "
+        f"Focus on {args.focus}."
+    )
+    result = agent.invoke({"messages": [{"role": "user", "content": user_msg}]})
+    
+    final_report = ""
+    for message in result["messages"]:
+        message.pretty_print()
+        if hasattr(message, "content") and message.type == "ai" and message.content and not getattr(message, "tool_calls", None):
+             final_report = message.content
+
+    if args.s3_bucket and final_report:
+        upload_report_to_s3(final_report, args.s3_bucket, args.repo)
 
 # def main() -> None:
 #     result = invoke("cve_agent/demo")
@@ -226,51 +240,51 @@ Approach:
 #     print("=" * 60)
 #     print(result["report"])
 
-# def invoke(owner_repo: str) -> dict:
-#     """Invoke the agent to audit a repository.
+def invoke(owner_repo: str) -> dict:
+    """Invoke the agent to audit a repository.
     
-#     Args:
-#         owner_repo: GitHub repository in owner/repo format
+    Args:
+        owner_repo: GitHub repository in owner/repo format
         
-#     Returns:
-#         dict with 'owner_repo' and 'report' keys
-#     """
-#     model = ChatGoogleGenerativeAI(
-#         model=os.getenv("GEMINI_MODEL", "gemini-2.5-flash"),
-#         google_api_key=os.environ["GOOGLE_API_KEY"],
-#         max_output_tokens=16384,
-#     )
-#     # model = ChatGroq(
-#     #     model=os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile"),
-#     #     groq_api_key=os.environ["GROQ_API_KEY"],
-#     # )
+    Returns:
+        dict with 'owner_repo' and 'report' keys
+    """
+    model = ChatGoogleGenerativeAI(
+        model=os.getenv("GEMINI_MODEL", "gemini-2.5-flash"),
+        google_api_key=os.environ["GOOGLE_API_KEY"],
+        max_output_tokens=16384,
+    )
+    # model = ChatGroq(
+    #     model=os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile"),
+    #     groq_api_key=os.environ["GROQ_API_KEY"],
+    # )
 
-#     agent = create_agent(
-#         model=model,
-#         tools=[search_code, list_dependencies, lookup_cve, search_advisories],
-#         system_prompt=SYSTEM_PROMPT,
-#     )
+    agent = create_agent(
+        model=model,
+        tools=[search_code, list_dependencies, lookup_cve, search_advisories],
+        system_prompt=SYSTEM_PROMPT,
+    )
 
-#     user_msg = (
-#         f"Audit the repository '{owner_repo}'. "
-#         "Focus on injection, unsafe deserialization, and hardcoded secrets."
-#     )
-#     result = agent.invoke({"messages": [{"role": "user", "content": user_msg}]})
+    user_msg = (
+        f"Audit the repository '{owner_repo}'. "
+        "Focus on injection, unsafe deserialization, and hardcoded secrets."
+    )
+    result = agent.invoke({"messages": [{"role": "user", "content": user_msg}]})
 
-#     messages = result.get("messages", [])
-#     report = next(
-#         (
-#             m.content
-#             for m in reversed(messages)
-#             if hasattr(m, "type") and m.type == "ai"
-#         ),
-#         "No report generated.",
-#     )
+    messages = result.get("messages", [])
+    report = next(
+        (
+            m.content
+            for m in reversed(messages)
+            if hasattr(m, "type") and m.type == "ai"
+        ),
+        "No report generated.",
+    )
 
-#     return {
-#         "owner_repo": owner_repo,
-#         "report": report,
-#     }
+    return {
+        "owner_repo": owner_repo,
+        "report": report,
+    }
 
 if __name__ == "__main__":
     main()
