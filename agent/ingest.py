@@ -196,6 +196,62 @@ def ingest_advisories(ecosystem: str, limit: int | None) -> None:
     print(f"ingested {len(docs)} advisories for {ecosystem}")
 
 
+def ingest_repo(github_url: str) -> str:
+    """Clone a GitHub repo, embed its Python source, and store in MongoDB Atlas.
+
+    Returns the repo slug (e.g. 'owner/repo').
+    """
+    slug = repo_slug(github_url)
+    print(f"[ingest] ingesting {slug}")
+
+    embeddings = VoyageAIEmbeddings(
+        model="voyage-code-3",
+        api_key=os.environ["VOYAGE_API_KEY"],
+    )
+
+    client = MongoClient(os.environ["MONGODB_URI"])
+    collection = client[os.environ.get("MONGODB_DB", "vuln_scanner")][
+        os.environ.get("MONGODB_COLLECTION", "code_chunks")
+    ]
+
+    with tempfile.TemporaryDirectory() as tmp:
+        repo_root = clone_repo(github_url, Path(tmp) / "repo")
+        py_files = list(iter_python_files(repo_root))
+        print(f"[ingest] found {len(py_files)} python files")
+
+        docs: list[Document] = []
+        for f in py_files:
+            for doc in chunk_python_file(f, repo_root):
+                doc.metadata["repo"] = slug
+                docs.append(doc)
+
+        print(f"[ingest] chunked into {len(docs)} documents")
+        if not docs:
+            print("[ingest] nothing to ingest")
+            return slug
+
+        deleted = collection.delete_many({"repo": slug}).deleted_count
+        if deleted:
+            print(f"[ingest] deleted {deleted} existing chunks for {slug}")
+
+        MongoDBAtlasVectorSearch.from_documents(
+            documents=docs,
+            embedding=embeddings,
+            collection=collection,
+            index_name=os.environ.get("MONGODB_VECTOR_INDEX", "code_chunks_vector_index"),
+        )
+        print(f"[ingest] ingested {len(docs)} chunks for {slug}")
+
+        deps = collect_dependencies(repo_root)
+        deps_col = client[os.environ.get("MONGODB_DB", "vuln_scanner")]["dependencies"]
+        deps_col.delete_many({"repo": slug})
+        if deps:
+            deps_col.insert_many([{**d, "repo": slug} for d in deps])
+        print(f"[ingest] ingested {len(deps)} dependencies for {slug}")
+
+    return slug
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Ingest a GitHub Python repo or OSV advisories into Atlas Vector Search.")
     parser.add_argument("github_url", nargs="?", help="e.g. https://github.com/owner/repo")
@@ -210,53 +266,7 @@ def main() -> None:
     if not args.github_url:
         parser.error("github_url is required unless --advisories is given")
 
-    slug = repo_slug(args.github_url)
-    print(f"ingesting {slug}")
-
-    embeddings = VoyageAIEmbeddings(
-        model="voyage-code-3",
-        api_key=os.environ["VOYAGE_API_KEY"],
-    )
-
-    client = MongoClient(os.environ["MONGODB_URI"])
-    collection = client[os.environ.get("MONGODB_DB", "vuln_scanner")][
-        os.environ.get("MONGODB_COLLECTION", "code_chunks")
-    ]
-
-    with tempfile.TemporaryDirectory() as tmp:
-        repo_root = clone_repo(args.github_url, Path(tmp) / "repo")
-        py_files = list(iter_python_files(repo_root))
-        print(f"found {len(py_files)} python files")
-
-        docs: list[Document] = []
-        for f in py_files:
-            for doc in chunk_python_file(f, repo_root):
-                doc.metadata["repo"] = slug
-                docs.append(doc)
-
-        print(f"chunked into {len(docs)} documents")
-        if not docs:
-            print("nothing to ingest")
-            return
-
-        deleted = collection.delete_many({"repo": slug}).deleted_count
-        if deleted:
-            print(f"deleted {deleted} existing chunks for {slug}")
-
-        MongoDBAtlasVectorSearch.from_documents(
-            documents=docs,
-            embedding=embeddings,
-            collection=collection,
-            index_name=os.environ.get("MONGODB_VECTOR_INDEX", "code_chunks_vector_index"),
-        )
-        print(f"ingested {len(docs)} chunks for {slug}")
-
-        deps = collect_dependencies(repo_root)
-        deps_col = client[os.environ.get("MONGODB_DB", "vuln_scanner")]["dependencies"]
-        deps_col.delete_many({"repo": slug})
-        if deps:
-            deps_col.insert_many([{**d, "repo": slug} for d in deps])
-        print(f"ingested {len(deps)} dependencies for {slug}")
+    ingest_repo(args.github_url)
 
 
 if __name__ == "__main__":

@@ -5,7 +5,7 @@ import httpx
 from dotenv import load_dotenv
 from langchain.agents import create_agent
 from langchain_core.tools import tool
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_groq import ChatGroq
 from langchain_mongodb import MongoDBAtlasVectorSearch
 from langchain_voyageai import VoyageAIEmbeddings
 from pymongo import MongoClient
@@ -158,10 +158,18 @@ Approach:
 """
 
 
-def main() -> None:
-    model = ChatGoogleGenerativeAI(
-        model=os.getenv("GEMINI_MODEL", "gemini-2.5-flash"),
-        google_api_key=os.environ["GOOGLE_API_KEY"],
+def invoke(owner_repo: str) -> dict:
+    """Invoke the agent to audit a repository.
+    
+    Args:
+        owner_repo: GitHub repository in owner/repo format
+        
+    Returns:
+        dict with 'owner_repo' and 'report' keys
+    """
+    model = ChatGroq(
+        model=os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile"),
+        groq_api_key=os.environ["GROQ_API_KEY"],
     )
 
     agent = create_agent(
@@ -171,12 +179,33 @@ def main() -> None:
     )
 
     user_msg = (
-        "Audit the repo 'owner/name' for Python security vulnerabilities. "
+        f"Audit the repository '{owner_repo}'. "
         "Focus on injection, unsafe deserialization, and hardcoded secrets."
     )
     result = agent.invoke({"messages": [{"role": "user", "content": user_msg}]})
-    for message in result["messages"]:
-        message.pretty_print()
+
+    messages = result.get("messages", [])
+    report = next(
+        (
+            m.content
+            for m in reversed(messages)
+            if hasattr(m, "type") and m.type == "ai"
+        ),
+        "No report generated.",
+    )
+
+    return {
+        "owner_repo": owner_repo,
+        "report": report,
+    }
+
+
+def main() -> None:
+    result = invoke("psf/requests")
+    print("\n" + "=" * 60)
+    print(f"SECURITY AUDIT REPORT — {result['owner_repo']}")
+    print("=" * 60)
+    print(result["report"])
 
 
 if __name__ == "__main__":

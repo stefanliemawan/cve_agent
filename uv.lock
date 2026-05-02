@@ -952,8 +952,10 @@ name = "mongo-db-hackathon"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
+    { name = "httpx" },
     { name = "langchain-core" },
     { name = "langchain-groq" },
+    { name = "langchain-mongodb" },
     { name = "langchain-voyageai" },
     { name = "langgraph" },
     { name = "langgraph-checkpoint-mongodb" },
@@ -965,14 +967,16 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
+    { name = "httpx", specifier = ">=0.27" },
     { name = "langchain-core", specifier = ">=0.3.0" },
     { name = "langchain-groq", specifier = ">=1.1.2" },
+    { name = "langchain-mongodb", specifier = ">=0.5.0" },
     { name = "langchain-voyageai", specifier = ">=0.3.3" },
     { name = "langgraph", specifier = ">=0.2.0" },
     { name = "langgraph-checkpoint-mongodb", specifier = ">=0.1.0" },
     { name = "pygithub", specifier = ">=2.3.0" },
-    { name = "pymongo", extras = ["srv"], specifier = ">=4.7.0" },
-    { name = "python-dotenv", specifier = ">=1.0.0" },
+    { name = "pymongo", specifier = ">=4.7.0" },
+    { name = "python-dotenv", specifier = ">=1.0.1" },
     { name = "requests", specifier = ">=2.31.0" },
 ]
 
