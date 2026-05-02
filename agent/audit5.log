@@ -1,0 +1,1675 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+================================ Human Message =================================
+
+Audit the repo 'cve_agent/demo' for Python security vulnerabilities. Focus on injection, unsafe deserialization, hardcoded secrets, and known CVEs in dependencies.
+================================== Ai Message ==================================
+
+[]
+Tool Calls:
+  list_dependencies (a560f781-87c8-4b5b-b33b-7440704575d6)
+ Call ID: a560f781-87c8-4b5b-b33b-7440704575d6
+  Args:
+    repo: cve_agent/demo
+  search_code (a504c424-ac26-49b4-ab69-dd772b2daad2)
+ Call ID: a504c424-ac26-49b4-ab69-dd772b2daad2
+  Args:
+    k: 6
+    query: pickle.loads yaml.load without SafeLoader marshal.loads
+    repo: cve_agent/demo
+  search_code (1fc12102-a04b-4790-a459-1d8b908ec842)
+ Call ID: 1fc12102-a04b-4790-a459-1d8b908ec842
+  Args:
+    k: 6
+    repo: cve_agent/demo
+    query: subprocess shell=True os.system os.popen
+  search_code (beae822e-3333-440d-a60f-4f0cec811056)
+ Call ID: beae822e-3333-440d-a60f-4f0cec811056
+  Args:
+    repo: cve_agent/demo
+    query: cursor.execute raw f-string "+" concatenation
+    k: 6
+  search_code (776d7724-430a-4d68-9723-eacb03a9e2d9)
+ Call ID: 776d7724-430a-4d68-9723-eacb03a9e2d9
+  Args:
+    repo: cve_agent/demo
+    query: eval exec compile
+    k: 6
+  search_code (31a81353-649b-469e-b8de-b9950306dc06)
+ Call ID: 31a81353-649b-469e-b8de-b9950306dc06
+  Args:
+    repo: cve_agent/demo
+    query: render_template_string Template().render f-string
+    k: 6
+  search_code (c34366d1-13ec-4fc1-b795-4cfaf035da42)
+ Call ID: c34366d1-13ec-4fc1-b795-4cfaf035da42
+  Args:
+    repo: cve_agent/demo
+    query: lxml etree.fromstring xml.etree
+    k: 6
+  search_code (c7321b89-cdb2-452a-8790-d966b56f82e6)
+ Call ID: c7321b89-cdb2-452a-8790-d966b56f82e6
+  Args:
+    k: 6
+    repo: cve_agent/demo
+    query: requests verify=False urllib.request.urlopen
+  search_code (71ead505-ec45-4ea1-9817-8e2c5249eb4d)
+ Call ID: 71ead505-ec45-4ea1-9817-8e2c5249eb4d
+  Args:
+    repo: cve_agent/demo
+    query: SECRET API_KEY PASSWORD TOKEN
+    k: 6
+  search_code (4388117e-703f-4729-8d75-b60ce6df8c4d)
+ Call ID: 4388117e-703f-4729-8d75-b60ce6df8c4d
+  Args:
+    k: 6
+    query: pycrypto MD5 SHA1 hardcoded IV key
+    repo: cve_agent/demo
+  search_code (f4898e79-aae5-4346-a48b-c8459c54233f)
+ Call ID: f4898e79-aae5-4346-a48b-c8459c54233f
+  Args:
+    repo: cve_agent/demo
+    query: open Path user input
+    k: 6
+================================= Tool Message =================================
+Name: list_dependencies
+
+flask==0.12.2 (PyPI)
+werkzeug==0.14.1 (PyPI)
+jinja2==2.10 (PyPI)
+pyyaml==3.13 (PyPI)
+requests==2.19.0 (PyPI)
+urllib3==1.24.1 (PyPI)
+lxml==4.6.0 (PyPI)
+pycrypto==2.6.1 (PyPI)
+pillow==5.3.0 (PyPI)
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:deserialize.py:19-20 (FunctionDef load_config_full) ---
+def load_config_full(raw_bytes):
+    return yaml.load(raw_bytes, Loader=yaml.FullLoader)
+
+--- cve_agent/demo:deserialize.py:14-15 (FunctionDef load_config) ---
+def load_config(raw_bytes):
+    return yaml.load(raw_bytes)
+
+--- cve_agent/demo:deserialize.py:25-26 (FunctionDef import_session) ---
+def import_session(raw_bytes):
+    return pickle.loads(raw_bytes)
+
+--- cve_agent/demo:xml_parser.py:12-14 (FunctionDef parse_feed) ---
+def parse_feed(raw_bytes):
+    root = etree.fromstring(raw_bytes, parser=_unsafe_parser)
+    return {child.tag: child.text for child in root}
+
+--- cve_agent/demo:xml_parser.py:21-23 (FunctionDef fetch_and_parse) ---
+def fetch_and_parse(url):
+    resp = requests.get(url, verify=False)  # CVE-2018-18074 + TLS verify disabled
+    return parse_feed(resp.content)
+
+--- cve_agent/demo:app.py:47-49 (FunctionDef config_route) ---
+def config_route():
+    cfg = load_config(request.data)
+    return jsonify({"status": "ok", "config": cfg})
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:shell.py:20-21 (FunctionDef check_service) ---
+def check_service(service_name):
+    os.system(f"systemctl status {service_name}")
+
+--- cve_agent/demo:shell.py:25-27 (FunctionDef tail_log) ---
+def tail_log(path):
+    p = subprocess.Popen("tail -n 50 " + path, shell=True, stdout=subprocess.PIPE)
+    return p.communicate()[0]
+
+--- cve_agent/demo:shell.py:11-16 (FunctionDef run_diagnostic) ---
+def run_diagnostic(host):
+    return subprocess.check_output(
+        f"ping -c 1 {host}",
+        shell=True,
+        stderr=subprocess.STDOUT,
+    ).decode("utf-8", errors="replace")
+
+--- cve_agent/demo:xml_parser.py:21-23 (FunctionDef fetch_and_parse) ---
+def fetch_and_parse(url):
+    resp = requests.get(url, verify=False)  # CVE-2018-18074 + TLS verify disabled
+    return parse_feed(resp.content)
+
+--- cve_agent/demo:db.py:20-23 (FunctionDef search_users) ---
+def search_users(name):
+    cur = _conn.cursor()
+    cur.execute("SELECT id, name FROM users WHERE name LIKE '%" + name + "%'")
+    return [{"id": r[0], "name": r[1]} for r in cur.fetchall()]
+
+--- cve_agent/demo:deserialize.py:14-15 (FunctionDef load_config) ---
+def load_config(raw_bytes):
+    return yaml.load(raw_bytes)
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:template.py:11-20 (FunctionDef render_profile) ---
+def render_profile(username, bio):
+    source = f"""
+    <html>
+      <body>
+        <h1>Profile: {username}</h1>
+        <div class="bio">{bio}</div>
+      </body>
+    </html>
+    """
+    return Template(source).render()
+
+--- cve_agent/demo:app.py:67-69 (FunctionDef greet_route) ---
+def greet_route():
+    name = request.args.get("name", "guest")
+    return render_template_string(f"<h1>Hello {name}</h1>")
+
+--- cve_agent/demo:db.py:20-23 (FunctionDef search_users) ---
+def search_users(name):
+    cur = _conn.cursor()
+    cur.execute("SELECT id, name FROM users WHERE name LIKE '%" + name + "%'")
+    return [{"id": r[0], "name": r[1]} for r in cur.fetchall()]
+
+--- cve_agent/demo:db.py:12-16 (FunctionDef get_user_by_id) ---
+def get_user_by_id(user_id):
+    cur = _conn.cursor()
+    cur.execute(f"SELECT id, name, email FROM users WHERE id = {user_id}")
+    row = cur.fetchone()
+    return dict(zip(["id", "name", "email"], row)) if row else None
+
+--- cve_agent/demo:shell.py:11-16 (FunctionDef run_diagnostic) ---
+def run_diagnostic(host):
+    return subprocess.check_output(
+        f"ping -c 1 {host}",
+        shell=True,
+        stderr=subprocess.STDOUT,
+    ).decode("utf-8", errors="replace")
+
+--- cve_agent/demo:xml_parser.py:21-23 (FunctionDef fetch_and_parse) ---
+def fetch_and_parse(url):
+    resp = requests.get(url, verify=False)  # CVE-2018-18074 + TLS verify disabled
+    return parse_feed(resp.content)
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:template.py:11-20 (FunctionDef render_profile) ---
+def render_profile(username, bio):
+    source = f"""
+    <html>
+      <body>
+        <h1>Profile: {username}</h1>
+        <div class="bio">{bio}</div>
+      </body>
+    </html>
+    """
+    return Template(source).render()
+
+--- cve_agent/demo:shell.py:25-27 (FunctionDef tail_log) ---
+def tail_log(path):
+    p = subprocess.Popen("tail -n 50 " + path, shell=True, stdout=subprocess.PIPE)
+    return p.communicate()[0]
+
+--- cve_agent/demo:template.py:27-29 (FunctionDef render_comment) ---
+def render_comment(author, comment):
+    tmpl = _env.from_string("<div><strong>{{ author }}</strong>: {{ comment | safe }}</div>")
+    return tmpl.render(author=author, comment=comment)
+
+--- cve_agent/demo:shell.py:20-21 (FunctionDef check_service) ---
+def check_service(service_name):
+    os.system(f"systemctl status {service_name}")
+
+--- cve_agent/demo:db.py:20-23 (FunctionDef search_users) ---
+def search_users(name):
+    cur = _conn.cursor()
+    cur.execute("SELECT id, name FROM users WHERE name LIKE '%" + name + "%'")
+    return [{"id": r[0], "name": r[1]} for r in cur.fetchall()]
+
+--- cve_agent/demo:xml_parser.py:21-23 (FunctionDef fetch_and_parse) ---
+def fetch_and_parse(url):
+    resp = requests.get(url, verify=False)  # CVE-2018-18074 + TLS verify disabled
+    return parse_feed(resp.content)
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:template.py:11-20 (FunctionDef render_profile) ---
+def render_profile(username, bio):
+    source = f"""
+    <html>
+      <body>
+        <h1>Profile: {username}</h1>
+        <div class="bio">{bio}</div>
+      </body>
+    </html>
+    """
+    return Template(source).render()
+
+--- cve_agent/demo:app.py:67-69 (FunctionDef greet_route) ---
+def greet_route():
+    name = request.args.get("name", "guest")
+    return render_template_string(f"<h1>Hello {name}</h1>")
+
+--- cve_agent/demo:template.py:27-29 (FunctionDef render_comment) ---
+def render_comment(author, comment):
+    tmpl = _env.from_string("<div><strong>{{ author }}</strong>: {{ comment | safe }}</div>")
+    return tmpl.render(author=author, comment=comment)
+
+--- cve_agent/demo:app.py:40-42 (FunctionDef profile_route) ---
+def profile_route(username):
+    bio = request.args.get("bio", "")
+    return render_profile(username, bio)
+
+--- cve_agent/demo:shell.py:11-16 (FunctionDef run_diagnostic) ---
+def run_diagnostic(host):
+    return subprocess.check_output(
+        f"ping -c 1 {host}",
+        shell=True,
+        stderr=subprocess.STDOUT,
+    ).decode("utf-8", errors="replace")
+
+--- cve_agent/demo:xml_parser.py:12-14 (FunctionDef parse_feed) ---
+def parse_feed(raw_bytes):
+    root = etree.fromstring(raw_bytes, parser=_unsafe_parser)
+    return {child.tag: child.text for child in root}
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:xml_parser.py:12-14 (FunctionDef parse_feed) ---
+def parse_feed(raw_bytes):
+    root = etree.fromstring(raw_bytes, parser=_unsafe_parser)
+    return {child.tag: child.text for child in root}
+
+--- cve_agent/demo:xml_parser.py:21-23 (FunctionDef fetch_and_parse) ---
+def fetch_and_parse(url):
+    resp = requests.get(url, verify=False)  # CVE-2018-18074 + TLS verify disabled
+    return parse_feed(resp.content)
+
+--- cve_agent/demo:app.py:61-62 (FunctionDef feed_route) ---
+def feed_route():
+    return jsonify(parse_feed(request.data))
+
+--- cve_agent/demo:deserialize.py:14-15 (FunctionDef load_config) ---
+def load_config(raw_bytes):
+    return yaml.load(raw_bytes)
+
+--- cve_agent/demo:deserialize.py:25-26 (FunctionDef import_session) ---
+def import_session(raw_bytes):
+    return pickle.loads(raw_bytes)
+
+--- cve_agent/demo:deserialize.py:19-20 (FunctionDef load_config_full) ---
+def load_config_full(raw_bytes):
+    return yaml.load(raw_bytes, Loader=yaml.FullLoader)
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:xml_parser.py:21-23 (FunctionDef fetch_and_parse) ---
+def fetch_and_parse(url):
+    resp = requests.get(url, verify=False)  # CVE-2018-18074 + TLS verify disabled
+    return parse_feed(resp.content)
+
+--- cve_agent/demo:app.py:33-35 (FunctionDef diagnostic_route) ---
+def diagnostic_route():
+    host = request.json.get("host", "")
+    return run_diagnostic(host)
+
+--- cve_agent/demo:shell.py:11-16 (FunctionDef run_diagnostic) ---
+def run_diagnostic(host):
+    return subprocess.check_output(
+        f"ping -c 1 {host}",
+        shell=True,
+        stderr=subprocess.STDOUT,
+    ).decode("utf-8", errors="replace")
+
+--- cve_agent/demo:app.py:47-49 (FunctionDef config_route) ---
+def config_route():
+    cfg = load_config(request.data)
+    return jsonify({"status": "ok", "config": cfg})
+
+--- cve_agent/demo:app.py:61-62 (FunctionDef feed_route) ---
+def feed_route():
+    return jsonify(parse_feed(request.data))
+
+--- cve_agent/demo:app.py:26-28 (FunctionDef search_route) ---
+def search_route():
+    name = request.args.get("name", "")
+    return jsonify(search_users(name))
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:app.py:54-56 (FunctionDef import_session_route) ---
+def import_session_route():
+    session = import_session(request.data)
+    return jsonify({"restored": str(session)})
+
+--- cve_agent/demo:app.py:47-49 (FunctionDef config_route) ---
+def config_route():
+    cfg = load_config(request.data)
+    return jsonify({"status": "ok", "config": cfg})
+
+--- cve_agent/demo:template.py:11-20 (FunctionDef render_profile) ---
+def render_profile(username, bio):
+    source = f"""
+    <html>
+      <body>
+        <h1>Profile: {username}</h1>
+        <div class="bio">{bio}</div>
+      </body>
+    </html>
+    """
+    return Template(source).render()
+
+--- cve_agent/demo:app.py:26-28 (FunctionDef search_route) ---
+def search_route():
+    name = request.args.get("name", "")
+    return jsonify(search_users(name))
+
+--- cve_agent/demo:app.py:61-62 (FunctionDef feed_route) ---
+def feed_route():
+    return jsonify(parse_feed(request.data))
+
+--- cve_agent/demo:app.py:40-42 (FunctionDef profile_route) ---
+def profile_route(username):
+    bio = request.args.get("bio", "")
+    return render_profile(username, bio)
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:xml_parser.py:21-23 (FunctionDef fetch_and_parse) ---
+def fetch_and_parse(url):
+    resp = requests.get(url, verify=False)  # CVE-2018-18074 + TLS verify disabled
+    return parse_feed(resp.content)
+
+--- cve_agent/demo:deserialize.py:25-26 (FunctionDef import_session) ---
+def import_session(raw_bytes):
+    return pickle.loads(raw_bytes)
+
+--- cve_agent/demo:xml_parser.py:12-14 (FunctionDef parse_feed) ---
+def parse_feed(raw_bytes):
+    root = etree.fromstring(raw_bytes, parser=_unsafe_parser)
+    return {child.tag: child.text for child in root}
+
+--- cve_agent/demo:template.py:11-20 (FunctionDef render_profile) ---
+def render_profile(username, bio):
+    source = f"""
+    <html>
+      <body>
+        <h1>Profile: {username}</h1>
+        <div class="bio">{bio}</div>
+      </body>
+    </html>
+    """
+    return Template(source).render()
+
+--- cve_agent/demo:db.py:20-23 (FunctionDef search_users) ---
+def search_users(name):
+    cur = _conn.cursor()
+    cur.execute("SELECT id, name FROM users WHERE name LIKE '%" + name + "%'")
+    return [{"id": r[0], "name": r[1]} for r in cur.fetchall()]
+
+--- cve_agent/demo:deserialize.py:14-15 (FunctionDef load_config) ---
+def load_config(raw_bytes):
+    return yaml.load(raw_bytes)
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:app.py:26-28 (FunctionDef search_route) ---
+def search_route():
+    name = request.args.get("name", "")
+    return jsonify(search_users(name))
+
+--- cve_agent/demo:app.py:33-35 (FunctionDef diagnostic_route) ---
+def diagnostic_route():
+    host = request.json.get("host", "")
+    return run_diagnostic(host)
+
+--- cve_agent/demo:app.py:40-42 (FunctionDef profile_route) ---
+def profile_route(username):
+    bio = request.args.get("bio", "")
+    return render_profile(username, bio)
+
+--- cve_agent/demo:app.py:54-56 (FunctionDef import_session_route) ---
+def import_session_route():
+    session = import_session(request.data)
+    return jsonify({"restored": str(session)})
+
+--- cve_agent/demo:app.py:47-49 (FunctionDef config_route) ---
+def config_route():
+    cfg = load_config(request.data)
+    return jsonify({"status": "ok", "config": cfg})
+
+--- cve_agent/demo:app.py:61-62 (FunctionDef feed_route) ---
+def feed_route():
+    return jsonify(parse_feed(request.data))
+================================== Ai Message ==================================
+
+[]
+Tool Calls:
+  lookup_cve (e2d9c4ef-d9ee-43ee-bfde-17d320234792)
+ Call ID: e2d9c4ef-d9ee-43ee-bfde-17d320234792
+  Args:
+    package: flask
+    ecosystem: PyPI
+    version: 0.12.2
+  lookup_cve (eb1b02b1-4319-4e71-a461-d6ed747c56ce)
+ Call ID: eb1b02b1-4319-4e71-a461-d6ed747c56ce
+  Args:
+    package: werkzeug
+    version: 0.14.1
+    ecosystem: PyPI
+  lookup_cve (c380269a-f3a2-49ea-88ff-16271b82492c)
+ Call ID: c380269a-f3a2-49ea-88ff-16271b82492c
+  Args:
+    package: jinja2
+    version: 2.10
+    ecosystem: PyPI
+  lookup_cve (4c1ae218-54d7-4a04-8094-2b178b68aa89)
+ Call ID: 4c1ae218-54d7-4a04-8094-2b178b68aa89
+  Args:
+    version: 3.13
+    ecosystem: PyPI
+    package: pyyaml
+  lookup_cve (f949e56c-a31b-4cbf-b339-662d0811fa82)
+ Call ID: f949e56c-a31b-4cbf-b339-662d0811fa82
+  Args:
+    version: 2.19.0
+    ecosystem: PyPI
+    package: requests
+  lookup_cve (4e6681cc-8abd-483b-936c-ae16cc2fcf36)
+ Call ID: 4e6681cc-8abd-483b-936c-ae16cc2fcf36
+  Args:
+    ecosystem: PyPI
+    version: 1.24.1
+    package: urllib3
+  lookup_cve (fa4d569a-923d-45d0-8ef4-81fe864ae80c)
+ Call ID: fa4d569a-923d-45d0-8ef4-81fe864ae80c
+  Args:
+    version: 4.6.0
+    ecosystem: PyPI
+    package: lxml
+  lookup_cve (4da97297-5fe7-4363-8a01-eb1f364ffa07)
+ Call ID: 4da97297-5fe7-4363-8a01-eb1f364ffa07
+  Args:
+    package: pycrypto
+    version: 2.6.1
+    ecosystem: PyPI
+  lookup_cve (fd8b790e-086e-4f69-880b-aca14ef1cd89)
+ Call ID: fd8b790e-086e-4f69-880b-aca14ef1cd89
+  Args:
+    package: pillow
+    ecosystem: PyPI
+    version: 5.3.0
+================================= Tool Message =================================
+Name: lookup_cve
+
+GHSA-562c-5r94-xh97, CVE-2018-1000656, PYSEC-2018-66 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H]
+Flask is vulnerable to Denial of Service via incorrect encoding of JSON data
+
+GHSA-5wv5-4vpf-pj6m, CVE-2019-1010083, PYSEC-2019-179 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H]
+Pallets Project Flask is vulnerable to Denial of Service via Unexpected memory usage
+
+GHSA-68rp-wp8r-4726, CVE-2026-27205 [CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:P/VC:L/VI:N/VA:N/SC:N/SI:N/SA:N]
+Flask session does not add `Vary: Cookie` header when accessed in some ways
+
+GHSA-m2qf-hxjv-5gpq, CVE-2023-30861, PYSEC-2023-62 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N]
+Flask vulnerable to possible disclosure of permanent session cookie due to missing Vary: Cookie header
+
+PYSEC-2018-66, CVE-2018-1000656, GHSA-562c-5r94-xh97 []
+The Pallets Project flask version Before 0.12.3 contains a CWE-20: Improper Input Validation vulnerability in flask that can result in Large amount of memory usage possibly leading to denial of service. This attack appear to be exploitable via Attacker provides JSON data in incorrect encoding. This vulnerability appears to have been fixed in 0.12.3. NOTE: this may overlap CVE-2019-1010083.
+
+PYSEC-2019-179, CVE-2019-1010083, GHSA-5wv5-4vpf-pj6m []
+The Pallets Project Flask before 1.0 is affected by: unexpected memory usage. The impact is: denial of service. The attack vector is: crafted encoded JSON data. The fixed version is: 1. NOTE: this may overlap CVE-2018-1000656.
+
+PYSEC-2023-62, CVE-2023-30861, GHSA-m2qf-hxjv-5gpq []
+Flask is a lightweight WSGI web application framework. When all of the following conditions are met, a response containing data intended for one client may be cached and subsequently sent by the proxy to other clients. If the proxy also caches `Set-Cookie` headers, it may send one client's `session` cookie to other clients. The severity depends on the application's use of the session and the proxy
+================================= Tool Message =================================
+Name: lookup_cve
+
+GHSA-29vq-49wr-vm6x, CVE-2026-27199 [CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:N/VI:N/VA:L/SC:N/SI:N/SA:N]
+ Werkzeug safe_join() allows Windows special device names
+
+GHSA-2g68-c3qc-8985, CVE-2024-34069 [CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H]
+Werkzeug debugger vulnerable to remote execution when interacting with attacker controlled domain
+
+GHSA-87hc-h4r5-73f7, CVE-2026-21860 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L]
+ Werkzeug safe_join() allows Windows special device names with compound extensions
+
+GHSA-f9vj-2wh5-fj8j, CVE-2024-49766 [CVSS:4.0/AV:N/AC:H/AT:N/PR:N/UI:N/VC:L/VI:N/VA:N/SC:N/SI:N/SA:N]
+Werkzeug safe_join not safe on Windows
+
+GHSA-gq9m-qvpx-68hc, CVE-2019-14806, PYSEC-2019-140 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N]
+Pallets Werkzeug Insufficient Entropy
+
+GHSA-hgf8-39gv-g3f2, CVE-2025-66221 [CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:N/VI:N/VA:L/SC:N/SI:N/SA:N]
+Werkzeug safe_join() allows Windows special device names
+
+GHSA-hrfv-mqp8-q5rw, CVE-2023-46136, PYSEC-2023-221 [CVSS:3.1/AV:A/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H]
+Werkzeug DoS: High resource usage when parsing multipart/form-data containing a large part with CR/LF character at the beginning
+
+GHSA-j544-7q9p-6xp8, CVE-2019-14322 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N]
+Pallets Werkzeug vulnerable to Path Traversal
+
+GHSA-px8h-6qxv-m22q, CVE-2023-23934, PYSEC-2023-57 [CVSS:3.1/AV:A/AC:H/PR:N/UI:R/S:U/C:N/I:L/A:N]
+Incorrect parsing of nameless cookies leads to __Host- cookies bypass
+
+GHSA-q34m-jh98-gwm2, CVE-2024-49767 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H]
+Werkzeug possible resource exhaustion when parsing file data in forms
+================================= Tool Message =================================
+Name: lookup_cve
+
+GHSA-462w-v97r-4m45, CVE-2019-10906, PYSEC-2019-217 [CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:N/A:N]
+Jinja2 sandbox escape via string formatting
+
+GHSA-cpwx-vrp4-4pq7, CVE-2025-27516 [CVSS:4.0/AV:L/AC:L/AT:P/PR:L/UI:P/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N]
+Jinja2 vulnerable to sandbox breakout through attr filter selecting format method
+
+GHSA-g3rq-g295-4j3m, CVE-2020-28493, PYSEC-2021-66, SNYK-PYTHON-JINJA2-1012994 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L]
+Regular Expression Denial of Service (ReDoS) in Jinja2
+
+GHSA-h5c8-rqwp-cp95, CVE-2024-22195 [CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:L/I:L/A:N]
+Jinja vulnerable to HTML attribute injection when passing user input as keys to xmlattr filter
+
+GHSA-h75v-3vvj-5mfj, CVE-2024-34064 [CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:L/I:L/A:N]
+Jinja vulnerable to HTML attribute injection when passing user input as keys to xmlattr filter
+
+GHSA-q2x7-8rv6-6q7h, CVE-2024-56326 [CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H]
+Jinja has a sandbox breakout through indirect reference to format method
+
+PYSEC-2019-217, CVE-2019-10906, GHSA-462w-v97r-4m45 []
+In Pallets Jinja before 2.10.1, str.format_map allows a sandbox escape.
+
+PYSEC-2021-66, CVE-2020-28493, GHSA-g3rq-g295-4j3m, SNYK-PYTHON-JINJA2-1012994 []
+This affects the package jinja2 from 0.0.0 and before 2.11.3. The ReDoS vulnerability is mainly due to the `_punctuation_re regex` operator and its use of multiple wildcards. The last wildcard is the most exploitable as it searches for trailing punctuation. This issue can be mitigated by Markdown to format user content instead of the urlize filter, or by implementing request timeouts and limiting 
+================================= Tool Message =================================
+Name: lookup_cve
+
+GHSA-8q59-q68h-6hv4, CVE-2020-14343, PYSEC-2021-142 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H]
+Improper Input Validation in PyYAML
+
+GHSA-rprw-h62v-c2w7, CVE-2017-18342, PYSEC-2018-49 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H]
+PyYAML insecurely deserializes YAML strings leading to arbitrary code execution
+
+PYSEC-2018-49, CVE-2017-18342, GHSA-rprw-h62v-c2w7 []
+In PyYAML before 5.1, the yaml.load() API could execute arbitrary code if used with untrusted data. The load() function has been deprecated in version 5.1 and the 'UnsafeLoader' has been introduced for backward compatibility with the function.
+
+PYSEC-2021-142, CVE-2020-14343, GHSA-8q59-q68h-6hv4 []
+A vulnerability was discovered in the PyYAML library in versions before 5.4, where it is susceptible to arbitrary code execution when it processes untrusted YAML files through the full_load method or with the FullLoader loader. Applications that use the library to process untrusted input may be vulnerable to this flaw. This flaw allows an attacker to execute arbitrary code on the system by abusing
+================================= Tool Message =================================
+Name: lookup_cve
+
+GHSA-9hjg-9r4m-mvj7, CVE-2024-47081 [CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:N/A:N]
+Requests vulnerable to .netrc credentials leak via malicious URLs
+
+GHSA-9wx4-h78v-vm56, CVE-2024-35195 [CVSS:3.1/AV:L/AC:H/PR:H/UI:R/S:U/C:H/I:H/A:N]
+Requests `Session` object does not verify requests after making first request with verify=False
+
+GHSA-gc5v-m9x4-r6x2, CVE-2026-25645 [CVSS:3.1/AV:L/AC:H/PR:L/UI:R/S:U/C:N/I:H/A:N]
+Requests has Insecure Temp File Reuse in its extract_zipped_paths() utility function
+
+GHSA-j8r2-6x86-q33q, CVE-2023-32681, PYSEC-2023-74 [CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:C/C:H/I:N/A:N]
+Unintended leak of Proxy-Authorization header in requests
+
+GHSA-x84v-xcm2-53pg, CVE-2018-18074, PYSEC-2018-28 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N]
+Insufficiently Protected Credentials in Requests
+
+PYSEC-2018-28, CVE-2018-18074, GHSA-x84v-xcm2-53pg []
+The Requests package before 2.20.0 for Python sends an HTTP Authorization header to an http URI upon receiving a same-hostname https-to-http redirect, which makes it easier for remote attackers to discover credentials by sniffing the network.
+
+PYSEC-2023-74, CVE-2023-32681, GHSA-j8r2-6x86-q33q []
+Requests is a HTTP library. Since Requests 2.3.0, Requests has been leaking Proxy-Authorization headers to destination servers when redirected to an HTTPS endpoint. This is a product of how we use `rebuild_proxies` to reattach the `Proxy-Authorization` header to requests. For HTTP connections sent through the tunnel, the proxy will identify the header in the request itself and remove it prior to f
+================================= Tool Message =================================
+Name: lookup_cve
+
+GHSA-2xpw-w6gg-jr37, CVE-2025-66471 [CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:N/VI:N/VA:H/SC:N/SI:N/SA:H]
+urllib3 streaming API improperly handles highly compressed data
+
+GHSA-34jh-p97f-mpxf, CVE-2024-37891 [CVSS:3.1/AV:N/AC:H/PR:H/UI:N/S:U/C:H/I:N/A:N]
+urllib3's Proxy-Authorization request header isn't stripped during cross-origin redirects
+
+GHSA-38jv-5279-wg99, CVE-2026-21441 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H]
+Decompression-bomb safeguards bypassed when following HTTP redirects (streaming API)
+
+GHSA-g4mx-q9vg-27p4, CVE-2023-45803, PYSEC-2023-212 [CVSS:3.1/AV:A/AC:H/PR:H/UI:N/S:U/C:H/I:N/A:N]
+urllib3's request body not stripped after redirect from 303 status changes request method to GET
+
+GHSA-gm62-xv2j-4w53, CVE-2025-66418 [CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:N/VI:N/VA:H/SC:N/SI:N/SA:H]
+urllib3 allows an unbounded number of links in the decompression chain
+
+GHSA-gwvm-45gx-3cf8, CVE-2018-25091, PYSEC-2023-207 [CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N]
+Authorization Header forwarded on redirect
+
+GHSA-mh33-7rrq-662w, CVE-2019-11324, PYSEC-2019-133 [CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N]
+Improper Certificate Validation in urllib3
+
+GHSA-pq67-6m6q-mj2v, CVE-2025-50181 [CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:U/C:H/I:N/A:N]
+urllib3 redirects are not disabled when retries are disabled on PoolManager instantiation
+
+GHSA-r64q-w8jr-g9qp, CVE-2019-11236, PYSEC-2019-132 [CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N]
+Improper Neutralization of CRLF Sequences in urllib3 library for Python
+
+GHSA-v845-jxx5-vc9f, CVE-2023-43804, PYSEC-2023-192 [CVSS:3.1/AV:N/AC:H/PR:H/UI:N/S:U/C:H/I:H/A:N]
+`Cookie` HTTP header isn't stripped on cross-origin redirects
+================================= Tool Message =================================
+Name: lookup_cve
+
+GHSA-55x5-fj6c-h6m8, CVE-2021-43818, PYSEC-2021-852 [CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:H/A:N]
+lxml's HTML Cleaner allows crafted and SVG embedded scripts to pass through
+
+GHSA-jq4v-f5q6-mjqq, CVE-2021-28957, PYSEC-2021-19 [CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N]
+lxml vulnerable to Cross-Site Scripting 
+
+GHSA-pgww-xf46-h92r, CVE-2020-27783, PYSEC-2020-62 [CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N]
+lxml vulnerable to Cross-site Scripting
+
+GHSA-vfmq-68hx-4jfw, CVE-2026-41066 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N]
+lxml: Default configuration of iterparse() and ETCompatXMLParser() allows XXE to local files
+
+GHSA-wrxv-2j5q-m38w, CVE-2022-2309, PYSEC-2022-230 [CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L]
+lxml NULL Pointer Dereference allows attackers to cause a denial of service
+
+PYSEC-2020-62, CVE-2020-27783, GHSA-pgww-xf46-h92r []
+A XSS vulnerability was discovered in python-lxml's clean module. The module's parser didn't properly imitate browsers, which caused different behaviors between the sanitizer and the user's page. A remote attacker could exploit this flaw to run arbitrary HTML/JS code.
+
+PYSEC-2021-19, CVE-2021-28957, GHSA-jq4v-f5q6-mjqq []
+An XSS vulnerability was discovered in python-lxml's clean module versions before 4.6.3. When disabling the safe_attrs_only and forms arguments, the Cleaner class does not remove the formaction attribute allowing for JS to bypass the sanitizer. A remote attacker could exploit this flaw to run arbitrary JS code on users who interact with incorrectly sanitized HTML. This issue is patched in lxml 4.6
+
+PYSEC-2021-852, CVE-2021-43818, GHSA-55x5-fj6c-h6m8 []
+lxml is a library for processing XML and HTML in the Python language. Prior to version 4.6.5, the HTML Cleaner in lxml.html lets certain crafted script content pass through, as well as script content in SVG files embedded using data URIs. Users that employ the HTML cleaner in a security relevant context should upgrade to lxml 4.6.5 to receive a patch. There are no known workarounds available.
+
+PYSEC-2022-230, CVE-2022-2309, GHSA-wrxv-2j5q-m38w []
+NULL Pointer Dereference allows attackers to cause a denial of service (or application crash). This only applies when lxml is used together with libxml2 2.9.10 through 2.9.14. libxml2 2.9.9 and earlier are not affected. It allows triggering crashes through forged input data, given a vulnerable code sequence in the application. The vulnerability is caused by the iterwalk function (also used by the 
+================================= Tool Message =================================
+Name: lookup_cve
+
+GHSA-6528-wvf6-f6qg, CVE-2018-6594, PYSEC-2018-97 [CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N]
+Pycrypto generates weak key parameters
+
+GHSA-cq27-v7xp-c356, CVE-2013-7459, PYSEC-2017-94 [CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H]
+Buffer Overflow in pycrypto
+
+PYSEC-2017-94, CVE-2013-7459, GHSA-cq27-v7xp-c356 []
+Heap-based buffer overflow in the ALGnew function in block_templace.c in Python Cryptography Toolkit (aka pycrypto) allows remote attackers to execute arbitrary code as demonstrated by a crafted iv parameter to cryptmsg.py.
+
+PYSEC-2018-97, CVE-2018-6594, GHSA-6528-wvf6-f6qg []
+lib/Crypto/PublicKey/ElGamal.py in PyCrypto through 2.6.1 generates weak ElGamal key parameters, which allows attackers to obtain sensitive information by reading ciphertext data (i.e., it does not have semantic security in face of a ciphertext-only attack). The Decisional Diffie-Hellman (DDH) assumption does not hold for PyCrypto's ElGamal implementation.
+================================= Tool Message =================================
+Name: lookup_cve
+
+GHSA-3f63-hfp8-52jq, BIT-pillow-2023-50447, CVE-2023-50447 [CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H]
+Arbitrary Code Execution in Pillow
+
+GHSA-3wvg-mj6g-m9cv, BIT-pillow-2021-27922, CVE-2021-27922, PYSEC-2021-41 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H]
+Pillow Uncontrolled Resource Consumption
+
+GHSA-3xv8-3j54-hgrp, BIT-pillow-2020-10378, CVE-2020-10378, PYSEC-2020-77 [CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:H/I:N/A:N]
+Out-of-bounds read in Pillow
+
+GHSA-43fq-w8qq-v88h, BIT-pillow-2020-11538, CVE-2020-11538, PYSEC-2020-80 [CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H]
+Out-of-bounds read in Pillow
+
+GHSA-44wm-f244-xhp3, BIT-pillow-2024-28219, CVE-2024-28219 [CVSS:3.1/AV:L/AC:H/PR:L/UI:R/S:U/C:H/I:H/A:H]
+Pillow buffer overflow vulnerability
+
+GHSA-4fx9-vc88-q2xc []
+Infinite loop in Pillow
+
+GHSA-57h3-9rgr-c24m, BIT-pillow-2021-25289, CVE-2021-25289, PYSEC-2021-35 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H]
+Out of bounds write in Pillow
+
+GHSA-5gm3-px64-rw72, CVE-2019-19911, PYSEC-2020-172 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H]
+Uncontrolled Resource Consumption in Pillow
+
+GHSA-7534-mm45-c74v, BIT-pillow-2021-34552, CVE-2021-34552, PYSEC-2021-331 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H]
+Buffer Overflow in Pillow
+
+GHSA-77gc-v2xv-rvvh, BIT-pillow-2021-25287, CVE-2021-25287, PYSEC-2021-137 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:H]
+Out-of-bounds Read in Pillow
+================================== Ai Message ==================================
+
+[]
+Tool Calls:
+  search_code (a9aa4833-2100-4a39-8394-c5a99d7eca58)
+ Call ID: a9aa4833-2100-4a39-8394-c5a99d7eca58
+  Args:
+    repo: cve_agent/demo
+    k: 6
+    query: safe_join
+  search_code (0f2bed99-22dc-4f07-b06e-ca6120b78c9f)
+ Call ID: 0f2bed99-22dc-4f07-b06e-ca6120b78c9f
+  Args:
+    repo: cve_agent/demo
+    k: 6
+    query: lxml html clean
+  search_code (1845c213-7877-4308-bf30-a7173d1e0da7)
+ Call ID: 1845c213-7877-4308-bf30-a7173d1e0da7
+  Args:
+    query: pycrypto Crypto
+    k: 6
+    repo: cve_agent/demo
+  search_code (a0343170-361d-48a8-a3e5-cb786f05d060)
+ Call ID: a0343170-361d-48a8-a3e5-cb786f05d060
+  Args:
+    k: 6
+    repo: cve_agent/demo
+    query: jinja2 sandbox str.format_map
+  search_code (c862017b-9ea6-432e-8775-f3b2eadf4bfd)
+ Call ID: c862017b-9ea6-432e-8775-f3b2eadf4bfd
+  Args:
+    query: urllib3
+    k: 6
+    repo: cve_agent/demo
+  search_code (9cb7166a-d690-414c-9b3e-f3a13a83476b)
+ Call ID: 9cb7166a-d690-414c-9b3e-f3a13a83476b
+  Args:
+    query: Pillow Image
+    k: 6
+    repo: cve_agent/demo
+  search_code (7204e827-e57e-4751-96f5-5b60c9a8cea2)
+ Call ID: 7204e827-e57e-4751-96f5-5b60c9a8cea2
+  Args:
+    query: SECRET API_KEY PASSWORD TOKEN password secret key token
+    k: 6
+    repo: cve_agent/demo
+  search_code (b10eb03e-5de2-4ead-be31-614b3b96eca0)
+ Call ID: b10eb03e-5de2-4ead-be31-614b3b96eca0
+  Args:
+    query: open Path
+    repo: cve_agent/demo
+    k: 6
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:template.py:27-29 (FunctionDef render_comment) ---
+def render_comment(author, comment):
+    tmpl = _env.from_string("<div><strong>{{ author }}</strong>: {{ comment | safe }}</div>")
+    return tmpl.render(author=author, comment=comment)
+
+--- cve_agent/demo:template.py:11-20 (FunctionDef render_profile) ---
+def render_profile(username, bio):
+    source = f"""
+    <html>
+      <body>
+        <h1>Profile: {username}</h1>
+        <div class="bio">{bio}</div>
+      </body>
+    </html>
+    """
+    return Template(source).render()
+
+--- cve_agent/demo:xml_parser.py:12-14 (FunctionDef parse_feed) ---
+def parse_feed(raw_bytes):
+    root = etree.fromstring(raw_bytes, parser=_unsafe_parser)
+    return {child.tag: child.text for child in root}
+
+--- cve_agent/demo:shell.py:25-27 (FunctionDef tail_log) ---
+def tail_log(path):
+    p = subprocess.Popen("tail -n 50 " + path, shell=True, stdout=subprocess.PIPE)
+    return p.communicate()[0]
+
+--- cve_agent/demo:xml_parser.py:21-23 (FunctionDef fetch_and_parse) ---
+def fetch_and_parse(url):
+    resp = requests.get(url, verify=False)  # CVE-2018-18074 + TLS verify disabled
+    return parse_feed(resp.content)
+
+--- cve_agent/demo:app.py:26-28 (FunctionDef search_route) ---
+def search_route():
+    name = request.args.get("name", "")
+    return jsonify(search_users(name))
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:xml_parser.py:12-14 (FunctionDef parse_feed) ---
+def parse_feed(raw_bytes):
+    root = etree.fromstring(raw_bytes, parser=_unsafe_parser)
+    return {child.tag: child.text for child in root}
+
+--- cve_agent/demo:xml_parser.py:21-23 (FunctionDef fetch_and_parse) ---
+def fetch_and_parse(url):
+    resp = requests.get(url, verify=False)  # CVE-2018-18074 + TLS verify disabled
+    return parse_feed(resp.content)
+
+--- cve_agent/demo:template.py:27-29 (FunctionDef render_comment) ---
+def render_comment(author, comment):
+    tmpl = _env.from_string("<div><strong>{{ author }}</strong>: {{ comment | safe }}</div>")
+    return tmpl.render(author=author, comment=comment)
+
+--- cve_agent/demo:template.py:11-20 (FunctionDef render_profile) ---
+def render_profile(username, bio):
+    source = f"""
+    <html>
+      <body>
+        <h1>Profile: {username}</h1>
+        <div class="bio">{bio}</div>
+      </body>
+    </html>
+    """
+    return Template(source).render()
+
+--- cve_agent/demo:app.py:61-62 (FunctionDef feed_route) ---
+def feed_route():
+    return jsonify(parse_feed(request.data))
+
+--- cve_agent/demo:app.py:47-49 (FunctionDef config_route) ---
+def config_route():
+    cfg = load_config(request.data)
+    return jsonify({"status": "ok", "config": cfg})
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:deserialize.py:25-26 (FunctionDef import_session) ---
+def import_session(raw_bytes):
+    return pickle.loads(raw_bytes)
+
+--- cve_agent/demo:deserialize.py:14-15 (FunctionDef load_config) ---
+def load_config(raw_bytes):
+    return yaml.load(raw_bytes)
+
+--- cve_agent/demo:xml_parser.py:21-23 (FunctionDef fetch_and_parse) ---
+def fetch_and_parse(url):
+    resp = requests.get(url, verify=False)  # CVE-2018-18074 + TLS verify disabled
+    return parse_feed(resp.content)
+
+--- cve_agent/demo:template.py:27-29 (FunctionDef render_comment) ---
+def render_comment(author, comment):
+    tmpl = _env.from_string("<div><strong>{{ author }}</strong>: {{ comment | safe }}</div>")
+    return tmpl.render(author=author, comment=comment)
+
+--- cve_agent/demo:xml_parser.py:12-14 (FunctionDef parse_feed) ---
+def parse_feed(raw_bytes):
+    root = etree.fromstring(raw_bytes, parser=_unsafe_parser)
+    return {child.tag: child.text for child in root}
+
+--- cve_agent/demo:deserialize.py:19-20 (FunctionDef load_config_full) ---
+def load_config_full(raw_bytes):
+    return yaml.load(raw_bytes, Loader=yaml.FullLoader)
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:template.py:27-29 (FunctionDef render_comment) ---
+def render_comment(author, comment):
+    tmpl = _env.from_string("<div><strong>{{ author }}</strong>: {{ comment | safe }}</div>")
+    return tmpl.render(author=author, comment=comment)
+
+--- cve_agent/demo:xml_parser.py:12-14 (FunctionDef parse_feed) ---
+def parse_feed(raw_bytes):
+    root = etree.fromstring(raw_bytes, parser=_unsafe_parser)
+    return {child.tag: child.text for child in root}
+
+--- cve_agent/demo:template.py:11-20 (FunctionDef render_profile) ---
+def render_profile(username, bio):
+    source = f"""
+    <html>
+      <body>
+        <h1>Profile: {username}</h1>
+        <div class="bio">{bio}</div>
+      </body>
+    </html>
+    """
+    return Template(source).render()
+
+--- cve_agent/demo:deserialize.py:19-20 (FunctionDef load_config_full) ---
+def load_config_full(raw_bytes):
+    return yaml.load(raw_bytes, Loader=yaml.FullLoader)
+
+--- cve_agent/demo:shell.py:11-16 (FunctionDef run_diagnostic) ---
+def run_diagnostic(host):
+    return subprocess.check_output(
+        f"ping -c 1 {host}",
+        shell=True,
+        stderr=subprocess.STDOUT,
+    ).decode("utf-8", errors="replace")
+
+--- cve_agent/demo:app.py:67-69 (FunctionDef greet_route) ---
+def greet_route():
+    name = request.args.get("name", "guest")
+    return render_template_string(f"<h1>Hello {name}</h1>")
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:xml_parser.py:21-23 (FunctionDef fetch_and_parse) ---
+def fetch_and_parse(url):
+    resp = requests.get(url, verify=False)  # CVE-2018-18074 + TLS verify disabled
+    return parse_feed(resp.content)
+
+--- cve_agent/demo:xml_parser.py:12-14 (FunctionDef parse_feed) ---
+def parse_feed(raw_bytes):
+    root = etree.fromstring(raw_bytes, parser=_unsafe_parser)
+    return {child.tag: child.text for child in root}
+
+--- cve_agent/demo:deserialize.py:14-15 (FunctionDef load_config) ---
+def load_config(raw_bytes):
+    return yaml.load(raw_bytes)
+
+--- cve_agent/demo:deserialize.py:19-20 (FunctionDef load_config_full) ---
+def load_config_full(raw_bytes):
+    return yaml.load(raw_bytes, Loader=yaml.FullLoader)
+
+--- cve_agent/demo:deserialize.py:25-26 (FunctionDef import_session) ---
+def import_session(raw_bytes):
+    return pickle.loads(raw_bytes)
+
+--- cve_agent/demo:db.py:12-16 (FunctionDef get_user_by_id) ---
+def get_user_by_id(user_id):
+    cur = _conn.cursor()
+    cur.execute(f"SELECT id, name, email FROM users WHERE id = {user_id}")
+    row = cur.fetchone()
+    return dict(zip(["id", "name", "email"], row)) if row else None
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:deserialize.py:25-26 (FunctionDef import_session) ---
+def import_session(raw_bytes):
+    return pickle.loads(raw_bytes)
+
+--- cve_agent/demo:template.py:11-20 (FunctionDef render_profile) ---
+def render_profile(username, bio):
+    source = f"""
+    <html>
+      <body>
+        <h1>Profile: {username}</h1>
+        <div class="bio">{bio}</div>
+      </body>
+    </html>
+    """
+    return Template(source).render()
+
+--- cve_agent/demo:xml_parser.py:21-23 (FunctionDef fetch_and_parse) ---
+def fetch_and_parse(url):
+    resp = requests.get(url, verify=False)  # CVE-2018-18074 + TLS verify disabled
+    return parse_feed(resp.content)
+
+--- cve_agent/demo:shell.py:11-16 (FunctionDef run_diagnostic) ---
+def run_diagnostic(host):
+    return subprocess.check_output(
+        f"ping -c 1 {host}",
+        shell=True,
+        stderr=subprocess.STDOUT,
+    ).decode("utf-8", errors="replace")
+
+--- cve_agent/demo:app.py:61-62 (FunctionDef feed_route) ---
+def feed_route():
+    return jsonify(parse_feed(request.data))
+
+--- cve_agent/demo:xml_parser.py:12-14 (FunctionDef parse_feed) ---
+def parse_feed(raw_bytes):
+    root = etree.fromstring(raw_bytes, parser=_unsafe_parser)
+    return {child.tag: child.text for child in root}
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:app.py:54-56 (FunctionDef import_session_route) ---
+def import_session_route():
+    session = import_session(request.data)
+    return jsonify({"restored": str(session)})
+
+--- cve_agent/demo:app.py:47-49 (FunctionDef config_route) ---
+def config_route():
+    cfg = load_config(request.data)
+    return jsonify({"status": "ok", "config": cfg})
+
+--- cve_agent/demo:template.py:11-20 (FunctionDef render_profile) ---
+def render_profile(username, bio):
+    source = f"""
+    <html>
+      <body>
+        <h1>Profile: {username}</h1>
+        <div class="bio">{bio}</div>
+      </body>
+    </html>
+    """
+    return Template(source).render()
+
+--- cve_agent/demo:app.py:26-28 (FunctionDef search_route) ---
+def search_route():
+    name = request.args.get("name", "")
+    return jsonify(search_users(name))
+
+--- cve_agent/demo:app.py:40-42 (FunctionDef profile_route) ---
+def profile_route(username):
+    bio = request.args.get("bio", "")
+    return render_profile(username, bio)
+
+--- cve_agent/demo:app.py:61-62 (FunctionDef feed_route) ---
+def feed_route():
+    return jsonify(parse_feed(request.data))
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:shell.py:25-27 (FunctionDef tail_log) ---
+def tail_log(path):
+    p = subprocess.Popen("tail -n 50 " + path, shell=True, stdout=subprocess.PIPE)
+    return p.communicate()[0]
+
+--- cve_agent/demo:app.py:26-28 (FunctionDef search_route) ---
+def search_route():
+    name = request.args.get("name", "")
+    return jsonify(search_users(name))
+
+--- cve_agent/demo:template.py:11-20 (FunctionDef render_profile) ---
+def render_profile(username, bio):
+    source = f"""
+    <html>
+      <body>
+        <h1>Profile: {username}</h1>
+        <div class="bio">{bio}</div>
+      </body>
+    </html>
+    """
+    return Template(source).render()
+
+--- cve_agent/demo:app.py:33-35 (FunctionDef diagnostic_route) ---
+def diagnostic_route():
+    host = request.json.get("host", "")
+    return run_diagnostic(host)
+
+--- cve_agent/demo:app.py:54-56 (FunctionDef import_session_route) ---
+def import_session_route():
+    session = import_session(request.data)
+    return jsonify({"restored": str(session)})
+
+--- cve_agent/demo:app.py:61-62 (FunctionDef feed_route) ---
+def feed_route():
+    return jsonify(parse_feed(request.data))
+================================== Ai Message ==================================
+
+[]
+Tool Calls:
+  search_code (d2e3229f-135d-4a4c-a9c4-f44fe75d7174)
+ Call ID: d2e3229f-135d-4a4c-a9c4-f44fe75d7174
+  Args:
+    k: 6
+    query: import Crypto import PIL
+    repo: cve_agent/demo
+  search_code (3bd5a41b-0ae4-4f53-98da-c5d254204123)
+ Call ID: 3bd5a41b-0ae4-4f53-98da-c5d254204123
+  Args:
+    k: 6
+    repo: cve_agent/demo
+    query: MD5 SHA1 random hash
+  search_advisories (40d0da21-5efa-4163-8d66-3c667adb345c)
+ Call ID: 40d0da21-5efa-4163-8d66-3c667adb345c
+  Args:
+    query: improper neutralization of special elements used in an OS command
+    k: 3
+  search_advisories (295d94e3-d358-44c1-b3ff-836f2853d57a)
+ Call ID: 295d94e3-d358-44c1-b3ff-836f2853d57a
+  Args:
+    k: 3
+    query: improper neutralization of special elements used in an SQL command
+  search_advisories (1a238caf-89ec-4387-9618-753faf3bd3c5)
+ Call ID: 1a238caf-89ec-4387-9618-753faf3bd3c5
+  Args:
+    query: deserialization of untrusted data
+    k: 3
+  search_advisories (e09e28aa-d14a-4666-92ce-0f462fff160c)
+ Call ID: e09e28aa-d14a-4666-92ce-0f462fff160c
+  Args:
+    query: improper neutralization of directives in dynamically evaluated code
+    k: 3
+  search_advisories (5a74ae58-a179-4d64-8aa2-7e8f77e21bfa)
+ Call ID: 5a74ae58-a179-4d64-8aa2-7e8f77e21bfa
+  Args:
+    query: improper restriction of xml external entity reference
+    k: 3
+  search_advisories (3245c1b6-10c0-4bf0-a42f-770dc401c0f2)
+ Call ID: 3245c1b6-10c0-4bf0-a42f-770dc401c0f2
+  Args:
+    k: 3
+    query: server-side request forgery
+  search_advisories (ef3c0b2a-c738-4cc1-bf30-261ad878c290)
+ Call ID: ef3c0b2a-c738-4cc1-bf30-261ad878c290
+  Args:
+    k: 3
+    query: improper control of filename for include/require
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:deserialize.py:25-26 (FunctionDef import_session) ---
+def import_session(raw_bytes):
+    return pickle.loads(raw_bytes)
+
+--- cve_agent/demo:xml_parser.py:21-23 (FunctionDef fetch_and_parse) ---
+def fetch_and_parse(url):
+    resp = requests.get(url, verify=False)  # CVE-2018-18074 + TLS verify disabled
+    return parse_feed(resp.content)
+
+--- cve_agent/demo:template.py:11-20 (FunctionDef render_profile) ---
+def render_profile(username, bio):
+    source = f"""
+    <html>
+      <body>
+        <h1>Profile: {username}</h1>
+        <div class="bio">{bio}</div>
+      </body>
+    </html>
+    """
+    return Template(source).render()
+
+--- cve_agent/demo:app.py:54-56 (FunctionDef import_session_route) ---
+def import_session_route():
+    session = import_session(request.data)
+    return jsonify({"restored": str(session)})
+
+--- cve_agent/demo:app.py:61-62 (FunctionDef feed_route) ---
+def feed_route():
+    return jsonify(parse_feed(request.data))
+
+--- cve_agent/demo:shell.py:25-27 (FunctionDef tail_log) ---
+def tail_log(path):
+    p = subprocess.Popen("tail -n 50 " + path, shell=True, stdout=subprocess.PIPE)
+    return p.communicate()[0]
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:template.py:11-20 (FunctionDef render_profile) ---
+def render_profile(username, bio):
+    source = f"""
+    <html>
+      <body>
+        <h1>Profile: {username}</h1>
+        <div class="bio">{bio}</div>
+      </body>
+    </html>
+    """
+    return Template(source).render()
+
+--- cve_agent/demo:shell.py:25-27 (FunctionDef tail_log) ---
+def tail_log(path):
+    p = subprocess.Popen("tail -n 50 " + path, shell=True, stdout=subprocess.PIPE)
+    return p.communicate()[0]
+
+--- cve_agent/demo:db.py:20-23 (FunctionDef search_users) ---
+def search_users(name):
+    cur = _conn.cursor()
+    cur.execute("SELECT id, name FROM users WHERE name LIKE '%" + name + "%'")
+    return [{"id": r[0], "name": r[1]} for r in cur.fetchall()]
+
+--- cve_agent/demo:shell.py:20-21 (FunctionDef check_service) ---
+def check_service(service_name):
+    os.system(f"systemctl status {service_name}")
+
+--- cve_agent/demo:app.py:40-42 (FunctionDef profile_route) ---
+def profile_route(username):
+    bio = request.args.get("bio", "")
+    return render_profile(username, bio)
+
+--- cve_agent/demo:template.py:27-29 (FunctionDef render_comment) ---
+def render_comment(author, comment):
+    tmpl = _env.from_string("<div><strong>{{ author }}</strong>: {{ comment | safe }}</div>")
+    return tmpl.render(author=author, comment=comment)
+================================= Tool Message =================================
+Name: search_advisories
+
+--- CWE-78 ---
+CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')
+
+The product constructs all or part of an OS command using externally-influenced input from an upstream component, but it does not neutralize or incorrectly neutralizes special elements that could modify the intended OS command when it is sent to a downstream component.
+
+This weakness can lead to a vulnerability in environments in which the attacker does not have direct access to the operating system, such as in web applications. Alternately, if the weakness occurs in a privileged program, it could allow the attacker to specify commands that normally would not be accessible, or to call alternate commands with privileges that the attacker does not have. The problem is exacerbated if the compromised process does not follow the principle of least privilege, because the attacker-controlled commands may run with special system privileges that increases the amount of damage.
+            There are at least two subtypes of OS command injection:
+               
+				 The application intends to execute a single, fixed program that is under its own control. It intends to use externally-supplied inputs as arguments to that program. For example, the program might use system("nslookup [HOSTNAME]") to run nslookup and allow the user to supply a HOSTNAME, which is used as an argument. Attackers cannot prevent nslookup from executing. However, if the program does not remove command separators from the HOSTNAME argument, attackers could place the separators into the arguments, which allows them to execute their own program after nslookup has finished executing.
+				 The application accepts an input that it uses to fully select which program to run, as well as which commands to use. The application simply redirects this entire command to the operating system. For example, the program might use "exec([COMMAND])" to execute the [COMMAND] that was supplied by the user. If the COMMAND is under attacker control, then the attacker can execute arbitrary commands or programs. If the command is being executed using functions like exec() and CreateProcess(), the attacker might not be able to combine multiple commands together in the same line.
+               
+            From a weakness standpoint, these variants represent distinct programmer errors. In the first variant, the programmer clearly intends that input from untrusted parties will be part of the arguments in the command to be executed. In the second variant, the programmer does not intend for the command to be accessible to any untrusted party, but the programmer probably has not accounted for alternate ways in which malicious attackers can provide input.
+
+Consequences:
+- Attackers could execute unauthorized operating system commands, which could then be used to disable the product, or read and modify data for which the attacker does not have permissions to access directly. Since the targeted application is directly executing the commands instead of the attacker, any malicious activities may appear to come from the application or the application's owner.
+
+Mitigations:
+- If at all possible, use library calls rather than external processes to recreate the desired functionality.
+- Run the code in a "jail" or similar sandbox environment that enforces strict boundaries between the process and the operating system. This may effectively restrict which files can be accessed in a particular directory or which commands can be executed by the software.
+                  OS-level examples include the Unix chroot jail, AppArmor, and SELinux. In general, managed code may provide some protection. For example, java.io.FilePermission in the Java SecurityManager allows the software to specify restrictions on file operations.
+                  This may not be a feasible solution, and it only limits the impact to the operating system; the rest of the application may still be subject to compromise.
+                  Be careful to avoid CWE-243 and other weaknesses related to jails.
+- For any data that will be used to generate a command to be executed, keep as much of that data out of external control as possible. For example, in web applications, this may require storing the data locally in the session's state instead of sending it out to the client in a hidden form field.
+- For any security checks that are performed on the client side, ensure that these checks are duplicated on the server side, in order to avoid CWE-602. Attackers can bypass the client-side checks by modifying values after the checks have been performed, or by changing the client to remove the client-side checks entirely. Then, these modified values would be submitted to the server.
+- Use a vetted library or framework that does not allow this weakness to occur or provides constructs that make this weakness easier to avoid.
+                  For example, consider using the ESAPI Encoding control [REF-45] or a similar tool, library, or framework. These will help the programmer encode outputs in a manner less prone to error.
+- While it is risky to use dynamically-generated query strings, code, or commands that mix control and data together, sometimes it may be unavoidable. Properly quote arguments and escape any special characters within those arguments. The most conservative approach is to escape or filter all characters that do not pass an extremely strict allowlist (such as everything that is not alphanumeric or white space). If some special characters are still needed, such as white space, wrap each argument in quotes after the escaping/filtering step. Be careful of argument injection (CWE-88).
+- If the program to be executed allows arguments to be specified within an input file or from standard input, then consider using that mode to pass arguments instead of the command line.
+- If available, use structured mechanisms that automatically enforce the separation between data and code. These mechanisms may be able to provide the relevant quoting, encoding, and validation automatically, instead of relying on the developer to provide this capability at every point where output is generated.
+                  Some languages offer multiple functions that can be used to invoke commands. Where possible, identify any function that invokes a command shell using a single string, and replace it with a function that requires individual arguments. These functions typically perform appropriate quoting and filtering of arguments. For example, in C, the system() function accepts a string that contains the entire command to be executed, whereas execl(), execve(), and others require an array of strings, one for each argument. In Windows, CreateProcess() only accepts one command at a time. In Perl, if system() is provided with an array of arguments, then it will quote each of the arguments.
+- Assume all input is malicious. Use an "accept known good" input validation strategy, i.e., use a list of acceptable inputs that strictly conform to specifications. Reject any input that does not strictly conform to specifications, or transform it into something that does.
+                  When performing input validation, consider all potentially relevant properties, including length, type of input, the full range of acceptable values, missing or extra inputs, syntax, consistency across related fields, and conformance to business rules. As an example of business rule logic, "boat" may be syntactically valid because it only contains alphanumeric characters, but it is not valid if the input is only expected to contain colors such as "red" or "blue."
+                  Do not rely exclusively on looking for malicious or malformed inputs.  This is likely to miss at least one undesirable input, especially if the code's environment changes. This can give attackers enough room to bypass the intended validation. However, denylists can be useful for detecting potential attacks or determining which inputs are so ma
+
+--- CWE-138 ---
+CWE-138: Improper Neutralization of Special Elements
+
+The product receives input from an upstream component, but it does not neutralize or incorrectly neutralizes special elements that could be interpreted as control elements or syntactic markers when they are sent to a downstream component.
+
+Most languages and protocols have their own special elements such as characters and reserved words. These special elements can carry control implications. If product does not prevent external control or influence over the inclusion of such special elements, the control flow of the program may be altered from what was intended. For example, both Unix and Windows interpret the symbol < ("less than") as meaning "read input from a file".
+
+Mitigations:
+- Developers should anticipate that special elements (e.g. delimiters, symbols) will be injected into input vectors of their product. One defense is to create an allowlist (e.g. a regular expression) that defines valid input according to the requirements specifications. Strictly filter any input that does not match against the allowlist. Properly encode your output, and quote any elements that have special meaning to the component with which you are communicating.
+- Assume all input is malicious. Use an "accept known good" input validation strategy, i.e., use a list of acceptable inputs that strictly conform to specifications. Reject any input that does not strictly conform to specifications, or transform it into something that does.
+                  When performing input validation, consider all potentially relevant properties, including length, type of input, the full range of acceptable values, missing or extra inputs, syntax, consistency across related fields, and conformance to business rules. As an example of business rule logic, "boat" may be syntactically valid because it only contains alphanumeric characters, but it is not valid if the input is only expected to contain colors such as "red" or "blue."
+                  Do not rely exclusively on looking for malicious or malformed inputs.  This is likely to miss at least one undesirable input, especially if the code's environment changes. This can give attackers enough room to bypass the intended validation. However, denylists can be useful for detecting potential attacks or determining which inputs are so malformed that they should be rejected outright.
+- Use and specify an appropriate output encoding to ensure that the special elements are well-defined. A normal byte sequence in one encoding could be a special element in another.
+- Inputs should be decoded and canonicalized to the application's current internal representation before being validated (CWE-180). Make sure that the application does not decode the same input twice (CWE-174). Such errors could be used to bypass allowlist validation schemes by introducing dangerous inputs after they have been checked.
+- While it is risky to use dynamically-generated query strings, code, or commands that mix control and data together, sometimes it may be unavoidable. Properly quote arguments and escape any special characters within those arguments. The most conservative approach is to escape or filter all characters that do not pass an extremely strict allowlist (such as everything that is not alphanumeric or white space). If some special characters are still needed, such as white space, wrap each argument in quotes after the escaping/filtering step. Be careful of argument injection (CWE-88).
+
+--- CWE-77 ---
+CWE-77: Improper Neutralization of Special Elements used in a Command ('Command Injection')
+
+The product constructs all or part of a command using externally-influenced input from an upstream component, but it does not neutralize or incorrectly neutralizes special elements that could modify the intended command when it is sent to a downstream component.
+
+Many protocols and products have their own custom command language. While OS or shell command strings are frequently discovered and targeted, developers may not realize that these other command languages might also be vulnerable to attacks.
+
+Consequences:
+- If a malicious user injects a character (such as a semi-colon) that delimits the end of one command and the beginning of another, it may be possible to then insert an entirely new and unrelated command that was not intended to be executed. This gives an attacker a privilege or capability that they would not otherwise have.
+
+Mitigations:
+- If at all possible, use library calls rather than external processes to recreate the desired functionality.
+- If possible, ensure that all external commands called from the program are statically created.
+- Assume all input is malicious. Use an "accept known good" input validation strategy, i.e., use a list of acceptable inputs that strictly conform to specifications. Reject any input that does not strictly conform to specifications, or transform it into something that does.
+                  When performing input validation, consider all potentially relevant properties, including length, type of input, the full range of acceptable values, missing or extra inputs, syntax, consistency across related fields, and conformance to business rules. As an example of business rule logic, "boat" may be syntactically valid because it only contains alphanumeric characters, but it is not valid if the input is only expected to contain colors such as "red" or "blue."
+                  Do not rely exclusively on looking for malicious or malformed inputs.  This is likely to miss at least one undesirable input, especially if the code's environment changes. This can give attackers enough room to bypass the intended validation. However, denylists can be useful for detecting potential attacks or determining which inputs are so malformed that they should be rejected outright.
+- Run time: Run time policy enforcement may be used in an allowlist fashion to prevent use of any non-sanctioned commands.
+- Assign permissions that prevent the user from accessing/opening privileged files.
+================================= Tool Message =================================
+Name: search_advisories
+
+--- CWE-89 ---
+CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')
+
+The product constructs all or part of an SQL command using externally-influenced input from an upstream component, but it does not neutralize or incorrectly neutralizes special elements that could modify the intended SQL command when it is sent to a downstream component. Without sufficient removal or quoting of SQL syntax in user-controllable inputs, the generated SQL query can cause those inputs to be interpreted as SQL instead of ordinary user data.
+
+Consequences:
+- Adversaries could execute system commands, typically by changing the SQL statement to redirect output to a file that can then be executed.
+- Since SQL databases generally hold sensitive data, loss of confidentiality is a frequent problem with SQL injection vulnerabilities.
+- If poor SQL commands are used to check user names and passwords or perform other kinds of authentication, it may be possible to connect to the product as another user with no previous knowledge of the password.
+- If authorization information is held in a SQL database, it may be possible to change this information through the successful exploitation of a SQL injection vulnerability.
+- Just as it may be possible to read sensitive information, it is also possible to modify or even delete this information with a SQL injection attack.
+
+Mitigations:
+- Use a vetted library or framework that does not allow this weakness to occur or provides constructs that make this weakness easier to avoid [REF-1482].
+                  For example, consider using persistence layers such as Hibernate or Enterprise Java Beans, which can provide significant protection against SQL injection if used properly.
+- If available, use structured mechanisms that automatically enforce the separation between data and code. These mechanisms may be able to provide the relevant quoting, encoding, and validation automatically, instead of relying on the developer to provide this capability at every point where output is generated.
+                  Process SQL queries using prepared statements, parameterized queries, or stored procedures. These features should accept parameters or variables and support strong typing. Do not dynamically construct and execute query strings within these features using "exec" or similar functionality, since this may re-introduce the possibility of SQL injection. [REF-867]
+- Run your code using the lowest privileges that are required to accomplish the necessary tasks [REF-76]. If possible, create isolated accounts with limited privileges that are only used for a single task. That way, a successful attack will not immediately give the attacker access to the rest of the software or its environment. For example, database applications rarely need to run as the database administrator, especially in day-to-day operations.
+                  Specifically, follow the principle of least privilege when creating user accounts to a SQL database. The database users should only have the minimum privileges necessary to use their account. If the requirements of the system indicate that a user can read and modify their own data, then limit their privileges so they cannot read/write others' data. Use the strictest permissions possible on all database objects, such as execute-only for stored procedures.
+- For any security checks that are performed on the client side, ensure that these checks are duplicated on the server side, in order to avoid CWE-602. Attackers can bypass the client-side checks by modifying values after the checks have been performed, or by changing the client to remove the client-side checks entirely. Then, these modified values would be submitted to the server.
+- While it is risky to use dynamically-generated query strings, code, or commands that mix control and data together, sometimes it may be unavoidable. Properly quote arguments and escape any special characters within those arguments. The most conservative approach is to escape or filter all characters that do not pass an extremely strict allowlist (such as everything that is not alphanumeric or white space). If some special characters are still needed, such as white space, wrap each argument in quotes after the escaping/filtering step. Be careful of argument injection (CWE-88).
+                  Instead of building a new implementation, such features may be available in the database or programming language. For example, the Oracle DBMS_ASSERT package can check or enforce that parameters have certain properties that make them less vulnerable to SQL injection. For MySQL, the mysql_real_escape_string() API function is available in both C and PHP.
+- Assume all input is malicious. Use an "accept known good" input validation strategy, i.e., use a list of acceptable inputs that strictly conform to specifications. Reject any input that does not strictly conform to specifications, or transform it into something that does.
+                  When performing input validation, consider all potentially relevant properties, including length, type of input, the full range of acceptable values, missing or extra inputs, syntax, consistency across related fields, and conformance to business rules. As an example of business rule logic, "boat" may be syntactically valid because it only contains alphanumeric characters, but it is not valid if the input is only expected to contain colors such as "red" or "blue."
+                  Do not rely exclusively on looking for malicious or malformed inputs.  This is likely to miss at least one undesirable input, especially if the code's environment changes. This can give attackers enough room to bypass the intended validation. However, denylists can be useful for detecting potential attacks or determining which inputs are so malformed that they should be rejected outright.
+                  When constructing SQL query strings, use stringent allowlists that limit the character set based on the expected value of the parameter in the request. This will indirectly limit the scope of an attack, but this technique is less important than proper output encoding and escaping.
+                  Note that proper output encoding, escaping, and quoting is the most effective solution for preventing SQL injection, although input validation may provide some defense-in-depth. This is because it effectively limits what will appear in output. Input validation will not always prevent SQL injection, especially if you are required to support free-form text fields that could contain arbitrary characters. For example, the name "O'Reilly" would likely pass the validation step, since it is a common last name in the English language. However, it cannot be directly inserted into the database because it contains the "'" apostrophe character, which would need to be escaped or otherwise handled. In this case, stripping the apostrophe might reduce the risk of SQL injection, but it would produce incorrect behavior because the wrong name would be recorded.
+                  When feasible, it may be safest to disallow meta-characters entirely, instead of escaping them. This will provide some defense in depth. After the data is entered into the database, later processes may neglect to escape meta-characters before use, and you may not have control over those processes.
+- When the set of acceptable objects, such as filenames or URLs, is limited or known, create a mapping from a set of fixed input values (such as numeric IDs) to the actual filenames or URLs, and reject all other inputs.
+- Ensure that error messages only contain minimal details that are useful to the intended audience and no one else. The messages need to strike the balance between being too cryptic (which can confuse users) or being too detailed (which may reveal more than intended). The messages should not reveal the methods that were used to determine the error. Attackers can use detailed information to refine or optimize their 
+
+--- CWE-138 ---
+CWE-138: Improper Neutralization of Special Elements
+
+The product receives input from an upstream component, but it does not neutralize or incorrectly neutralizes special elements that could be interpreted as control elements or syntactic markers when they are sent to a downstream component.
+
+Most languages and protocols have their own special elements such as characters and reserved words. These special elements can carry control implications. If product does not prevent external control or influence over the inclusion of such special elements, the control flow of the program may be altered from what was intended. For example, both Unix and Windows interpret the symbol < ("less than") as meaning "read input from a file".
+
+Mitigations:
+- Developers should anticipate that special elements (e.g. delimiters, symbols) will be injected into input vectors of their product. One defense is to create an allowlist (e.g. a regular expression) that defines valid input according to the requirements specifications. Strictly filter any input that does not match against the allowlist. Properly encode your output, and quote any elements that have special meaning to the component with which you are communicating.
+- Assume all input is malicious. Use an "accept known good" input validation strategy, i.e., use a list of acceptable inputs that strictly conform to specifications. Reject any input that does not strictly conform to specifications, or transform it into something that does.
+                  When performing input validation, consider all potentially relevant properties, including length, type of input, the full range of acceptable values, missing or extra inputs, syntax, consistency across related fields, and conformance to business rules. As an example of business rule logic, "boat" may be syntactically valid because it only contains alphanumeric characters, but it is not valid if the input is only expected to contain colors such as "red" or "blue."
+                  Do not rely exclusively on looking for malicious or malformed inputs.  This is likely to miss at least one undesirable input, especially if the code's environment changes. This can give attackers enough room to bypass the intended validation. However, denylists can be useful for detecting potential attacks or determining which inputs are so malformed that they should be rejected outright.
+- Use and specify an appropriate output encoding to ensure that the special elements are well-defined. A normal byte sequence in one encoding could be a special element in another.
+- Inputs should be decoded and canonicalized to the application's current internal representation before being validated (CWE-180). Make sure that the application does not decode the same input twice (CWE-174). Such errors could be used to bypass allowlist validation schemes by introducing dangerous inputs after they have been checked.
+- While it is risky to use dynamically-generated query strings, code, or commands that mix control and data together, sometimes it may be unavoidable. Properly quote arguments and escape any special characters within those arguments. The most conservative approach is to escape or filter all characters that do not pass an extremely strict allowlist (such as everything that is not alphanumeric or white space). If some special characters are still needed, such as white space, wrap each argument in quotes after the escaping/filtering step. Be careful of argument injection (CWE-88).
+
+--- CWE-78 ---
+CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')
+
+The product constructs all or part of an OS command using externally-influenced input from an upstream component, but it does not neutralize or incorrectly neutralizes special elements that could modify the intended OS command when it is sent to a downstream component.
+
+This weakness can lead to a vulnerability in environments in which the attacker does not have direct access to the operating system, such as in web applications. Alternately, if the weakness occurs in a privileged program, it could allow the attacker to specify commands that normally would not be accessible, or to call alternate commands with privileges that the attacker does not have. The problem is exacerbated if the compromised process does not follow the principle of least privilege, because the attacker-controlled commands may run with special system privileges that increases the amount of damage.
+            There are at least two subtypes of OS command injection:
+               
+				 The application intends to execute a single, fixed program that is under its own control. It intends to use externally-supplied inputs as arguments to that program. For example, the program might use system("nslookup [HOSTNAME]") to run nslookup and allow the user to supply a HOSTNAME, which is used as an argument. Attackers cannot prevent nslookup from executing. However, if the program does not remove command separators from the HOSTNAME argument, attackers could place the separators into the arguments, which allows them to execute their own program after nslookup has finished executing.
+				 The application accepts an input that it uses to fully select which program to run, as well as which commands to use. The application simply redirects this entire command to the operating system. For example, the program might use "exec([COMMAND])" to execute the [COMMAND] that was supplied by the user. If the COMMAND is under attacker control, then the attacker can execute arbitrary commands or programs. If the command is being executed using functions like exec() and CreateProcess(), the attacker might not be able to combine multiple commands together in the same line.
+               
+            From a weakness standpoint, these variants represent distinct programmer errors. In the first variant, the programmer clearly intends that input from untrusted parties will be part of the arguments in the command to be executed. In the second variant, the programmer does not intend for the command to be accessible to any untrusted party, but the programmer probably has not accounted for alternate ways in which malicious attackers can provide input.
+
+Consequences:
+- Attackers could execute unauthorized operating system commands, which could then be used to disable the product, or read and modify data for which the attacker does not have permissions to access directly. Since the targeted application is directly executing the commands instead of the attacker, any malicious activities may appear to come from the application or the application's owner.
+
+Mitigations:
+- If at all possible, use library calls rather than external processes to recreate the desired functionality.
+- Run the code in a "jail" or similar sandbox environment that enforces strict boundaries between the process and the operating system. This may effectively restrict which files can be accessed in a particular directory or which commands can be executed by the software.
+                  OS-level examples include the Unix chroot jail, AppArmor, and SELinux. In general, managed code may provide some protection. For example, java.io.FilePermission in the Java SecurityManager allows the software to specify restrictions on file operations.
+                  This may not be a feasible solution, and it only limits the impact to the operating system; the rest of the application may still be subject to compromise.
+                  Be careful to avoid CWE-243 and other weaknesses related to jails.
+- For any data that will be used to generate a command to be executed, keep as much of that data out of external control as possible. For example, in web applications, this may require storing the data locally in the session's state instead of sending it out to the client in a hidden form field.
+- For any security checks that are performed on the client side, ensure that these checks are duplicated on the server side, in order to avoid CWE-602. Attackers can bypass the client-side checks by modifying values after the checks have been performed, or by changing the client to remove the client-side checks entirely. Then, these modified values would be submitted to the server.
+- Use a vetted library or framework that does not allow this weakness to occur or provides constructs that make this weakness easier to avoid.
+                  For example, consider using the ESAPI Encoding control [REF-45] or a similar tool, library, or framework. These will help the programmer encode outputs in a manner less prone to error.
+- While it is risky to use dynamically-generated query strings, code, or commands that mix control and data together, sometimes it may be unavoidable. Properly quote arguments and escape any special characters within those arguments. The most conservative approach is to escape or filter all characters that do not pass an extremely strict allowlist (such as everything that is not alphanumeric or white space). If some special characters are still needed, such as white space, wrap each argument in quotes after the escaping/filtering step. Be careful of argument injection (CWE-88).
+- If the program to be executed allows arguments to be specified within an input file or from standard input, then consider using that mode to pass arguments instead of the command line.
+- If available, use structured mechanisms that automatically enforce the separation between data and code. These mechanisms may be able to provide the relevant quoting, encoding, and validation automatically, instead of relying on the developer to provide this capability at every point where output is generated.
+                  Some languages offer multiple functions that can be used to invoke commands. Where possible, identify any function that invokes a command shell using a single string, and replace it with a function that requires individual arguments. These functions typically perform appropriate quoting and filtering of arguments. For example, in C, the system() function accepts a string that contains the entire command to be executed, whereas execl(), execve(), and others require an array of strings, one for each argument. In Windows, CreateProcess() only accepts one command at a time. In Perl, if system() is provided with an array of arguments, then it will quote each of the arguments.
+- Assume all input is malicious. Use an "accept known good" input validation strategy, i.e., use a list of acceptable inputs that strictly conform to specifications. Reject any input that does not strictly conform to specifications, or transform it into something that does.
+                  When performing input validation, consider all potentially relevant properties, including length, type of input, the full range of acceptable values, missing or extra inputs, syntax, consistency across related fields, and conformance to business rules. As an example of business rule logic, "boat" may be syntactically valid because it only contains alphanumeric characters, but it is not valid if the input is only expected to contain colors such as "red" or "blue."
+                  Do not rely exclusively on looking for malicious or malformed inputs.  This is likely to miss at least one undesirable input, especially if the code's environment changes. This can give attackers enough room to bypass the intended validation. However, denylists can be useful for detecting potential attacks or determining which inputs are so ma
+================================= Tool Message =================================
+Name: search_advisories
+
+--- GHSA-2vj5-px25-gjrp ---
+pytorch-lightning is vulnerable to Deserialization of Untrusted Data
+
+pytorch-lightning is vulnerable to Deserialization of Untrusted Data.
+
+--- GHSA-3cwm-7jmm-774w ---
+Deserialization of Untrusted Data in Beaker
+
+The Beaker library through 1.11.0 for Python is affected by deserialization of untrusted data, which could lead to arbitrary code execution.
+
+--- GHSA-3863-2447-669p ---
+transformers has a Deserialization of Untrusted Data vulnerability
+
+Deserialization of Untrusted Data in GitHub repository huggingface/transformers prior to 4.36.0.
+================================= Tool Message =================================
+Name: search_advisories
+
+--- CWE-96 ---
+CWE-96: Improper Neutralization of Directives in Statically Saved Code ('Static Code Injection')
+
+The product receives input from an upstream component, but it does not neutralize or incorrectly neutralizes code syntax before inserting the input into an executable resource, such as a library, configuration file, or template.
+
+Consequences:
+- The injected code could access restricted data / files.
+- In some cases, injectable code controls authentication; this may lead to a remote vulnerability.
+- Injected code can access resources that the attacker is directly prevented from accessing.
+- Code injection attacks can lead to loss of data integrity in nearly all cases as the control-plane data injected is always incidental to data recall or writing. Additionally, code injection can often result in the execution of arbitrary code.
+- Often the actions performed by injected control code are unlogged.
+
+Mitigations:
+- Assume all input is malicious. Use an "accept known good" input validation strategy, i.e., use a list of acceptable inputs that strictly conform to specifications. Reject any input that does not strictly conform to specifications, or transform it into something that does.
+                  When performing input validation, consider all potentially relevant properties, including length, type of input, the full range of acceptable values, missing or extra inputs, syntax, consistency across related fields, and conformance to business rules. As an example of business rule logic, "boat" may be syntactically valid because it only contains alphanumeric characters, but it is not valid if the input is only expected to contain colors such as "red" or "blue."
+                  Do not rely exclusively on looking for malicious or malformed inputs.  This is likely to miss at least one undesirable input, especially if the code's environment changes. This can give attackers enough room to bypass the intended validation. However, denylists can be useful for detecting potential attacks or determining which inputs are so malformed that they should be rejected outright.
+- Perform proper output validation and escaping to neutralize all code syntax from data written to code files.
+
+--- CWE-95 ---
+CWE-95: Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection')
+
+The product receives input from an upstream component, but it does not neutralize or incorrectly neutralizes code syntax before using the input in a dynamic evaluation call (e.g. "eval").
+
+Consequences:
+- The injected code could access restricted data / files.
+- In some cases, injectable code controls authentication; this may lead to a remote vulnerability.
+- Injected code can access resources that the attacker is directly prevented from accessing.
+- Code injection attacks can lead to loss of data integrity in nearly all cases as the control-plane data injected is always incidental to data recall or writing. Additionally, code injection can often result in the execution of arbitrary code or at least modify what code can be executed.
+- Often the actions performed by injected control code are unlogged.
+
+Mitigations:
+- If possible, refactor your code so that it does not need to use eval() at all.
+- Assume all input is malicious. Use an "accept known good" input validation strategy, i.e., use a list of acceptable inputs that strictly conform to specifications. Reject any input that does not strictly conform to specifications, or transform it into something that does.
+                  When performing input validation, consider all potentially relevant properties, including length, type of input, the full range of acceptable values, missing or extra inputs, syntax, consistency across related fields, and conformance to business rules. As an example of business rule logic, "boat" may be syntactically valid because it only contains alphanumeric characters, but it is not valid if the input is only expected to contain colors such as "red" or "blue."
+                  Do not rely exclusively on looking for malicious or malformed inputs.  This is likely to miss at least one undesirable input, especially if the code's environment changes. This can give attackers enough room to bypass the intended validation. However, denylists can be useful for detecting potential attacks or determining which inputs are so malformed that they should be rejected outright.
+- Inputs should be decoded and canonicalized to the application's current internal representation before being validated (CWE-180, CWE-181). Make sure that your application does not inadvertently decode the same input twice (CWE-174). Such errors could be used to bypass allowlist schemes by introducing dangerous inputs after they have been checked. Use libraries such as the OWASP ESAPI Canonicalization control.
+                  Consider performing repeated canonicalization until your input does not change any more. This will avoid double-decoding and similar scenarios, but it might inadvertently modify inputs that are allowed to contain properly-encoded dangerous content.
+- For Python programs, it is frequently encouraged to use the ast.literal_eval() function instead of eval, since it is intentionally designed to avoid executing code. However, an adversary could still cause excessive memory or stack consumption via deeply nested structures [REF-1372], so the python documentation discourages use of ast.literal_eval() on untrusted data [REF-1373].
+
+--- CWE-154 ---
+CWE-154: Improper Neutralization of Variable Name Delimiters
+
+The product receives input from an upstream component, but it does not neutralize or incorrectly neutralizes special elements that could be interpreted as variable name delimiters when they are sent to a downstream component.
+
+As data is parsed, an injected delimiter may cause the process to take unexpected actions that result in an attack. Example: "$" for an environment variable.
+
+Mitigations:
+- Developers should anticipate that variable name delimiters will be injected/removed/manipulated in the input vectors of their product. Use an appropriate combination of denylists and allowlists to ensure only valid, expected and appropriate input is processed by the system.
+- Assume all input is malicious. Use an "accept known good" input validation strategy, i.e., use a list of acceptable inputs that strictly conform to specifications. Reject any input that does not strictly conform to specifications, or transform it into something that does.
+                  When performing input validation, consider all potentially relevant properties, including length, type of input, the full range of acceptable values, missing or extra inputs, syntax, consistency across related fields, and conformance to business rules. As an example of business rule logic, "boat" may be syntactically valid because it only contains alphanumeric characters, but it is not valid if the input is only expected to contain colors such as "red" or "blue."
+                  Do not rely exclusively on looking for malicious or malformed inputs.  This is likely to miss at least one undesirable input, especially if the code's environment changes. This can give attackers enough room to bypass the intended validation. However, denylists can be useful for detecting potential attacks or determining which inputs are so malformed that they should be rejected outright.
+- While it is risky to use dynamically-generated query strings, code, or commands that mix control and data together, sometimes it may be unavoidable. Properly quote arguments and escape any special characters within those arguments. The most conservative approach is to escape or filter all characters that do not pass an extremely strict allowlist (such as everything that is not alphanumeric or white space). If some special characters are still needed, such as white space, wrap each argument in quotes after the escaping/filtering step. Be careful of argument injection (CWE-88).
+- Inputs should be decoded and canonicalized to the application's current internal representation before being validated (CWE-180). Make sure that the application does not decode the same input twice (CWE-174). Such errors could be used to bypass allowlist validation schemes by introducing dangerous inputs after they have been checked.
+================================= Tool Message =================================
+Name: search_advisories
+
+--- GHSA-32r8-54hf-c9p3 ---
+unstructured XML External Entity (XXE)
+
+unstructured v.0.14.2 and before is vulnerable to XML External Entity (XXE) via the XMLParser.
+
+--- GHSA-432c-wxpg-m4q3 ---
+xml2rfc has file inclusion irregularities
+
+Version [3.12.0](https://github.com/ietf-tools/xml2rfc/blob/main/CHANGELOG.md#3120---2021-12-08) changed `xml2rfc` so that it would not access local files without the presence of its new `--allow-local-file-access` flag.
+This prevented XML External Entity (XXE) injection attacks with `xinclude` and XML entity references.
+
+It was discovered that `xml2rfc` does not respect `--allow-local-file-access` when a local file is specified as `src` in `artwork` or `sourcecode` elements. Furthermore, XML entity references can include any file inside the source dir and below without using the `--allow-local-file-access` flag. 
+
+The `xml2rfc <= 3.26.0` behaviour:
+
+|  | `xinclude` | XML entity reference | `artwork src=` | `sourcecode src=` |
+|---|---|---|---|---|
+| without `--allow-local-file-access` flag | No filesystem access | Any file in xml2rfc templates dir and below, any file in source directory and below | Access source directory and below | Access source directory and below |
+| with `--allow-local-file-access` flag | Access any file on filesystem[^1] | Access any file on filesystem[^1] | Access source directory and below | Access source directory and below | Access source directory and below |
+
+  [^1]: Access any file of the filesystem with the permissions of the user running `xml2rfc` can access.
+
+### Impact
+
+Anyone running `xml2rfc` as a service that accepts input from external users is impacted by this issue.
+Specifying a file in `src` attribute in `artwork` or `sourcecode` elements will cause the contents of that file to appear in xml2rfc’s output results.
+But that file has to be inside the same directory as the XML input source file.
+For `artwork` and `sourcecode`, `xml2rfc` will not look above the source file directory.
+
+### The proposed new behaviour
+- Generalize file access checks.
+- Only allow access to files within src dir and below. (xml entity include can access templates dir).
+- Always allow access to `templates_dir` for XML entity includes.
+
+New behaviour:
+
+|  | `xinclude` | XML entity reference | `artwork src=` | `sourcecode src=` |
+|---|---|---|---|---|
+| without `--allow-local-file-access` flag | No filesystem access | No filesystem access _(except for `templates_dir`)_ | No filesystem access | No filesystem access |
+| with `--allow-local-file-access` flag | Access source directory and below | Access source directory and below _(Can access`templates_dir`)._ | Access source directory and below | Access source directory and below |
+
+### Workarounds
+
+Use a secure temporary directory to process un-trusted XML files, and do not reuse it for processing other XML documents.
+
+--- CWE-91 ---
+CWE-91: XML Injection (aka Blind XPath Injection)
+
+The product does not properly neutralize special elements that are used in XML, allowing attackers to modify the syntax, content, or commands of the XML before it is processed by an end system.
+
+Within XML, special elements could include reserved words or characters such as "<", ">", """, and "&", which could then be used to add new data or modify XML syntax.
+
+Mitigations:
+- Assume all input is malicious. Use an "accept known good" input validation strategy, i.e., use a list of acceptable inputs that strictly conform to specifications. Reject any input that does not strictly conform to specifications, or transform it into something that does.
+                  When performing input validation, consider all potentially relevant properties, including length, type of input, the full range of acceptable values, missing or extra inputs, syntax, consistency across related fields, and conformance to business rules. As an example of business rule logic, "boat" may be syntactically valid because it only contains alphanumeric characters, but it is not valid if the input is only expected to contain colors such as "red" or "blue."
+                  Do not rely exclusively on looking for malicious or malformed inputs.  This is likely to miss at least one undesirable input, especially if the code's environment changes. This can give attackers enough room to bypass the intended validation. However, denylists can be useful for detecting potential attacks or determining which inputs are so malformed that they should be rejected outright.
+================================= Tool Message =================================
+Name: search_advisories
+
+--- GHSA-2g59-m95p-pgfq ---
+Chainlit contain a server-side request forgery (SSRF) vulnerability
+
+Chainlit versions prior to 2.9.4 contain a server-side request forgery (SSRF) vulnerability in the /project/element update flow when configured with the SQLAlchemy data layer backend. An authenticated client can provide a user-controlled url value in an Element, which is fetched by the SQLAlchemy element creation logic using an outbound HTTP GET request. This allows an attacker to make arbitrary HTTP requests from the Chainlit server to internal network services or cloud metadata endpoints and store the retrieved responses via the configured storage provider.
+
+--- GHSA-38rv-5jqc-m2cv ---
+Recurly vulnerable to SSRF
+
+The Recurly Client Python Library before 2.0.5, 2.1.16, 2.2.22, 2.3.1, 2.4.5, 2.5.1, 2.6.2 is vulnerable to a Server-Side Request Forgery vulnerability in the `Resource.get` method that could result in compromise of API keys or other critical resources.
+
+--- GHSA-34mr-6q8x-g9r6 ---
+Server-Side Request Forgery in mindsdb
+
+### Impact
+
+The put method in `mindsdb/mindsdb/api/http/namespaces/file.py` does not validate the user-controlled URL in the source variable and uses it to create arbitrary requests on line 115, which allows Server-side request forgery (SSRF). This issue may lead to Information Disclosure. The SSRF allows for forging arbitrary network requests from the MindsDB server. It can be used to scan nodes in internal networks for open ports that may not be accessible externally, as well as scan for existing files on the internal network. It allows for retrieving files with csv, xls, xlsx, json or parquet extensions, which will be viewable via MindsDB GUI. For any other existing files, it is a blind SSRF.
+ 
+### Patches
+
+Use mindsdb staging branch or v23.11.4.1
+
+### References
+
+* GHSL-2023-182
+[SSRF prevention cheatsheet](https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html).
+================================= Tool Message =================================
+Name: search_advisories
+
+--- CWE-98 ---
+CWE-98: Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion')
+
+The PHP application receives input from an upstream component, but it does not restrict or incorrectly restricts the input before its usage in "require," "include," or similar functions.
+
+In certain versions and configurations of PHP, this can allow an attacker to specify a URL to a remote location from which the product will obtain the code to execute. In other cases in association with path traversal, the attacker can specify a local file that may contain executable statements that can be parsed by PHP.
+
+Consequences:
+- The attacker may be able to specify arbitrary code to be executed from a remote location. Alternatively, it may be possible to use normal program behavior to insert php code into files on the local machine which can then be included and force the code to execute since php ignores everything in the file except for the content between php specifiers.
+
+Mitigations:
+- Use a vetted library or framework that does not allow this weakness to occur or provides constructs that make this weakness easier to avoid [REF-1482].
+- When the set of acceptable objects, such as filenames or URLs, is limited or known, create a mapping from a set of fixed input values (such as numeric IDs) to the actual filenames or URLs, and reject all other inputs.
+                  For example, ID 1 could map to "inbox.txt" and ID 2 could map to "profile.txt". Features such as the ESAPI AccessReferenceMap [REF-185] provide this capability.
+- For any security checks that are performed on the client side, ensure that these checks are duplicated on the server side, in order to avoid CWE-602. Attackers can bypass the client-side checks by modifying values after the checks have been performed, or by changing the client to remove the client-side checks entirely. Then, these modified values would be submitted to the server.
+- Run the code in a "jail" or similar sandbox environment that enforces strict boundaries between the process and the operating system. This may effectively restrict which files can be accessed in a particular directory or which commands can be executed by the software.
+                  OS-level examples include the Unix chroot jail, AppArmor, and SELinux. In general, managed code may provide some protection. For example, java.io.FilePermission in the Java SecurityManager allows the software to specify restrictions on file operations.
+                  This may not be a feasible solution, and it only limits the impact to the operating system; the rest of the application may still be subject to compromise.
+                  Be careful to avoid CWE-243 and other weaknesses related to jails.
+- Run your code using the lowest privileges that are required to accomplish the necessary tasks [REF-76]. If possible, create isolated accounts with limited privileges that are only used for a single task. That way, a successful attack will not immediately give the attacker access to the rest of the software or its environment. For example, database applications rarely need to run as the database administrator, especially in day-to-day operations.
+- Assume all input is malicious. Use an "accept known good" input validation strategy, i.e., use a list of acceptable inputs that strictly conform to specifications. Reject any input that does not strictly conform to specifications, or transform it into something that does.
+                  When performing input validation, consider all potentially relevant properties, including length, type of input, the full range of acceptable values, missing or extra inputs, syntax, consistency across related fields, and conformance to business rules. As an example of business rule logic, "boat" may be syntactically valid because it only contains alphanumeric characters, but it is not valid if the input is only expected to contain colors such as "red" or "blue."
+                  Do not rely exclusively on looking for malicious or malformed inputs.  This is likely to miss at least one undesirable input, especially if the code's environment changes. This can give attackers enough room to bypass the intended validation. However, denylists can be useful for detecting potential attacks or determining which inputs are so malformed that they should be rejected outright.
+                  When validating filenames, use stringent lists that limit the character set to be used. If feasible, only allow a single "." character in the filename to avoid weaknesses such as CWE-23, and exclude directory separators such as "/" to avoid CWE-36. Use a list of allowable file extensions, which will help to avoid CWE-434.
+                  Do not rely exclusively on a filtering mechanism that removes potentially dangerous characters. This is equivalent to a denylist, which may be incomplete (CWE-184). For example, filtering "/" is insufficient protection if the filesystem also supports the use of "\" as a directory separator. Another possible error could occur when the filtering is applied in a way that still produces dangerous data (CWE-182). For example, if "../" sequences are removed from the ".../...//" string in a sequential fashion, two instances of "../" would be removed from the original string, but the remaining characters would still form the "../" string.
+- Store library, include, and utility files outside of the web document root, if possible. Otherwise, store them in a separate directory and use the web server's access control capabilities to prevent attackers from directly requesting them. One common practice is to define a fixed constant in each calling program, then check for the existence of the constant in the library/include file; if the constant does not exist, then the file was directly requested, and it can exit immediately.
+                  This significantly reduces the chance of an attacker being able to bypass any protection mechanisms that are in the base program but not in the include files. It will also reduce the attack surface.
+- Understand all the potential areas where untrusted inputs can enter your software: parameters or arguments, cookies, anything read from the network, environment variables, reverse DNS lookups, query results, request headers, URL components, e-mail, files, filenames, databases, and any external systems that provide data to the application. Remember that such inputs may be obtained indirectly through API calls.
+                  Many file inclusion problems occur because the programmer assumed that certain inputs could not be modified, especially for cookies and URL components.
+- Use an application firewall that can detect attacks against this weakness. It can be beneficial in cases in which the code cannot be fixed (because it is controlled by a third party), as an emergency prevention measure while more comprehensive software assurance measures are applied, or to provide defense in depth [REF-1481].
+- Develop and run your code in the most recent versions of PHP available, preferably PHP 6 or later. Many of the highly risky features in earlier PHP interpreters have been removed, restricted, or disabled by default.
+- When using PHP, configure the application so that it does not use register_globals. During implementation, develop the application so that it does not rely on this feature, but be wary of implementing a register_globals emulation that is subject to weaknesses such as CWE-95, CWE-621, and similar issues.
+                  Often, programmers do not protect direct access to files intended only to be included by core programs. These include files may assume that critical variables have already been initialized by the calling program. As a result, the use of register_globals combined with the ability to directly access the include file may allow attackers to conduct file inclusion attacks. This remains an extremely common pattern as of 2009.
+- Set allow_url_fopen to false, which limits
+
+--- CWE-73 ---
+CWE-73: External Control of File Name or Path
+
+The product allows user input to control or influence paths or file names that are used in filesystem operations.
+
+This could allow an attacker to access or modify system files or other files that are critical to the application.
+            Path manipulation errors occur when the following two conditions are met:
+            
+               1. An attacker can specify a path used in an operation on the filesystem.
+               2. By specifying the resource, the attacker gains a capability that would not otherwise be permitted.
+            
+            For example, the program may give the attacker the ability to overwrite the specified file or run with a configuration controlled by the attacker.
+
+Consequences:
+- The application can operate on unexpected files. Confidentiality is violated when the targeted filename is not directly readable by the attacker.
+- The application can operate on unexpected files. This may violate integrity if the filename is written to, or if the filename is for a program or other form of executable code.
+- The application can operate on unexpected files. Availability can be violated if the attacker specifies an unexpected file that the application modifies. Availability can also be affected if the attacker specifies a filename for a large file, or points to a special device or a file that does not have the format that the application expects.
+
+Mitigations:
+- When the set of filenames is limited or known, create a mapping from a set of fixed input values (such as numeric IDs) to the actual filenames, and reject all other inputs. For example, ID 1 could map to "inbox.txt" and ID 2 could map to "profile.txt". Features such as the ESAPI AccessReferenceMap provide this capability.
+- Run your code in a "jail" or similar sandbox environment that enforces strict boundaries between the process and the operating system. This may effectively restrict all access to files within a particular directory.
+                  Examples include the Unix chroot jail and AppArmor. In general, managed code may provide some protection.
+                  This may not be a feasible solution, and it only limits the impact to the operating system; the rest of your application may still be subject to compromise.
+                  Be careful to avoid CWE-243 and other weaknesses related to jails.
+- For any security checks that are performed on the client side, ensure that these checks are duplicated on the server side, in order to avoid CWE-602. Attackers can bypass the client-side checks by modifying values after the checks have been performed, or by changing the client to remove the client-side checks entirely. Then, these modified values would be submitted to the server.
+- Assume all input is malicious. Use an "accept known good" input validation strategy, i.e., use a list of acceptable inputs that strictly conform to specifications. Reject any input that does not strictly conform to specifications, or transform it into something that does.
+                  When performing input validation, consider all potentially relevant properties, including length, type of input, the full range of acceptable values, missing or extra inputs, syntax, consistency across related fields, and conformance to business rules. As an example of business rule logic, "boat" may be syntactically valid because it only contains alphanumeric characters, but it is not valid if the input is only expected to contain colors such as "red" or "blue."
+                  Do not rely exclusively on looking for malicious or malformed inputs.  This is likely to miss at least one undesirable input, especially if the code's environment changes. This can give attackers enough room to bypass the intended validation. However, denylists can be useful for detecting potential attacks or determining which inputs are so malformed that they should be rejected outright.
+                  When validating filenames, use stringent allowlists that limit the character set to be used. If feasible, only allow a single "." character in the filename to avoid weaknesses such as CWE-23, and exclude directory separators such as "/" to avoid CWE-36. Use a list of allowable file extensions, which will help to avoid CWE-434.
+                  Do not rely exclusively on a filtering mechanism that removes potentially dangerous characters. This is equivalent to a denylist, which may be incomplete (CWE-184). For example, filtering "/" is insufficient protection if the filesystem also supports the use of "\" as a directory separator. Another possible error could occur when the filtering is applied in a way that still produces dangerous data (CWE-182). For example, if "../" sequences are removed from the ".../...//" string in a sequential fashion, two instances of "../" would be removed from the original string, but the remaining characters would still form the "../" string.
+- Use a built-in path canonicalization function (such as realpath() in C) that produces the canonical version of the pathname, which effectively removes ".." sequences and symbolic links (CWE-23, CWE-59).
+- Use OS-level permissions and run as a low-privileged user to limit the scope of any successful attack.
+- If you are using PHP, configure your application so that it does not use register_globals. During implementation, develop your application so that it does not rely on this feature, but be wary of implementing a register_globals emulation that is subject to weaknesses such as CWE-95, CWE-621, and similar issues.
+- Use tools and techniques that require manual (human) analysis, such as penetration testing, threat modeling, and interactive tools that allow the tester to record and modify an active session. These may be more effective than strictly automated techniques. This is especially the case with weaknesses that are related to design and business rules.
+
+--- GHSA-432c-wxpg-m4q3 ---
+xml2rfc has file inclusion irregularities
+
+Version [3.12.0](https://github.com/ietf-tools/xml2rfc/blob/main/CHANGELOG.md#3120---2021-12-08) changed `xml2rfc` so that it would not access local files without the presence of its new `--allow-local-file-access` flag.
+This prevented XML External Entity (XXE) injection attacks with `xinclude` and XML entity references.
+
+It was discovered that `xml2rfc` does not respect `--allow-local-file-access` when a local file is specified as `src` in `artwork` or `sourcecode` elements. Furthermore, XML entity references can include any file inside the source dir and below without using the `--allow-local-file-access` flag. 
+
+The `xml2rfc <= 3.26.0` behaviour:
+
+|  | `xinclude` | XML entity reference | `artwork src=` | `sourcecode src=` |
+|---|---|---|---|---|
+| without `--allow-local-file-access` flag | No filesystem access | Any file in xml2rfc templates dir and below, any file in source directory and below | Access source directory and below | Access source directory and below |
+| with `--allow-local-file-access` flag | Access any file on filesystem[^1] | Access any file on filesystem[^1] | Access source directory and below | Access source directory and below | Access source directory and below |
+
+  [^1]: Access any file of the filesystem with the permissions of the user running `xml2rfc` can access.
+
+### Impact
+
+Anyone running `xml2rfc` as a service that accepts input from external users is impacted by this issue.
+Specifying a file in `src` attribute in `artwork` or `sourcecode` elements will cause the contents of that file to appear in xml2rfc’s output results.
+But that file has to be inside the same directory as the XML input source file.
+For `artwork` and `sourcecode`, `xml2rfc` will not look above the source file directory.
+
+### The proposed new behaviour
+- Generalize file access checks.
+- Only allow access to files within src dir and below. (xml entity include can access templates dir).
+- Always allow access to `templates_dir` for XML entity includes.
+
+New behaviour:
+
+|  | `xinclude` | XML entity reference | `artwork src=` | `sourcecode src=` |
+|---|---|---|---|---|
+| without `--allow-local-file-access` flag | No filesystem access | No filesystem access _(except for `templates_dir`)_ | No filesystem access | No filesystem access |
+| with `--allow-local-file-access` flag | Access source directory and below | Access source directory and below _(Can access`templates_dir`)._ | Access source directory and below | Access source directory and below |
+
+### Workarounds
+
+Use a secure temporary directory to process un-trusted XML files, and do not reuse it for processing other XML documents.
+================================== Ai Message ==================================
+
+[]
+Tool Calls:
+  search_code (cbed0dc1-e48e-4cb1-b102-ebfb86aa6993)
+ Call ID: cbed0dc1-e48e-4cb1-b102-ebfb86aa6993
+  Args:
+    k: 6
+    query: SECRET API_KEY PASSWORD TOKEN password secret key token
+    repo: cve_agent/demo
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:app.py:54-56 (FunctionDef import_session_route) ---
+def import_session_route():
+    session = import_session(request.data)
+    return jsonify({"restored": str(session)})
+
+--- cve_agent/demo:app.py:47-49 (FunctionDef config_route) ---
+def config_route():
+    cfg = load_config(request.data)
+    return jsonify({"status": "ok", "config": cfg})
+
+--- cve_agent/demo:template.py:11-20 (FunctionDef render_profile) ---
+def render_profile(username, bio):
+    source = f"""
+    <html>
+      <body>
+        <h1>Profile: {username}</h1>
+        <div class="bio">{bio}</div>
+      </body>
+    </html>
+    """
+    return Template(source).render()
+
+--- cve_agent/demo:app.py:26-28 (FunctionDef search_route) ---
+def search_route():
+    name = request.args.get("name", "")
+    return jsonify(search_users(name))
+
+--- cve_agent/demo:app.py:40-42 (FunctionDef profile_route) ---
+def profile_route(username):
+    bio = request.args.get("bio", "")
+    return render_profile(username, bio)
+
+--- cve_agent/demo:app.py:61-62 (FunctionDef feed_route) ---
+def feed_route():
+    return jsonify(parse_feed(request.data))
+================================== Ai Message ==================================
+
+[{'type': 'text', 'text': 'Here is the exhaustive security audit report for the `cve_agent/demo` repository based on the identified code patterns and declared dependencies.\n\n### CONFIRMED\n\n**1. CVE-2017-18342 / CVE-2020-14343 (Unsafe YAML Deserialization)**\n* **Package:** `pyyaml==3.13`\n* **Location:** `cve_agent/demo/deserialize.py:14-15` & `cve_agent/demo/deserialize.py:19-20`\n* **Snippet:** \n  ```python\n  def load_config(raw_bytes):\n      return yaml.load(raw_bytes)\n  \n  def load_config_full(raw_bytes):\n      return yaml.load(raw_bytes, Loader=yaml.FullLoader)\n  ```\n* **Fix:** Upgrade `pyyaml` to `>=5.4`. Replace `yaml.load(raw_bytes)` and `yaml.FullLoader` with `yaml.safe_load(raw_bytes)` or use `Loader=yaml.SafeLoader` to prevent arbitrary code execution via Python object instantiation.\n\n**2. CVE-2018-18074 (Insufficiently Protected Credentials in Requests)**\n* **Package:** `requests==2.19.0`\n* **Location:** `cve_agent/demo/xml_parser.py:21-23`\n* **Snippet:** \n  ```python\n  def fetch_and_parse(url):\n      resp = requests.get(url, verify=False)\n  ```\n* **Fix:** Upgrade the `requests` library to `>=2.20.0` to prevent HTTP `Authorization` headers from being forwarded upon cross-origin HTTPS-to-HTTP redirects. \n\n---\n\n### LIKELY\n\n**1. CWE-78: Improper Neutralization of Special Elements used in an OS Command (Command Injection)**\n* **Location:** `cve_agent/demo/shell.py:25-27`\n* **Snippet:** `subprocess.Popen("tail -n 50 " + path, shell=True, stdout=subprocess.PIPE)`\n* **Fix:** Use `shell=False` and pass arguments as a list: `subprocess.Popen(["tail", "-n", "50", path], stdout=subprocess.PIPE)`.\n\n**2. CWE-78: Improper Neutralization of Special Elements used in an OS Command (Command Injection)**\n* **Location:** `cve_agent/demo/shell.py:11-16`\n* **Snippet:** `subprocess.check_output(f"ping -c 1 {host}", shell=True, ...)`\n* **Fix:** Remove `shell=True` and pass as a list: `subprocess.check_output(["ping", "-c", "1", host], ...)`. Also, strictly validate `host` against alphanumeric characters/valid IP formats.\n\n**3. CWE-78: Improper Neutralization of Special Elements used in an OS Command (Command Injection)**\n* **Location:** `cve_agent/demo/shell.py:20-21`\n* **Snippet:** `os.system(f"systemctl status {service_name}")`\n* **Fix:** Replace `os.system` with `subprocess.run(["systemctl", "status", service_name], check=True)`.\n\n**4. CWE-89: Improper Neutralization of Special Elements used in an SQL Command (SQL Injection)**\n* **Location:** `cve_agent/demo/db.py:20-23`\n* **Snippet:** `cur.execute("SELECT id, name FROM users WHERE name LIKE \'%" + name + "%\'")`\n* **Fix:** Use parameterized queries: `cur.execute("SELECT id, name FROM users WHERE name LIKE ?", (f"%{name}%",))`\n\n**5. CWE-89: Improper Neutralization of Special Elements used in an SQL Command (SQL Injection)**\n* **Location:** `cve_agent/demo/db.py:12-16`\n* **Snippet:** `cur.execute(f"SELECT id, name, email FROM users WHERE id = {user_id}")`\n* **Fix:** Use parameterized database queries: `cur.execute("SELECT id, name, email FROM users WHERE id = ?", (user_id,))`.\n\n**6. CWE-502: Deserialization of Untrusted Data**\n* **Location:** `cve_agent/demo/deserialize.py:25-26`\n* **Snippet:** `return pickle.loads(raw_bytes)`\n* **Fix:** Do not use `pickle` for untrusted session data. Switch to a secure serialization format such as `json`.\n\n**7. CWE-611: Improper Restriction of XML External Entity Reference (\'XXE\')**\n* **Location:** `cve_agent/demo/xml_parser.py:12-14`\n* **Snippet:** `root = etree.fromstring(raw_bytes, parser=_unsafe_parser)`\n* **Fix:** Implement safe XML parsing with the `defusedxml` package, or ensure that the custom `_unsafe_parser` explicitly sets `resolve_entities=False` to block XXE attacks.\n\n**8. CWE-918: Server-Side Request Forgery (SSRF) / CWE-295: Improper Certificate Validation**\n* **Location:** `cve_agent/demo/xml_parser.py:21-23`\n* **Snippet:** `resp = requests.get(url, verify=False)`\n* **Fix:** Validate the incoming `url` parameter against an explicit allowlist of authorized hostnames. Remove `verify=False` to enforce strict TLS verification.\n\n**9. CWE-94 / CWE-96: Server-Side Template Injection (SSTI)**\n* **Location:** `cve_agent/demo/template.py:11-20`\n* **Snippet:** \n  ```python\n  source = f"""...<h1>Profile: {username}</h1>..."""\n  return Template(source).render()\n  ```\n* **Fix:** Avoid embedding string variables into Jinja templates directly. Provide them as context variables: `Template("...<h1>Profile: {{ username }}</h1>...").render(username=username)`.\n\n**10. CWE-94 / CWE-96: Server-Side Template Injection (SSTI)**\n* **Location:** `cve_agent/demo/app.py:67-69`\n* **Snippet:** `return render_template_string(f"<h1>Hello {name}</h1>")`\n* **Fix:** Supply input as a context argument: `render_template_string("<h1>Hello {{ name }}</h1>", name=name)`.\n\n**11. CWE-79: Improper Neutralization of Input During Web Page Generation (\'XSS\')**\n* **Location:** `cve_agent/demo/template.py:27-29`\n* **Snippet:** `tmpl = _env.from_string("<div><strong>{{ author }}</strong>: {{ comment | safe }}</div>")`\n* **Fix:** The `| safe` filter suppresses automatic context-aware escaping. Remove `| safe` so the payload gets safely HTML-escaped.\n\n---\n\n### UNREACHED\n*(Dependencies with known vulnerabilities, but no direct evidence of exploitation logic was found in the examined codebase.)*\n\n* **flask==0.12.2** (High Severity): Vulnerable to CVE-2018-1000656, CVE-2019-1010083, CVE-2023-30861. Missing specific conditions, such as incorrect JSON encodings creating memory exhaustion or a cache/session proxy overlap.\n* **werkzeug==0.14.1** (High Severity): Vulnerable to CVE-2019-14806, CVE-2023-46136, CVE-2024-34069. APIs like `safe_join()` or the interactive Werkzeug debugger are not visibly utilized.\n* **jinja2==2.10** (High Severity): Vulnerable to CVE-2019-10906, CVE-2020-28493, CVE-2024-22195. No explicit usage of `str.format_map` sandbox breakouts or `xmlattr` filtering found.\n* **urllib3==1.24.1** (Medium Severity): Vulnerable to CVE-2018-25091, CVE-2019-11324. Dependency present but explicitly vulnerable components unutilized natively.\n* **lxml==4.6.0** (Medium Severity): Vulnerable to CVE-2020-27783, CVE-2021-28957. The vulnerable `lxml.html.clean` XSS sanitizer is not imported or employed.\n* **pycrypto==2.6.1** (High Severity): Vulnerable to CVE-2013-7459 (Buffer Overflow). Exists in `requirements.txt` but no associated imports are present in the source base.\n* **pillow==5.3.0** (High Severity): Vulnerable to CVE-2023-50447, CVE-2021-34552. Declared in requirements, but no usage of `PIL` or `Image` handling was detected.', 'extras': {'signature': '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'}}]

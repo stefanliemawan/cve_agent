@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 from langchain.agents import create_agent
 from langchain_core.tools import tool
 from langchain_groq import ChatGroq
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_mongodb import MongoDBAtlasVectorSearch
 from langchain_voyageai import VoyageAIEmbeddings
 from pymongo import MongoClient
@@ -172,16 +173,14 @@ Approach:
 6. Before reporting a finding, verify the retrieved code chunk *actually demonstrates*
    the pattern. `search_code` returns approximate matches — if the chunk doesn't
    contain the dangerous call, drop it. Do not flag imports, comments, or docstrings.
-7. Report three buckets:
-     CONFIRMED — known CVE in a dep AND a reachable call site in this repo.
-                 Include CVE id, package, file:line, snippet, fix.
-     LIKELY    — novel pattern from step 4 with code evidence.
-                 Include CWE id (from search_advisories cross-ref), file:line,
-                 snippet, fix.
-     UNREACHED — CVE present in deps but no call site found in code.
-                 Include CVE id, package, severity. Lower priority.
-   Be exhaustive: list every finding you have evidence for. Brevity in the prose
-   is fine, but do not omit findings to save tokens.
+7. Structure your final output strictly as a highly readable Markdown document:
+   - Use a brief introduction summarizing the scan.
+   - Use Markdown tables for each bucket (CONFIRMED, LIKELY, UNREACHED).
+     - For CONFIRMED/LIKELY tables, include columns: `ID` (CVE/CWE), `Severity/Package`, `File:Line`, `Vulnerability Snippet` (inline code), and `Recommended Fix`.
+     - For UNREACHED tables, include columns: `CVE ID`, `Package`, `Severity`, `Summary`.
+   - If a snippet is too long for a table, provide a very concise summary instead.
+   - Ensure the markdown is visually clean, concise, and professional.
+   Be exhaustive: list every finding you have evidence for, but format it cleanly in the tables.
 """
 
 
@@ -201,6 +200,11 @@ Approach:
 #         max_output_tokens=16384,
 #     )
 
+#     # model = ChatGroq(
+#     #     model=os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile"),
+#     #     groq_api_key=os.environ["GROQ_API_KEY"],
+#     # )
+
 #     agent = create_agent(
 #         model=model,
 #         tools=[search_code, list_dependencies, lookup_cve, search_advisories],
@@ -215,53 +219,58 @@ Approach:
 #     for message in result["messages"]:
 #         message.pretty_print()
 
-def main() -> None:
-    result = invoke("cve_agent/demo")
-    print("\n" + "=" * 60)
-    print(f"SECURITY AUDIT REPORT — {result['owner_repo']}")
-    print("=" * 60)
-    print(result["report"])
+# def main() -> None:
+#     result = invoke("cve_agent/demo")
+#     print("\n" + "=" * 60)
+#     print(f"SECURITY AUDIT REPORT — {result['owner_repo']}")
+#     print("=" * 60)
+#     print(result["report"])
 
-def invoke(owner_repo: str) -> dict:
-    """Invoke the agent to audit a repository.
+# def invoke(owner_repo: str) -> dict:
+#     """Invoke the agent to audit a repository.
     
-    Args:
-        owner_repo: GitHub repository in owner/repo format
+#     Args:
+#         owner_repo: GitHub repository in owner/repo format
         
-    Returns:
-        dict with 'owner_repo' and 'report' keys
-    """
-    model = ChatGroq(
-        model=os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile"),
-        groq_api_key=os.environ["GROQ_API_KEY"],
-    )
+#     Returns:
+#         dict with 'owner_repo' and 'report' keys
+#     """
+#     model = ChatGoogleGenerativeAI(
+#         model=os.getenv("GEMINI_MODEL", "gemini-2.5-flash"),
+#         google_api_key=os.environ["GOOGLE_API_KEY"],
+#         max_output_tokens=16384,
+#     )
+#     # model = ChatGroq(
+#     #     model=os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile"),
+#     #     groq_api_key=os.environ["GROQ_API_KEY"],
+#     # )
 
-    agent = create_agent(
-        model=model,
-        tools=[search_code, list_dependencies, lookup_cve, search_advisories],
-        system_prompt=SYSTEM_PROMPT,
-    )
+#     agent = create_agent(
+#         model=model,
+#         tools=[search_code, list_dependencies, lookup_cve, search_advisories],
+#         system_prompt=SYSTEM_PROMPT,
+#     )
 
-    user_msg = (
-        f"Audit the repository '{owner_repo}'. "
-        "Focus on injection, unsafe deserialization, and hardcoded secrets."
-    )
-    result = agent.invoke({"messages": [{"role": "user", "content": user_msg}]})
+#     user_msg = (
+#         f"Audit the repository '{owner_repo}'. "
+#         "Focus on injection, unsafe deserialization, and hardcoded secrets."
+#     )
+#     result = agent.invoke({"messages": [{"role": "user", "content": user_msg}]})
 
-    messages = result.get("messages", [])
-    report = next(
-        (
-            m.content
-            for m in reversed(messages)
-            if hasattr(m, "type") and m.type == "ai"
-        ),
-        "No report generated.",
-    )
+#     messages = result.get("messages", [])
+#     report = next(
+#         (
+#             m.content
+#             for m in reversed(messages)
+#             if hasattr(m, "type") and m.type == "ai"
+#         ),
+#         "No report generated.",
+#     )
 
-    return {
-        "owner_repo": owner_repo,
-        "report": report,
-    }
+#     return {
+#         "owner_repo": owner_repo,
+#         "report": report,
+#     }
 
 if __name__ == "__main__":
     main()

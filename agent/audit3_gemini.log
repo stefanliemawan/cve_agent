@@ -1,0 +1,1273 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+================================ Human Message =================================
+
+Audit the repo 'cve_agent/demo' for Python security vulnerabilities. Focus on injection, unsafe deserialization, hardcoded secrets, and known CVEs in dependencies.
+================================== Ai Message ==================================
+Tool Calls:
+  list_dependencies (fe321d00-5d3c-4c78-b362-b5691280c515)
+ Call ID: fe321d00-5d3c-4c78-b362-b5691280c515
+  Args:
+    repo: cve_agent/demo
+================================= Tool Message =================================
+Name: list_dependencies
+
+flask==0.12.2 (PyPI)
+werkzeug==0.14.1 (PyPI)
+jinja2==2.10 (PyPI)
+pyyaml==3.13 (PyPI)
+requests==2.19.0 (PyPI)
+urllib3==1.24.1 (PyPI)
+lxml==4.6.0 (PyPI)
+pycrypto==2.6.1 (PyPI)
+pillow==5.3.0 (PyPI)
+================================== Ai Message ==================================
+Tool Calls:
+  lookup_cve (6d88bf64-40ad-43f0-b03d-fddd5d82d650)
+ Call ID: 6d88bf64-40ad-43f0-b03d-fddd5d82d650
+  Args:
+    ecosystem: PyPI
+    version: 0.12.2
+    package: flask
+  lookup_cve (954e95f1-a20a-4376-99a6-eeab23a91cf7)
+ Call ID: 954e95f1-a20a-4376-99a6-eeab23a91cf7
+  Args:
+    package: werkzeug
+    ecosystem: PyPI
+    version: 0.14.1
+  lookup_cve (5d3123c4-8755-4958-aa2e-dd563bbb4de3)
+ Call ID: 5d3123c4-8755-4958-aa2e-dd563bbb4de3
+  Args:
+    version: 2.10
+    ecosystem: PyPI
+    package: jinja2
+  lookup_cve (5fc85185-444d-41a8-a5fb-83c7cb2d97d1)
+ Call ID: 5fc85185-444d-41a8-a5fb-83c7cb2d97d1
+  Args:
+    version: 3.13
+    ecosystem: PyPI
+    package: pyyaml
+  lookup_cve (c07fd4c0-bc43-4b76-988f-1f91dc7a48bf)
+ Call ID: c07fd4c0-bc43-4b76-988f-1f91dc7a48bf
+  Args:
+    ecosystem: PyPI
+    version: 2.19.0
+    package: requests
+  lookup_cve (aae48c0d-a480-4f27-b2d7-4c703abdc314)
+ Call ID: aae48c0d-a480-4f27-b2d7-4c703abdc314
+  Args:
+    package: urllib3
+    ecosystem: PyPI
+    version: 1.24.1
+  lookup_cve (6b716a7a-7fd5-4222-8c99-b384dd61080a)
+ Call ID: 6b716a7a-7fd5-4222-8c99-b384dd61080a
+  Args:
+    package: lxml
+    version: 4.6.0
+    ecosystem: PyPI
+  lookup_cve (64a253b7-1e20-4de6-8dbf-8abcec805124)
+ Call ID: 64a253b7-1e20-4de6-8dbf-8abcec805124
+  Args:
+    package: pycrypto
+    version: 2.6.1
+    ecosystem: PyPI
+  lookup_cve (5e6c8f2a-c874-4085-9b07-56c8fe9995ee)
+ Call ID: 5e6c8f2a-c874-4085-9b07-56c8fe9995ee
+  Args:
+    package: pillow
+    version: 5.3.0
+    ecosystem: PyPI
+================================= Tool Message =================================
+Name: lookup_cve
+
+GHSA-562c-5r94-xh97, CVE-2018-1000656, PYSEC-2018-66 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H]
+Flask is vulnerable to Denial of Service via incorrect encoding of JSON data
+
+GHSA-5wv5-4vpf-pj6m, CVE-2019-1010083, PYSEC-2019-179 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H]
+Pallets Project Flask is vulnerable to Denial of Service via Unexpected memory usage
+
+GHSA-68rp-wp8r-4726, CVE-2026-27205 [CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:P/VC:L/VI:N/VA:N/SC:N/SI:N/SA:N]
+Flask session does not add `Vary: Cookie` header when accessed in some ways
+
+GHSA-m2qf-hxjv-5gpq, CVE-2023-30861, PYSEC-2023-62 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N]
+Flask vulnerable to possible disclosure of permanent session cookie due to missing Vary: Cookie header
+
+PYSEC-2018-66, CVE-2018-1000656, GHSA-562c-5r94-xh97 []
+The Pallets Project flask version Before 0.12.3 contains a CWE-20: Improper Input Validation vulnerability in flask that can result in Large amount of memory usage possibly leading to denial of service. This attack appear to be exploitable via Attacker provides JSON data in incorrect encoding. This vulnerability appears to have been fixed in 0.12.3. NOTE: this may overlap CVE-2019-1010083.
+
+PYSEC-2019-179, CVE-2019-1010083, GHSA-5wv5-4vpf-pj6m []
+The Pallets Project Flask before 1.0 is affected by: unexpected memory usage. The impact is: denial of service. The attack vector is: crafted encoded JSON data. The fixed version is: 1. NOTE: this may overlap CVE-2018-1000656.
+
+PYSEC-2023-62, CVE-2023-30861, GHSA-m2qf-hxjv-5gpq []
+Flask is a lightweight WSGI web application framework. When all of the following conditions are met, a response containing data intended for one client may be cached and subsequently sent by the proxy to other clients. If the proxy also caches `Set-Cookie` headers, it may send one client's `session` cookie to other clients. The severity depends on the application's use of the session and the proxy
+================================= Tool Message =================================
+Name: lookup_cve
+
+GHSA-29vq-49wr-vm6x, CVE-2026-27199 [CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:N/VI:N/VA:L/SC:N/SI:N/SA:N]
+ Werkzeug safe_join() allows Windows special device names
+
+GHSA-2g68-c3qc-8985, CVE-2024-34069 [CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H]
+Werkzeug debugger vulnerable to remote execution when interacting with attacker controlled domain
+
+GHSA-87hc-h4r5-73f7, CVE-2026-21860 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L]
+ Werkzeug safe_join() allows Windows special device names with compound extensions
+
+GHSA-f9vj-2wh5-fj8j, CVE-2024-49766 [CVSS:4.0/AV:N/AC:H/AT:N/PR:N/UI:N/VC:L/VI:N/VA:N/SC:N/SI:N/SA:N]
+Werkzeug safe_join not safe on Windows
+
+GHSA-gq9m-qvpx-68hc, CVE-2019-14806, PYSEC-2019-140 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N]
+Pallets Werkzeug Insufficient Entropy
+
+GHSA-hgf8-39gv-g3f2, CVE-2025-66221 [CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:N/VI:N/VA:L/SC:N/SI:N/SA:N]
+Werkzeug safe_join() allows Windows special device names
+
+GHSA-hrfv-mqp8-q5rw, CVE-2023-46136, PYSEC-2023-221 [CVSS:3.1/AV:A/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H]
+Werkzeug DoS: High resource usage when parsing multipart/form-data containing a large part with CR/LF character at the beginning
+
+GHSA-j544-7q9p-6xp8, CVE-2019-14322 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N]
+Pallets Werkzeug vulnerable to Path Traversal
+
+GHSA-px8h-6qxv-m22q, CVE-2023-23934, PYSEC-2023-57 [CVSS:3.1/AV:A/AC:H/PR:N/UI:R/S:U/C:N/I:L/A:N]
+Incorrect parsing of nameless cookies leads to __Host- cookies bypass
+
+GHSA-q34m-jh98-gwm2, CVE-2024-49767 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H]
+Werkzeug possible resource exhaustion when parsing file data in forms
+================================= Tool Message =================================
+Name: lookup_cve
+
+GHSA-462w-v97r-4m45, CVE-2019-10906, PYSEC-2019-217 [CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:N/A:N]
+Jinja2 sandbox escape via string formatting
+
+GHSA-cpwx-vrp4-4pq7, CVE-2025-27516 [CVSS:4.0/AV:L/AC:L/AT:P/PR:L/UI:P/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N]
+Jinja2 vulnerable to sandbox breakout through attr filter selecting format method
+
+GHSA-g3rq-g295-4j3m, CVE-2020-28493, PYSEC-2021-66, SNYK-PYTHON-JINJA2-1012994 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L]
+Regular Expression Denial of Service (ReDoS) in Jinja2
+
+GHSA-h5c8-rqwp-cp95, CVE-2024-22195 [CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:L/I:L/A:N]
+Jinja vulnerable to HTML attribute injection when passing user input as keys to xmlattr filter
+
+GHSA-h75v-3vvj-5mfj, CVE-2024-34064 [CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:L/I:L/A:N]
+Jinja vulnerable to HTML attribute injection when passing user input as keys to xmlattr filter
+
+GHSA-q2x7-8rv6-6q7h, CVE-2024-56326 [CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H]
+Jinja has a sandbox breakout through indirect reference to format method
+
+PYSEC-2019-217, CVE-2019-10906, GHSA-462w-v97r-4m45 []
+In Pallets Jinja before 2.10.1, str.format_map allows a sandbox escape.
+
+PYSEC-2021-66, CVE-2020-28493, GHSA-g3rq-g295-4j3m, SNYK-PYTHON-JINJA2-1012994 []
+This affects the package jinja2 from 0.0.0 and before 2.11.3. The ReDoS vulnerability is mainly due to the `_punctuation_re regex` operator and its use of multiple wildcards. The last wildcard is the most exploitable as it searches for trailing punctuation. This issue can be mitigated by Markdown to format user content instead of the urlize filter, or by implementing request timeouts and limiting 
+================================= Tool Message =================================
+Name: lookup_cve
+
+GHSA-8q59-q68h-6hv4, CVE-2020-14343, PYSEC-2021-142 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H]
+Improper Input Validation in PyYAML
+
+GHSA-rprw-h62v-c2w7, CVE-2017-18342, PYSEC-2018-49 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H]
+PyYAML insecurely deserializes YAML strings leading to arbitrary code execution
+
+PYSEC-2018-49, CVE-2017-18342, GHSA-rprw-h62v-c2w7 []
+In PyYAML before 5.1, the yaml.load() API could execute arbitrary code if used with untrusted data. The load() function has been deprecated in version 5.1 and the 'UnsafeLoader' has been introduced for backward compatibility with the function.
+
+PYSEC-2021-142, CVE-2020-14343, GHSA-8q59-q68h-6hv4 []
+A vulnerability was discovered in the PyYAML library in versions before 5.4, where it is susceptible to arbitrary code execution when it processes untrusted YAML files through the full_load method or with the FullLoader loader. Applications that use the library to process untrusted input may be vulnerable to this flaw. This flaw allows an attacker to execute arbitrary code on the system by abusing
+================================= Tool Message =================================
+Name: lookup_cve
+
+GHSA-9hjg-9r4m-mvj7, CVE-2024-47081 [CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:N/A:N]
+Requests vulnerable to .netrc credentials leak via malicious URLs
+
+GHSA-9wx4-h78v-vm56, CVE-2024-35195 [CVSS:3.1/AV:L/AC:H/PR:H/UI:R/S:U/C:H/I:H/A:N]
+Requests `Session` object does not verify requests after making first request with verify=False
+
+GHSA-gc5v-m9x4-r6x2, CVE-2026-25645 [CVSS:3.1/AV:L/AC:H/PR:L/UI:R/S:U/C:N/I:H/A:N]
+Requests has Insecure Temp File Reuse in its extract_zipped_paths() utility function
+
+GHSA-j8r2-6x86-q33q, CVE-2023-32681, PYSEC-2023-74 [CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:C/C:H/I:N/A:N]
+Unintended leak of Proxy-Authorization header in requests
+
+GHSA-x84v-xcm2-53pg, CVE-2018-18074, PYSEC-2018-28 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N]
+Insufficiently Protected Credentials in Requests
+
+PYSEC-2018-28, CVE-2018-18074, GHSA-x84v-xcm2-53pg []
+The Requests package before 2.20.0 for Python sends an HTTP Authorization header to an http URI upon receiving a same-hostname https-to-http redirect, which makes it easier for remote attackers to discover credentials by sniffing the network.
+
+PYSEC-2023-74, CVE-2023-32681, GHSA-j8r2-6x86-q33q []
+Requests is a HTTP library. Since Requests 2.3.0, Requests has been leaking Proxy-Authorization headers to destination servers when redirected to an HTTPS endpoint. This is a product of how we use `rebuild_proxies` to reattach the `Proxy-Authorization` header to requests. For HTTP connections sent through the tunnel, the proxy will identify the header in the request itself and remove it prior to f
+================================= Tool Message =================================
+Name: lookup_cve
+
+GHSA-2xpw-w6gg-jr37, CVE-2025-66471 [CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:N/VI:N/VA:H/SC:N/SI:N/SA:H]
+urllib3 streaming API improperly handles highly compressed data
+
+GHSA-34jh-p97f-mpxf, CVE-2024-37891 [CVSS:3.1/AV:N/AC:H/PR:H/UI:N/S:U/C:H/I:N/A:N]
+urllib3's Proxy-Authorization request header isn't stripped during cross-origin redirects
+
+GHSA-38jv-5279-wg99, CVE-2026-21441 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H]
+Decompression-bomb safeguards bypassed when following HTTP redirects (streaming API)
+
+GHSA-g4mx-q9vg-27p4, CVE-2023-45803, PYSEC-2023-212 [CVSS:3.1/AV:A/AC:H/PR:H/UI:N/S:U/C:H/I:N/A:N]
+urllib3's request body not stripped after redirect from 303 status changes request method to GET
+
+GHSA-gm62-xv2j-4w53, CVE-2025-66418 [CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:N/VI:N/VA:H/SC:N/SI:N/SA:H]
+urllib3 allows an unbounded number of links in the decompression chain
+
+GHSA-gwvm-45gx-3cf8, CVE-2018-25091, PYSEC-2023-207 [CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N]
+Authorization Header forwarded on redirect
+
+GHSA-mh33-7rrq-662w, CVE-2019-11324, PYSEC-2019-133 [CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N]
+Improper Certificate Validation in urllib3
+
+GHSA-pq67-6m6q-mj2v, CVE-2025-50181 [CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:U/C:H/I:N/A:N]
+urllib3 redirects are not disabled when retries are disabled on PoolManager instantiation
+
+GHSA-r64q-w8jr-g9qp, CVE-2019-11236, PYSEC-2019-132 [CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N]
+Improper Neutralization of CRLF Sequences in urllib3 library for Python
+
+GHSA-v845-jxx5-vc9f, CVE-2023-43804, PYSEC-2023-192 [CVSS:3.1/AV:N/AC:H/PR:H/UI:N/S:U/C:H/I:H/A:N]
+`Cookie` HTTP header isn't stripped on cross-origin redirects
+================================= Tool Message =================================
+Name: lookup_cve
+
+GHSA-55x5-fj6c-h6m8, CVE-2021-43818, PYSEC-2021-852 [CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:H/A:N]
+lxml's HTML Cleaner allows crafted and SVG embedded scripts to pass through
+
+GHSA-jq4v-f5q6-mjqq, CVE-2021-28957, PYSEC-2021-19 [CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N]
+lxml vulnerable to Cross-Site Scripting 
+
+GHSA-pgww-xf46-h92r, CVE-2020-27783, PYSEC-2020-62 [CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N]
+lxml vulnerable to Cross-site Scripting
+
+GHSA-vfmq-68hx-4jfw, CVE-2026-41066 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N]
+lxml: Default configuration of iterparse() and ETCompatXMLParser() allows XXE to local files
+
+GHSA-wrxv-2j5q-m38w, CVE-2022-2309, PYSEC-2022-230 [CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L]
+lxml NULL Pointer Dereference allows attackers to cause a denial of service
+
+PYSEC-2020-62, CVE-2020-27783, GHSA-pgww-xf46-h92r []
+A XSS vulnerability was discovered in python-lxml's clean module. The module's parser didn't properly imitate browsers, which caused different behaviors between the sanitizer and the user's page. A remote attacker could exploit this flaw to run arbitrary HTML/JS code.
+
+PYSEC-2021-19, CVE-2021-28957, GHSA-jq4v-f5q6-mjqq []
+An XSS vulnerability was discovered in python-lxml's clean module versions before 4.6.3. When disabling the safe_attrs_only and forms arguments, the Cleaner class does not remove the formaction attribute allowing for JS to bypass the sanitizer. A remote attacker could exploit this flaw to run arbitrary JS code on users who interact with incorrectly sanitized HTML. This issue is patched in lxml 4.6
+
+PYSEC-2021-852, CVE-2021-43818, GHSA-55x5-fj6c-h6m8 []
+lxml is a library for processing XML and HTML in the Python language. Prior to version 4.6.5, the HTML Cleaner in lxml.html lets certain crafted script content pass through, as well as script content in SVG files embedded using data URIs. Users that employ the HTML cleaner in a security relevant context should upgrade to lxml 4.6.5 to receive a patch. There are no known workarounds available.
+
+PYSEC-2022-230, CVE-2022-2309, GHSA-wrxv-2j5q-m38w []
+NULL Pointer Dereference allows attackers to cause a denial of service (or application crash). This only applies when lxml is used together with libxml2 2.9.10 through 2.9.14. libxml2 2.9.9 and earlier are not affected. It allows triggering crashes through forged input data, given a vulnerable code sequence in the application. The vulnerability is caused by the iterwalk function (also used by the 
+================================= Tool Message =================================
+Name: lookup_cve
+
+GHSA-6528-wvf6-f6qg, CVE-2018-6594, PYSEC-2018-97 [CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N]
+Pycrypto generates weak key parameters
+
+GHSA-cq27-v7xp-c356, CVE-2013-7459, PYSEC-2017-94 [CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H]
+Buffer Overflow in pycrypto
+
+PYSEC-2017-94, CVE-2013-7459, GHSA-cq27-v7xp-c356 []
+Heap-based buffer overflow in the ALGnew function in block_templace.c in Python Cryptography Toolkit (aka pycrypto) allows remote attackers to execute arbitrary code as demonstrated by a crafted iv parameter to cryptmsg.py.
+
+PYSEC-2018-97, CVE-2018-6594, GHSA-6528-wvf6-f6qg []
+lib/Crypto/PublicKey/ElGamal.py in PyCrypto through 2.6.1 generates weak ElGamal key parameters, which allows attackers to obtain sensitive information by reading ciphertext data (i.e., it does not have semantic security in face of a ciphertext-only attack). The Decisional Diffie-Hellman (DDH) assumption does not hold for PyCrypto's ElGamal implementation.
+================================= Tool Message =================================
+Name: lookup_cve
+
+GHSA-3f63-hfp8-52jq, BIT-pillow-2023-50447, CVE-2023-50447 [CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H]
+Arbitrary Code Execution in Pillow
+
+GHSA-3wvg-mj6g-m9cv, BIT-pillow-2021-27922, CVE-2021-27922, PYSEC-2021-41 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H]
+Pillow Uncontrolled Resource Consumption
+
+GHSA-3xv8-3j54-hgrp, BIT-pillow-2020-10378, CVE-2020-10378, PYSEC-2020-77 [CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:H/I:N/A:N]
+Out-of-bounds read in Pillow
+
+GHSA-43fq-w8qq-v88h, BIT-pillow-2020-11538, CVE-2020-11538, PYSEC-2020-80 [CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H]
+Out-of-bounds read in Pillow
+
+GHSA-44wm-f244-xhp3, BIT-pillow-2024-28219, CVE-2024-28219 [CVSS:3.1/AV:L/AC:H/PR:L/UI:R/S:U/C:H/I:H/A:H]
+Pillow buffer overflow vulnerability
+
+GHSA-4fx9-vc88-q2xc []
+Infinite loop in Pillow
+
+GHSA-57h3-9rgr-c24m, BIT-pillow-2021-25289, CVE-2021-25289, PYSEC-2021-35 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H]
+Out of bounds write in Pillow
+
+GHSA-5gm3-px64-rw72, CVE-2019-19911, PYSEC-2020-172 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H]
+Uncontrolled Resource Consumption in Pillow
+
+GHSA-7534-mm45-c74v, BIT-pillow-2021-34552, CVE-2021-34552, PYSEC-2021-331 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H]
+Buffer Overflow in Pillow
+
+GHSA-77gc-v2xv-rvvh, BIT-pillow-2021-25287, CVE-2021-25287, PYSEC-2021-137 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:H]
+Out-of-bounds Read in Pillow
+================================== Ai Message ==================================
+Tool Calls:
+  search_code (e4b0c299-6316-402d-91d1-1ef6ef333529)
+ Call ID: e4b0c299-6316-402d-91d1-1ef6ef333529
+  Args:
+    query: yaml.load or yaml.full_load
+    repo: cve_agent/demo
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:deserialize.py:19-20 (FunctionDef load_config_full) ---
+def load_config_full(raw_bytes):
+    return yaml.load(raw_bytes, Loader=yaml.FullLoader)
+
+--- cve_agent/demo:deserialize.py:14-15 (FunctionDef load_config) ---
+def load_config(raw_bytes):
+    return yaml.load(raw_bytes)
+
+--- cve_agent/demo:deserialize.py:25-26 (FunctionDef import_session) ---
+def import_session(raw_bytes):
+    return pickle.loads(raw_bytes)
+
+--- cve_agent/demo:app.py:47-49 (FunctionDef config_route) ---
+def config_route():
+    cfg = load_config(request.data)
+    return jsonify({"status": "ok", "config": cfg})
+
+--- cve_agent/demo:xml_parser.py:21-23 (FunctionDef fetch_and_parse) ---
+def fetch_and_parse(url):
+    resp = requests.get(url, verify=False)  # CVE-2018-18074 + TLS verify disabled
+    return parse_feed(resp.content)
+
+--- cve_agent/demo:xml_parser.py:12-14 (FunctionDef parse_feed) ---
+def parse_feed(raw_bytes):
+    root = etree.fromstring(raw_bytes, parser=_unsafe_parser)
+    return {child.tag: child.text for child in root}
+================================== Ai Message ==================================
+Tool Calls:
+  search_code (2c6f1bf6-700e-4f58-9c14-900804cc16a3)
+ Call ID: 2c6f1bf6-700e-4f58-9c14-900804cc16a3
+  Args:
+    repo: cve_agent/demo
+    query: werkzeug.utils.safe_join
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:template.py:27-29 (FunctionDef render_comment) ---
+def render_comment(author, comment):
+    tmpl = _env.from_string("<div><strong>{{ author }}</strong>: {{ comment | safe }}</div>")
+    return tmpl.render(author=author, comment=comment)
+
+--- cve_agent/demo:xml_parser.py:21-23 (FunctionDef fetch_and_parse) ---
+def fetch_and_parse(url):
+    resp = requests.get(url, verify=False)  # CVE-2018-18074 + TLS verify disabled
+    return parse_feed(resp.content)
+
+--- cve_agent/demo:app.py:26-28 (FunctionDef search_route) ---
+def search_route():
+    name = request.args.get("name", "")
+    return jsonify(search_users(name))
+
+--- cve_agent/demo:template.py:11-20 (FunctionDef render_profile) ---
+def render_profile(username, bio):
+    source = f"""
+    <html>
+      <body>
+        <h1>Profile: {username}</h1>
+        <div class="bio">{bio}</div>
+      </body>
+    </html>
+    """
+    return Template(source).render()
+
+--- cve_agent/demo:app.py:61-62 (FunctionDef feed_route) ---
+def feed_route():
+    return jsonify(parse_feed(request.data))
+
+--- cve_agent/demo:shell.py:25-27 (FunctionDef tail_log) ---
+def tail_log(path):
+    p = subprocess.Popen("tail -n 50 " + path, shell=True, stdout=subprocess.PIPE)
+    return p.communicate()[0]
+================================== Ai Message ==================================
+Tool Calls:
+  search_code (e0dbe5c0-0e5f-4140-9ff5-db30aff4469b)
+ Call ID: e0dbe5c0-0e5f-4140-9ff5-db30aff4469b
+  Args:
+    query: render_template_string
+    repo: cve_agent/demo
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:template.py:11-20 (FunctionDef render_profile) ---
+def render_profile(username, bio):
+    source = f"""
+    <html>
+      <body>
+        <h1>Profile: {username}</h1>
+        <div class="bio">{bio}</div>
+      </body>
+    </html>
+    """
+    return Template(source).render()
+
+--- cve_agent/demo:template.py:27-29 (FunctionDef render_comment) ---
+def render_comment(author, comment):
+    tmpl = _env.from_string("<div><strong>{{ author }}</strong>: {{ comment | safe }}</div>")
+    return tmpl.render(author=author, comment=comment)
+
+--- cve_agent/demo:app.py:67-69 (FunctionDef greet_route) ---
+def greet_route():
+    name = request.args.get("name", "guest")
+    return render_template_string(f"<h1>Hello {name}</h1>")
+
+--- cve_agent/demo:app.py:40-42 (FunctionDef profile_route) ---
+def profile_route(username):
+    bio = request.args.get("bio", "")
+    return render_profile(username, bio)
+
+--- cve_agent/demo:app.py:26-28 (FunctionDef search_route) ---
+def search_route():
+    name = request.args.get("name", "")
+    return jsonify(search_users(name))
+
+--- cve_agent/demo:shell.py:11-16 (FunctionDef run_diagnostic) ---
+def run_diagnostic(host):
+    return subprocess.check_output(
+        f"ping -c 1 {host}",
+        shell=True,
+        stderr=subprocess.STDOUT,
+    ).decode("utf-8", errors="replace")
+================================== Ai Message ==================================
+Tool Calls:
+  search_code (bb3b8495-40a3-4402-880a-ad4450d68632)
+ Call ID: bb3b8495-40a3-4402-880a-ad4450d68632
+  Args:
+    query: flask.request.get_json or flask.session
+    repo: cve_agent/demo
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:app.py:54-56 (FunctionDef import_session_route) ---
+def import_session_route():
+    session = import_session(request.data)
+    return jsonify({"restored": str(session)})
+
+--- cve_agent/demo:deserialize.py:25-26 (FunctionDef import_session) ---
+def import_session(raw_bytes):
+    return pickle.loads(raw_bytes)
+
+--- cve_agent/demo:app.py:61-62 (FunctionDef feed_route) ---
+def feed_route():
+    return jsonify(parse_feed(request.data))
+
+--- cve_agent/demo:app.py:47-49 (FunctionDef config_route) ---
+def config_route():
+    cfg = load_config(request.data)
+    return jsonify({"status": "ok", "config": cfg})
+
+--- cve_agent/demo:app.py:21-22 (FunctionDef user_route) ---
+def user_route(user_id):
+    return jsonify(get_user_by_id(user_id))
+
+--- cve_agent/demo:app.py:26-28 (FunctionDef search_route) ---
+def search_route():
+    name = request.args.get("name", "")
+    return jsonify(search_users(name))
+================================== Ai Message ==================================
+Tool Calls:
+  search_code (04daeade-f163-4fe3-a5fa-f0f0ae6da497)
+ Call ID: 04daeade-f163-4fe3-a5fa-f0f0ae6da497
+  Args:
+    query: requests.get or requests.post or requests.Session with verify=False
+    repo: cve_agent/demo
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:xml_parser.py:21-23 (FunctionDef fetch_and_parse) ---
+def fetch_and_parse(url):
+    resp = requests.get(url, verify=False)  # CVE-2018-18074 + TLS verify disabled
+    return parse_feed(resp.content)
+
+--- cve_agent/demo:app.py:33-35 (FunctionDef diagnostic_route) ---
+def diagnostic_route():
+    host = request.json.get("host", "")
+    return run_diagnostic(host)
+
+--- cve_agent/demo:app.py:54-56 (FunctionDef import_session_route) ---
+def import_session_route():
+    session = import_session(request.data)
+    return jsonify({"restored": str(session)})
+
+--- cve_agent/demo:deserialize.py:25-26 (FunctionDef import_session) ---
+def import_session(raw_bytes):
+    return pickle.loads(raw_bytes)
+
+--- cve_agent/demo:shell.py:11-16 (FunctionDef run_diagnostic) ---
+def run_diagnostic(host):
+    return subprocess.check_output(
+        f"ping -c 1 {host}",
+        shell=True,
+        stderr=subprocess.STDOUT,
+    ).decode("utf-8", errors="replace")
+
+--- cve_agent/demo:app.py:47-49 (FunctionDef config_route) ---
+def config_route():
+    cfg = load_config(request.data)
+    return jsonify({"status": "ok", "config": cfg})
+================================== Ai Message ==================================
+Tool Calls:
+  search_code (28eb6244-7cdd-44f8-bac5-536db41b4b6e)
+ Call ID: 28eb6244-7cdd-44f8-bac5-536db41b4b6e
+  Args:
+    query: urllib3.PoolManager with verify=False or cert_reqs='NONE'
+    repo: cve_agent/demo
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:xml_parser.py:21-23 (FunctionDef fetch_and_parse) ---
+def fetch_and_parse(url):
+    resp = requests.get(url, verify=False)  # CVE-2018-18074 + TLS verify disabled
+    return parse_feed(resp.content)
+
+--- cve_agent/demo:deserialize.py:19-20 (FunctionDef load_config_full) ---
+def load_config_full(raw_bytes):
+    return yaml.load(raw_bytes, Loader=yaml.FullLoader)
+
+--- cve_agent/demo:app.py:33-35 (FunctionDef diagnostic_route) ---
+def diagnostic_route():
+    host = request.json.get("host", "")
+    return run_diagnostic(host)
+
+--- cve_agent/demo:shell.py:11-16 (FunctionDef run_diagnostic) ---
+def run_diagnostic(host):
+    return subprocess.check_output(
+        f"ping -c 1 {host}",
+        shell=True,
+        stderr=subprocess.STDOUT,
+    ).decode("utf-8", errors="replace")
+
+--- cve_agent/demo:xml_parser.py:12-14 (FunctionDef parse_feed) ---
+def parse_feed(raw_bytes):
+    root = etree.fromstring(raw_bytes, parser=_unsafe_parser)
+    return {child.tag: child.text for child in root}
+
+--- cve_agent/demo:deserialize.py:25-26 (FunctionDef import_session) ---
+def import_session(raw_bytes):
+    return pickle.loads(raw_bytes)
+================================== Ai Message ==================================
+Tool Calls:
+  search_code (42b16324-ec1a-4177-86b6-bc59e23b7f1b)
+ Call ID: 42b16324-ec1a-4177-86b6-bc59e23b7f1b
+  Args:
+    query: lxml.etree.fromstring or lxml.html.clean.Cleaner or lxml.etree.iterparse or lxml.etree.ETCompatXMLParser
+    repo: cve_agent/demo
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:xml_parser.py:12-14 (FunctionDef parse_feed) ---
+def parse_feed(raw_bytes):
+    root = etree.fromstring(raw_bytes, parser=_unsafe_parser)
+    return {child.tag: child.text for child in root}
+
+--- cve_agent/demo:xml_parser.py:21-23 (FunctionDef fetch_and_parse) ---
+def fetch_and_parse(url):
+    resp = requests.get(url, verify=False)  # CVE-2018-18074 + TLS verify disabled
+    return parse_feed(resp.content)
+
+--- cve_agent/demo:app.py:61-62 (FunctionDef feed_route) ---
+def feed_route():
+    return jsonify(parse_feed(request.data))
+
+--- cve_agent/demo:deserialize.py:25-26 (FunctionDef import_session) ---
+def import_session(raw_bytes):
+    return pickle.loads(raw_bytes)
+
+--- cve_agent/demo:template.py:11-20 (FunctionDef render_profile) ---
+def render_profile(username, bio):
+    source = f"""
+    <html>
+      <body>
+        <h1>Profile: {username}</h1>
+        <div class="bio">{bio}</div>
+      </body>
+    </html>
+    """
+    return Template(source).render()
+
+--- cve_agent/demo:template.py:27-29 (FunctionDef render_comment) ---
+def render_comment(author, comment):
+    tmpl = _env.from_string("<div><strong>{{ author }}</strong>: {{ comment | safe }}</div>")
+    return tmpl.render(author=author, comment=comment)
+================================== Ai Message ==================================
+Tool Calls:
+  search_code (fcd2c654-01c2-449c-a148-dde541702a18)
+ Call ID: fcd2c654-01c2-449c-a148-dde541702a18
+  Args:
+    repo: cve_agent/demo
+    query: Crypto.PublicKey.ElGamal
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:deserialize.py:25-26 (FunctionDef import_session) ---
+def import_session(raw_bytes):
+    return pickle.loads(raw_bytes)
+
+--- cve_agent/demo:shell.py:25-27 (FunctionDef tail_log) ---
+def tail_log(path):
+    p = subprocess.Popen("tail -n 50 " + path, shell=True, stdout=subprocess.PIPE)
+    return p.communicate()[0]
+
+--- cve_agent/demo:deserialize.py:14-15 (FunctionDef load_config) ---
+def load_config(raw_bytes):
+    return yaml.load(raw_bytes)
+
+--- cve_agent/demo:shell.py:11-16 (FunctionDef run_diagnostic) ---
+def run_diagnostic(host):
+    return subprocess.check_output(
+        f"ping -c 1 {host}",
+        shell=True,
+        stderr=subprocess.STDOUT,
+    ).decode("utf-8", errors="replace")
+
+--- cve_agent/demo:xml_parser.py:12-14 (FunctionDef parse_feed) ---
+def parse_feed(raw_bytes):
+    root = etree.fromstring(raw_bytes, parser=_unsafe_parser)
+    return {child.tag: child.text for child in root}
+
+--- cve_agent/demo:db.py:20-23 (FunctionDef search_users) ---
+def search_users(name):
+    cur = _conn.cursor()
+    cur.execute("SELECT id, name FROM users WHERE name LIKE '%" + name + "%'")
+    return [{"id": r[0], "name": r[1]} for r in cur.fetchall()]
+================================== Ai Message ==================================
+Tool Calls:
+  search_code (694e33bc-8eab-4a57-9e21-256e298db68c)
+ Call ID: 694e33bc-8eab-4a57-9e21-256e298db68c
+  Args:
+    query: PIL.Image.open or Image.open
+    repo: cve_agent/demo
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:deserialize.py:25-26 (FunctionDef import_session) ---
+def import_session(raw_bytes):
+    return pickle.loads(raw_bytes)
+
+--- cve_agent/demo:xml_parser.py:21-23 (FunctionDef fetch_and_parse) ---
+def fetch_and_parse(url):
+    resp = requests.get(url, verify=False)  # CVE-2018-18074 + TLS verify disabled
+    return parse_feed(resp.content)
+
+--- cve_agent/demo:deserialize.py:19-20 (FunctionDef load_config_full) ---
+def load_config_full(raw_bytes):
+    return yaml.load(raw_bytes, Loader=yaml.FullLoader)
+
+--- cve_agent/demo:deserialize.py:14-15 (FunctionDef load_config) ---
+def load_config(raw_bytes):
+    return yaml.load(raw_bytes)
+
+--- cve_agent/demo:template.py:11-20 (FunctionDef render_profile) ---
+def render_profile(username, bio):
+    source = f"""
+    <html>
+      <body>
+        <h1>Profile: {username}</h1>
+        <div class="bio">{bio}</div>
+      </body>
+    </html>
+    """
+    return Template(source).render()
+
+--- cve_agent/demo:app.py:61-62 (FunctionDef feed_route) ---
+def feed_route():
+    return jsonify(parse_feed(request.data))
+================================== Ai Message ==================================
+Tool Calls:
+  search_code (a4de3056-96c7-4e61-87a4-80e68fd4f628)
+ Call ID: a4de3056-96c7-4e61-87a4-80e68fd4f628
+  Args:
+    query: marshal.loads
+    repo: cve_agent/demo
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:deserialize.py:25-26 (FunctionDef import_session) ---
+def import_session(raw_bytes):
+    return pickle.loads(raw_bytes)
+
+--- cve_agent/demo:deserialize.py:14-15 (FunctionDef load_config) ---
+def load_config(raw_bytes):
+    return yaml.load(raw_bytes)
+
+--- cve_agent/demo:deserialize.py:19-20 (FunctionDef load_config_full) ---
+def load_config_full(raw_bytes):
+    return yaml.load(raw_bytes, Loader=yaml.FullLoader)
+
+--- cve_agent/demo:app.py:54-56 (FunctionDef import_session_route) ---
+def import_session_route():
+    session = import_session(request.data)
+    return jsonify({"restored": str(session)})
+
+--- cve_agent/demo:app.py:47-49 (FunctionDef config_route) ---
+def config_route():
+    cfg = load_config(request.data)
+    return jsonify({"status": "ok", "config": cfg})
+
+--- cve_agent/demo:xml_parser.py:12-14 (FunctionDef parse_feed) ---
+def parse_feed(raw_bytes):
+    root = etree.fromstring(raw_bytes, parser=_unsafe_parser)
+    return {child.tag: child.text for child in root}
+================================== Ai Message ==================================
+Tool Calls:
+  search_code (1a7fb6be-e620-48cc-8767-8c47e8601e1b)
+ Call ID: 1a7fb6be-e620-48cc-8767-8c47e8601e1b
+  Args:
+    query: tail_log
+    repo: cve_agent/demo
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:shell.py:25-27 (FunctionDef tail_log) ---
+def tail_log(path):
+    p = subprocess.Popen("tail -n 50 " + path, shell=True, stdout=subprocess.PIPE)
+    return p.communicate()[0]
+
+--- cve_agent/demo:app.py:33-35 (FunctionDef diagnostic_route) ---
+def diagnostic_route():
+    host = request.json.get("host", "")
+    return run_diagnostic(host)
+
+--- cve_agent/demo:app.py:47-49 (FunctionDef config_route) ---
+def config_route():
+    cfg = load_config(request.data)
+    return jsonify({"status": "ok", "config": cfg})
+
+--- cve_agent/demo:deserialize.py:14-15 (FunctionDef load_config) ---
+def load_config(raw_bytes):
+    return yaml.load(raw_bytes)
+
+--- cve_agent/demo:shell.py:11-16 (FunctionDef run_diagnostic) ---
+def run_diagnostic(host):
+    return subprocess.check_output(
+        f"ping -c 1 {host}",
+        shell=True,
+        stderr=subprocess.STDOUT,
+    ).decode("utf-8", errors="replace")
+
+--- cve_agent/demo:shell.py:20-21 (FunctionDef check_service) ---
+def check_service(service_name):
+    os.system(f"systemctl status {service_name}")
+================================== Ai Message ==================================
+Tool Calls:
+  search_code (e9db1808-49e7-4114-85db-31696a56c55d)
+ Call ID: e9db1808-49e7-4114-85db-31696a56c55d
+  Args:
+    query: os.system or os.popen
+    repo: cve_agent/demo
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:shell.py:20-21 (FunctionDef check_service) ---
+def check_service(service_name):
+    os.system(f"systemctl status {service_name}")
+
+--- cve_agent/demo:shell.py:11-16 (FunctionDef run_diagnostic) ---
+def run_diagnostic(host):
+    return subprocess.check_output(
+        f"ping -c 1 {host}",
+        shell=True,
+        stderr=subprocess.STDOUT,
+    ).decode("utf-8", errors="replace")
+
+--- cve_agent/demo:shell.py:25-27 (FunctionDef tail_log) ---
+def tail_log(path):
+    p = subprocess.Popen("tail -n 50 " + path, shell=True, stdout=subprocess.PIPE)
+    return p.communicate()[0]
+
+--- cve_agent/demo:xml_parser.py:21-23 (FunctionDef fetch_and_parse) ---
+def fetch_and_parse(url):
+    resp = requests.get(url, verify=False)  # CVE-2018-18074 + TLS verify disabled
+    return parse_feed(resp.content)
+
+--- cve_agent/demo:app.py:33-35 (FunctionDef diagnostic_route) ---
+def diagnostic_route():
+    host = request.json.get("host", "")
+    return run_diagnostic(host)
+
+--- cve_agent/demo:db.py:20-23 (FunctionDef search_users) ---
+def search_users(name):
+    cur = _conn.cursor()
+    cur.execute("SELECT id, name FROM users WHERE name LIKE '%" + name + "%'")
+    return [{"id": r[0], "name": r[1]} for r in cur.fetchall()]
+================================== Ai Message ==================================
+Tool Calls:
+  search_code (d7441373-0874-4a24-91c7-2b985132fbd1)
+ Call ID: d7441373-0874-4a24-91c7-2b985132fbd1
+  Args:
+    query: check_service
+    repo: cve_agent/demo
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:shell.py:20-21 (FunctionDef check_service) ---
+def check_service(service_name):
+    os.system(f"systemctl status {service_name}")
+
+--- cve_agent/demo:shell.py:11-16 (FunctionDef run_diagnostic) ---
+def run_diagnostic(host):
+    return subprocess.check_output(
+        f"ping -c 1 {host}",
+        shell=True,
+        stderr=subprocess.STDOUT,
+    ).decode("utf-8", errors="replace")
+
+--- cve_agent/demo:app.py:33-35 (FunctionDef diagnostic_route) ---
+def diagnostic_route():
+    host = request.json.get("host", "")
+    return run_diagnostic(host)
+
+--- cve_agent/demo:xml_parser.py:21-23 (FunctionDef fetch_and_parse) ---
+def fetch_and_parse(url):
+    resp = requests.get(url, verify=False)  # CVE-2018-18074 + TLS verify disabled
+    return parse_feed(resp.content)
+
+--- cve_agent/demo:shell.py:25-27 (FunctionDef tail_log) ---
+def tail_log(path):
+    p = subprocess.Popen("tail -n 50 " + path, shell=True, stdout=subprocess.PIPE)
+    return p.communicate()[0]
+
+--- cve_agent/demo:app.py:47-49 (FunctionDef config_route) ---
+def config_route():
+    cfg = load_config(request.data)
+    return jsonify({"status": "ok", "config": cfg})
+================================== Ai Message ==================================
+Tool Calls:
+  search_code (ded14108-ab94-4394-8601-856a2d9d6dca)
+ Call ID: ded14108-ab94-4394-8601-856a2d9d6dca
+  Args:
+    repo: cve_agent/demo
+    query: search_users
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:app.py:26-28 (FunctionDef search_route) ---
+def search_route():
+    name = request.args.get("name", "")
+    return jsonify(search_users(name))
+
+--- cve_agent/demo:db.py:20-23 (FunctionDef search_users) ---
+def search_users(name):
+    cur = _conn.cursor()
+    cur.execute("SELECT id, name FROM users WHERE name LIKE '%" + name + "%'")
+    return [{"id": r[0], "name": r[1]} for r in cur.fetchall()]
+
+--- cve_agent/demo:app.py:21-22 (FunctionDef user_route) ---
+def user_route(user_id):
+    return jsonify(get_user_by_id(user_id))
+
+--- cve_agent/demo:db.py:12-16 (FunctionDef get_user_by_id) ---
+def get_user_by_id(user_id):
+    cur = _conn.cursor()
+    cur.execute(f"SELECT id, name, email FROM users WHERE id = {user_id}")
+    row = cur.fetchone()
+    return dict(zip(["id", "name", "email"], row)) if row else None
+
+--- cve_agent/demo:app.py:40-42 (FunctionDef profile_route) ---
+def profile_route(username):
+    bio = request.args.get("bio", "")
+    return render_profile(username, bio)
+
+--- cve_agent/demo:template.py:11-20 (FunctionDef render_profile) ---
+def render_profile(username, bio):
+    source = f"""
+    <html>
+      <body>
+        <h1>Profile: {username}</h1>
+        <div class="bio">{bio}</div>
+      </body>
+    </html>
+    """
+    return Template(source).render()
+================================== Ai Message ==================================
+Tool Calls:
+  search_code (c3860928-60ed-4216-9bea-2e01e1405034)
+ Call ID: c3860928-60ed-4216-9bea-2e01e1405034
+  Args:
+    repo: cve_agent/demo
+    query: get_user_by_id
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:db.py:12-16 (FunctionDef get_user_by_id) ---
+def get_user_by_id(user_id):
+    cur = _conn.cursor()
+    cur.execute(f"SELECT id, name, email FROM users WHERE id = {user_id}")
+    row = cur.fetchone()
+    return dict(zip(["id", "name", "email"], row)) if row else None
+
+--- cve_agent/demo:app.py:21-22 (FunctionDef user_route) ---
+def user_route(user_id):
+    return jsonify(get_user_by_id(user_id))
+
+--- cve_agent/demo:db.py:20-23 (FunctionDef search_users) ---
+def search_users(name):
+    cur = _conn.cursor()
+    cur.execute("SELECT id, name FROM users WHERE name LIKE '%" + name + "%'")
+    return [{"id": r[0], "name": r[1]} for r in cur.fetchall()]
+
+--- cve_agent/demo:app.py:26-28 (FunctionDef search_route) ---
+def search_route():
+    name = request.args.get("name", "")
+    return jsonify(search_users(name))
+
+--- cve_agent/demo:app.py:40-42 (FunctionDef profile_route) ---
+def profile_route(username):
+    bio = request.args.get("bio", "")
+    return render_profile(username, bio)
+
+--- cve_agent/demo:template.py:11-20 (FunctionDef render_profile) ---
+def render_profile(username, bio):
+    source = f"""
+    <html>
+      <body>
+        <h1>Profile: {username}</h1>
+        <div class="bio">{bio}</div>
+      </body>
+    </html>
+    """
+    return Template(source).render()
+================================== Ai Message ==================================
+Tool Calls:
+  search_code (0746ce3a-7d0b-4001-b924-5fe03bb89f24)
+ Call ID: 0746ce3a-7d0b-4001-b924-5fe03bb89f24
+  Args:
+    query: eval or exec or compile
+    repo: cve_agent/demo
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:template.py:11-20 (FunctionDef render_profile) ---
+def render_profile(username, bio):
+    source = f"""
+    <html>
+      <body>
+        <h1>Profile: {username}</h1>
+        <div class="bio">{bio}</div>
+      </body>
+    </html>
+    """
+    return Template(source).render()
+
+--- cve_agent/demo:shell.py:25-27 (FunctionDef tail_log) ---
+def tail_log(path):
+    p = subprocess.Popen("tail -n 50 " + path, shell=True, stdout=subprocess.PIPE)
+    return p.communicate()[0]
+
+--- cve_agent/demo:deserialize.py:14-15 (FunctionDef load_config) ---
+def load_config(raw_bytes):
+    return yaml.load(raw_bytes)
+
+--- cve_agent/demo:app.py:26-28 (FunctionDef search_route) ---
+def search_route():
+    name = request.args.get("name", "")
+    return jsonify(search_users(name))
+
+--- cve_agent/demo:db.py:20-23 (FunctionDef search_users) ---
+def search_users(name):
+    cur = _conn.cursor()
+    cur.execute("SELECT id, name FROM users WHERE name LIKE '%" + name + "%'")
+    return [{"id": r[0], "name": r[1]} for r in cur.fetchall()]
+
+--- cve_agent/demo:deserialize.py:25-26 (FunctionDef import_session) ---
+def import_session(raw_bytes):
+    return pickle.loads(raw_bytes)
+================================== Ai Message ==================================
+Tool Calls:
+  search_code (db936e84-bf9c-4916-b8bb-10309da2be26)
+ Call ID: db936e84-bf9c-4916-b8bb-10309da2be26
+  Args:
+    query: urllib.request.urlopen
+    repo: cve_agent/demo
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:xml_parser.py:21-23 (FunctionDef fetch_and_parse) ---
+def fetch_and_parse(url):
+    resp = requests.get(url, verify=False)  # CVE-2018-18074 + TLS verify disabled
+    return parse_feed(resp.content)
+
+--- cve_agent/demo:app.py:26-28 (FunctionDef search_route) ---
+def search_route():
+    name = request.args.get("name", "")
+    return jsonify(search_users(name))
+
+--- cve_agent/demo:template.py:11-20 (FunctionDef render_profile) ---
+def render_profile(username, bio):
+    source = f"""
+    <html>
+      <body>
+        <h1>Profile: {username}</h1>
+        <div class="bio">{bio}</div>
+      </body>
+    </html>
+    """
+    return Template(source).render()
+
+--- cve_agent/demo:shell.py:11-16 (FunctionDef run_diagnostic) ---
+def run_diagnostic(host):
+    return subprocess.check_output(
+        f"ping -c 1 {host}",
+        shell=True,
+        stderr=subprocess.STDOUT,
+    ).decode("utf-8", errors="replace")
+
+--- cve_agent/demo:shell.py:25-27 (FunctionDef tail_log) ---
+def tail_log(path):
+    p = subprocess.Popen("tail -n 50 " + path, shell=True, stdout=subprocess.PIPE)
+    return p.communicate()[0]
+
+--- cve_agent/demo:db.py:20-23 (FunctionDef search_users) ---
+def search_users(name):
+    cur = _conn.cursor()
+    cur.execute("SELECT id, name FROM users WHERE name LIKE '%" + name + "%'")
+    return [{"id": r[0], "name": r[1]} for r in cur.fetchall()]
+================================== Ai Message ==================================
+Tool Calls:
+  search_code (9e1a812f-b2df-47a8-ae9d-49f1173dd30c)
+ Call ID: 9e1a812f-b2df-47a8-ae9d-49f1173dd30c
+  Args:
+    repo: cve_agent/demo
+    query: SECRET or API_KEY or PASSWORD or TOKEN
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:app.py:47-49 (FunctionDef config_route) ---
+def config_route():
+    cfg = load_config(request.data)
+    return jsonify({"status": "ok", "config": cfg})
+
+--- cve_agent/demo:app.py:26-28 (FunctionDef search_route) ---
+def search_route():
+    name = request.args.get("name", "")
+    return jsonify(search_users(name))
+
+--- cve_agent/demo:app.py:54-56 (FunctionDef import_session_route) ---
+def import_session_route():
+    session = import_session(request.data)
+    return jsonify({"restored": str(session)})
+
+--- cve_agent/demo:db.py:20-23 (FunctionDef search_users) ---
+def search_users(name):
+    cur = _conn.cursor()
+    cur.execute("SELECT id, name FROM users WHERE name LIKE '%" + name + "%'")
+    return [{"id": r[0], "name": r[1]} for r in cur.fetchall()]
+
+--- cve_agent/demo:template.py:11-20 (FunctionDef render_profile) ---
+def render_profile(username, bio):
+    source = f"""
+    <html>
+      <body>
+        <h1>Profile: {username}</h1>
+        <div class="bio">{bio}</div>
+      </body>
+    </html>
+    """
+    return Template(source).render()
+
+--- cve_agent/demo:app.py:67-69 (FunctionDef greet_route) ---
+def greet_route():
+    name = request.args.get("name", "guest")
+    return render_template_string(f"<h1>Hello {name}</h1>")
+================================== Ai Message ==================================
+Tool Calls:
+  search_code (a70b3e31-ec13-4236-92f4-c45f15888b2a)
+ Call ID: a70b3e31-ec13-4236-92f4-c45f15888b2a
+  Args:
+    query: MD5 or SHA1 for security
+    repo: cve_agent/demo
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:template.py:11-20 (FunctionDef render_profile) ---
+def render_profile(username, bio):
+    source = f"""
+    <html>
+      <body>
+        <h1>Profile: {username}</h1>
+        <div class="bio">{bio}</div>
+      </body>
+    </html>
+    """
+    return Template(source).render()
+
+--- cve_agent/demo:xml_parser.py:21-23 (FunctionDef fetch_and_parse) ---
+def fetch_and_parse(url):
+    resp = requests.get(url, verify=False)  # CVE-2018-18074 + TLS verify disabled
+    return parse_feed(resp.content)
+
+--- cve_agent/demo:shell.py:25-27 (FunctionDef tail_log) ---
+def tail_log(path):
+    p = subprocess.Popen("tail -n 50 " + path, shell=True, stdout=subprocess.PIPE)
+    return p.communicate()[0]
+
+--- cve_agent/demo:template.py:27-29 (FunctionDef render_comment) ---
+def render_comment(author, comment):
+    tmpl = _env.from_string("<div><strong>{{ author }}</strong>: {{ comment | safe }}</div>")
+    return tmpl.render(author=author, comment=comment)
+
+--- cve_agent/demo:db.py:20-23 (FunctionDef search_users) ---
+def search_users(name):
+    cur = _conn.cursor()
+    cur.execute("SELECT id, name FROM users WHERE name LIKE '%" + name + "%'")
+    return [{"id": r[0], "name": r[1]} for r in cur.fetchall()]
+
+--- cve_agent/demo:shell.py:11-16 (FunctionDef run_diagnostic) ---
+def run_diagnostic(host):
+    return subprocess.check_output(
+        f"ping -c 1 {host}",
+        shell=True,
+        stderr=subprocess.STDOUT,
+    ).decode("utf-8", errors="replace")
+================================== Ai Message ==================================
+Tool Calls:
+  search_code (a1704acb-6b30-4001-90e6-bfa0ec7a607f)
+ Call ID: a1704acb-6b30-4001-90e6-bfa0ec7a607f
+  Args:
+    query: open() or Path() with user input
+    repo: cve_agent/demo
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:app.py:26-28 (FunctionDef search_route) ---
+def search_route():
+    name = request.args.get("name", "")
+    return jsonify(search_users(name))
+
+--- cve_agent/demo:app.py:67-69 (FunctionDef greet_route) ---
+def greet_route():
+    name = request.args.get("name", "guest")
+    return render_template_string(f"<h1>Hello {name}</h1>")
+
+--- cve_agent/demo:template.py:11-20 (FunctionDef render_profile) ---
+def render_profile(username, bio):
+    source = f"""
+    <html>
+      <body>
+        <h1>Profile: {username}</h1>
+        <div class="bio">{bio}</div>
+      </body>
+    </html>
+    """
+    return Template(source).render()
+
+--- cve_agent/demo:app.py:40-42 (FunctionDef profile_route) ---
+def profile_route(username):
+    bio = request.args.get("bio", "")
+    return render_profile(username, bio)
+
+--- cve_agent/demo:app.py:21-22 (FunctionDef user_route) ---
+def user_route(user_id):
+    return jsonify(get_user_by_id(user_id))
+
+--- cve_agent/demo:app.py:61-62 (FunctionDef feed_route) ---
+def feed_route():
+    return jsonify(parse_feed(request.data))
+================================== Ai Message ==================================
+Tool Calls:
+  search_advisories (359a492e-740e-4bb7-b1b1-551102e7478c)
+ Call ID: 359a492e-740e-4bb7-b1b1-551102e7478c
+  Args:
+    query: deserialization of untrusted data leading to arbitrary code execution
+  search_advisories (daa02b2b-26fb-4a4a-b4b7-ff75a88c97b4)
+ Call ID: daa02b2b-26fb-4a4a-b4b7-ff75a88c97b4
+  Args:
+    query: server-side template injection
+  search_advisories (c1c52448-0c1c-4067-be95-27cb9da017da)
+ Call ID: c1c52448-0c1c-4067-be95-27cb9da017da
+  Args:
+    query: improper neutralization of OS command elements
+  search_advisories (8fa82739-f867-4702-bb8d-f557d19e3109)
+ Call ID: 8fa82739-f867-4702-bb8d-f557d19e3109
+  Args:
+    query: improper neutralization of special elements in SQL command
+================================= Tool Message =================================
+Name: search_advisories
+
+no matching advisories
+================================= Tool Message =================================
+Name: search_advisories
+
+no matching advisories
+================================= Tool Message =================================
+Name: search_advisories
+
+no matching advisories
+================================= Tool Message =================================
+Name: search_advisories
+
+no matching advisories
+================================== Ai Message ==================================
+Tool Calls:
+  search_advisories (a7c40cc9-ca47-41bf-8f40-02996e1b1794)
+ Call ID: a7c40cc9-ca47-41bf-8f40-02996e1b1794
+  Args:
+    query: deserialization of untrusted data
+  search_advisories (f3e69f18-d966-41eb-af70-9104f4188c7f)
+ Call ID: f3e69f18-d966-41eb-af70-9104f4188c7f
+  Args:
+    query: template injection
+  search_advisories (8be3d51e-c962-4dfc-86be-fd8f411925af)
+ Call ID: 8be3d51e-c962-4dfc-86be-fd8f411925af
+  Args:
+    query: command injection
+  search_advisories (a0ca1a06-5a32-49d8-b0ac-d28ce67ae901)
+ Call ID: a0ca1a06-5a32-49d8-b0ac-d28ce67ae901
+  Args:
+    query: SQL injection
+================================= Tool Message =================================
+Name: search_advisories
+
+no matching advisories
+================================= Tool Message =================================
+Name: search_advisories
+
+no matching advisories
+================================= Tool Message =================================
+Name: search_advisories
+
+no matching advisories
+================================= Tool Message =================================
+Name: search_advisories
+
+no matching advisories
+================================== Ai Message ==================================
+Tool Calls:
+  search_advisories (df8a102b-dd00-44d8-8c45-efe452770d92)
+ Call ID: df8a102b-dd00-44d8-8c45-efe452770d92
+  Args:
+    query: CWE-502 Deserialization of Untrusted Data
+  search_advisories (c7aef136-5883-43d9-b1eb-e1905e2ac82b)
+ Call ID: c7aef136-5883-43d9-b1eb-e1905e2ac82b
+  Args:
+    query: CWE-94 Improper Control of Generation of Code ('Code Injection')
+  search_advisories (1ed8c168-352f-4ca2-b0ee-97838bf51099)
+ Call ID: 1ed8c168-352f-4ca2-b0ee-97838bf51099
+  Args:
+    query: CWE-78 Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')
+  search_advisories (1575b56f-821d-433f-82d1-a9cf61dbf98a)
+ Call ID: 1575b56f-821d-433f-82d1-a9cf61dbf98a
+  Args:
+    query: CWE-89 Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')
+================================= Tool Message =================================
+Name: search_advisories
+
+no matching advisories
+================================= Tool Message =================================
+Name: search_advisories
+
+no matching advisories
+================================= Tool Message =================================
+Name: search_advisories
+
+no matching advisories
+================================= Tool Message =================================
+Name: search_advisories
+
+no matching advisories
+================================== Ai Message ==================================
+
+[{'type': 'text', 'text': "Here is the security audit report for the repository 'cve_agent/demo'.\n\n### CONFIRMED Findings\n\nThese are known CVEs in dependencies where evidence of the vulnerable API being called in the repository was found.\n\n**1. PyYAML Insecure Deserialization**\n*   **CVE ID**: CVE-2017-18342, CVE-2020-14343\n*   **Package**: `pyyaml==3.13`\n*   **Description**: PyYAML versions before 5.1 (and before 5.4 for `FullLoader`) are vulnerable to arbitrary code execution when `yaml.load()` or `yaml.load()` with `FullLoader` are used with untrusted input. The application uses `yaml.load` and `yaml.load` with `FullLoader` on `request.data`, which is user-controlled.\n*   **File:Line**: `cve_agent/demo:deserialize.py:14-15`\n    ", 'extras': {'signature': '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'}}, '```python\n    def load_config(raw_bytes):\n        return yaml.load(raw_bytes)\n    ```', '\n*   **File:Line**: `cve_agent/demo:deserialize.py:19-20`\n    ', '```python\n    def load_config_full(raw_bytes):\n        return yaml.load(raw_bytes, Loader=yaml.FullLoader)\n    ```', '\n*   **File:Line**: `cve_agent/demo:app.py:47-49` (Call site)\n    ', '```python\n    def config_route():\n        cfg = load_config(request.data)\n        return jsonify({"status": "ok", "config": cfg})\n    ```', '\n*   **Fix**: Upgrade PyYAML to version 5.4 or later. Replace `yaml.load()` with `yaml.safe_load()`. If `FullLoader` functionality is required, ensure input is trusted or implement strict validation.\n\n**2. Requests Insecure TLS Verification**\n*   **CVE ID**: CVE-2018-18074, CVE-2024-35195, CVE-2024-47081 (related to insecure handling of credentials/proxies, exacerbated by `verify=False`)\n*   **Package**: `requests==2.19.0`\n*   **Description**: The application explicitly disables TLS certificate verification (`verify=False`) when making HTTP requests, making it vulnerable to Man-in-the-Middle (MITM) attacks.\n*   **File:Line**: `cve_agent/demo:xml_parser.py:21-23`\n    ', '```python\n    def fetch_and_parse(url):\n        resp = requests.get(url, verify=False)  # CVE-2018-18074 + TLS verify disabled\n        return parse_feed(resp.content)\n    ```', '\n*   **Fix**: Remove `verify=False`. Ensure proper certificate validation is in place. If self-signed certificates are used, configure requests to trust them correctly.\n\n**3. lxml XXE with Unsafe Parser**\n*   **CVE ID**: CVE-2026-41066 (related to XXE with default configuration of iterparse and ETCompatXMLParser, but `_unsafe_parser` is a direct indicator of vulnerability)\n*   **Package**: `lxml==4.6.0`\n*   **Description**: The application uses an explicitly unsafe XML parser (`_unsafe_parser`) with `lxml.etree.fromstring` on user-controlled input, making it vulnerable to XML External Entity (XXE) attacks.\n*   **File:Line**: `cve_agent/demo:xml_parser.py:12-14`\n    ', '```python\n    def parse_feed(raw_bytes):\n        root = etree.fromstring(raw_bytes, parser=_unsafe_parser)\n        return {child.tag: child.text for child in root}\n    ```', '\n*   **File:Line**: `cve_agent/demo:app.py:61-62` (Call site)\n    ', '```python\n    def feed_route():\n        return jsonify(parse_feed(request.data))\n    ```', '\n*   **Fix**: Configure XML parsers to disallow DTDs and external entities. Use `defusedxml` or `lxml.etree.XMLParser(resolve_entities=False, no_network=True)` or similar safe configurations.\n\n### LIKELY Findings\n\nThese are novel patterns found in the code that indicate potential vulnerabilities, not directly tied to a known CVE from the dependency scan.\n\n**1. Unsafe Deserialization (pickle)**\n*   **CWE ID**: CWE-502: Deserialization of Untrusted Data\n*   **Description**: The application uses `pickle.loads()` on user-controlled input (`request.data`), which can lead to arbitrary code execution.\n*   **File:Line**: `cve_agent/demo:deserialize.py:25-26`\n    ', '```python\n    def import_session(raw_bytes):\n        return pickle.loads(raw_bytes)\n    ```', '\n*   **File:Line**: `cve_agent/demo:app.py:54-56` (Call site)\n    ', '```python\n    def import_session_route():\n        session = import_session(request.data)\n        return jsonify({"restored": str(session)})\n    ```', "\n*   **Fix**: Avoid deserializing untrusted data with `pickle`. Use safer data formats like JSON or implement integrity checks and strict type validation if `pickle` is unavoidable.\n\n**2. Server-Side Template Injection (Jinja2 - `render_template_string`)**\n*   **CWE ID**: CWE-94: Improper Control of Generation of Code ('Code Injection')\n*   **Description**: User-controlled input (`name` from `request.args.get`) is directly embedded into a template string passed to `render_template_string`, allowing for arbitrary code execution in the template engine context.\n*   **File:Line**: `cve_agent/demo:app.py:67-69`\n    ", '```python\n    def greet_route():\n        name = request.args.get("name", "guest")\n        return render_template_string(f"<h1>Hello {name}</h1>")\n    ```', '\n*   **Fix**: Avoid direct concatenation of user input into template strings. Pass user input as template variables and rely on the template engine\'s auto-escaping (e.g., `render_template_string("<h1>Hello {{ name }}</h1>", name=name)`).\n\n**3. Server-Side Template Injection (Jinja2 - `Template().render` with f-string)**\n*   **CWE ID**: CWE-94: Improper Control of Generation of Code (\'Code Injection\')\n*   **Description**: User-controlled input (`username` and `bio` from `request.args.get`) is directly embedded into an f-string that forms a Jinja2 template, allowing for arbitrary code execution in the template engine context.\n*   **File:Line**: `cve_agent/demo:template.py:11-20`\n    ', '```python\n    def render_profile(username, bio):\n        source = f"""\n        <html>\n          <body>\n            <h1>Profile: {username}</h1>\n            <div class="bio">{bio}</div>\n          </body>\n        </html>\n        """\n        return Template(source).render()\n    ```', '\n*   **File:Line**: `cve_agent/demo:app.py:40-42` (Call site)\n    ', '```python\n    def profile_route(username):\n        bio = request.args.get("bio", "")\n        return render_profile(username, bio)\n    ```', "\n*   **Fix**: Avoid creating template strings using f-strings with user input. Pass user input as template variables and rely on the template engine's auto-escaping.\n\n**4. OS Command Injection (subprocess with `shell=True`)**\n*   **CWE ID**: CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')\n*   **Description**: User-controlled input (`host` from `request.json.get`) is directly embedded into an OS command executed with `shell=True`, allowing for arbitrary command execution.\n*   **File:Line**: `cve_agent/demo:shell.py:11-16`\n    ", '```python\n    def run_diagnostic(host):\n        return subprocess.check_output(\n            f"ping -c 1 {host}",\n            shell=True,\n            stderr=subprocess.STDOUT,\n        ).decode("utf-8", errors="replace")\n    ```', '\n*   **File:Line**: `cve_agent/demo:app.py:33-35` (Call site)\n    ', '```python\n    def diagnostic_route():\n        host = request.json.get("host", "")\n        return run_diagnostic(host)\n    ```', '\n*   **Fix**: Avoid `shell=True`. Pass commands and arguments as a list (e.g., `["ping", "-c", "1", host]`). Sanitize and validate user input.\n\n**5. SQL Injection (string concatenation)**\n*   **CWE ID**: CWE-89: Improper Neutralization of Special Elements used in an SQL Command (\'SQL Injection\')\n*   **Description**: User-controlled input (`name` from `request.args.get`) is directly concatenated into an SQL query, allowing for SQL injection attacks.\n*   **File:Line**: `cve_agent/demo:db.py:20-23`\n    ', '```python\n    def search_users(name):\n        cur = _conn.cursor()\n        cur.execute("SELECT id, name FROM users WHERE name LIKE \'%" + name + "%\'")\n        return [{"id": r[0], "name": r[1]} for r in cur.fetchall()]\n    ```', '\n*   **File:Line**: `cve_agent/demo:app.py:26-28` (Call site)\n    ', '```python\n    def search_route():\n        name = request.args.get("name", "")\n        return jsonify(search_users(name))\n    ```', "\n*   **Fix**: Use parameterized queries (prepared statements) to separate SQL logic from user input.\n\n**6. SQL Injection (f-string interpolation)**\n*   **CWE ID**: CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')\n*   **Description**: User-controlled input (`user_id`, a path parameter) is directly interpolated into an SQL query using an f-string, allowing for SQL injection attacks.\n*   **File:Line**: `cve_agent/demo:db.py:12-16`\n    ", '```python\n    def get_user_by_id(user_id):\n        cur = _conn.cursor()\n        cur.execute(f"SELECT id, name, email FROM users WHERE id = {user_id}")\n        row = cur.fetchone()\n        return dict(zip(["id", "name", "email"], row)) if row else None\n    ```', '\n*   **File:Line**: `cve_agent/demo:app.py:21-22` (Call site)\n    ', '```python\n    def user_route(user_id):\n        return jsonify(get_user_by_id(user_id))\n    ```', "\n*   **Fix**: Use parameterized queries (prepared statements) to separate SQL logic from user input.\n\n### UNREACHED Findings\n\nThese are known CVEs in dependencies where no evidence of the vulnerable API being called in the repository was found. While not immediately exploitable through the current codebase, it's still recommended to update these dependencies to patched versions.\n\n*   **Flask 0.12.2**\n    *   **CVE ID**: GHSA-562c-5r94-xh97, CVE-2018-1000656, PYSEC-2018-66 (DoS via incorrect JSON encoding)\n    *   **Severity**: High\n    *   **CVE ID**: GHSA-5wv5-4vpf-pj6m, CVE-2019-1010083, PYSEC-2019-179 (DoS via unexpected memory usage with encoded JSON)\n    *   **Severity**: High\n    *   **CVE ID**: GHSA-m2qf-hxjv-5gpq, CVE-2023-30861, PYSEC-2023-62 (Session cookie disclosure due to missing Vary: Cookie header)\n    *   **Severity**: High\n*   **Werkzeug 0.14.1**\n    *   **CVE ID**: GHSA-29vq-49wr-vm6x, CVE-2026-27199 (safe_join allows Windows special device names)\n    *   **Severity**: Medium\n    *   **CVE ID**: GHSA-2g68-c3qc-8985, CVE-2024-34069 (debugger vulnerable to remote execution)\n    *   **Severity**: Critical\n    *   **CVE ID**: GHSA-87hc-h4r5-73f7, CVE-2026-21860 (safe_join allows Windows special device names with compound extensions)\n    *   **Severity**: Medium\n    *   **CVE ID**: GHSA-f9vj-2wh5-fj8j, CVE-2024-49766 (Werkzeug safe_join not safe on Windows)\n    *   **Severity**: Medium\n    *   **CVE ID**: GHSA-gq9m-qvpx-68hc, CVE-2019-14806, PYSEC-2019-140 (Insufficient Entropy)\n    *   **Severity**: High\n    *   **CVE ID**: GHSA-hgf8-39gv-g3f2, CVE-2025-66221 (Werkzeug safe_join() allows Windows special device names)\n    *   **Severity**: Medium\n    *   **CVE ID**: GHSA-hrfv-mqp8-q5rw, CVE-2023-46136, PYSEC-2023-221 (DoS: High resource usage when parsing multipart/form-data)\n    *   **Severity**: High\n    *   **CVE ID**: GHSA-j544-7q9p-6xp8, CVE-2019-14322 (Path Traversal)\n    *   **Severity**: High\n    *   **CVE ID**: GHSA-px8h-6qxv-m22q, CVE-2023-23934, PYSEC-2023-57 (Incorrect parsing of nameless cookies)\n    *   **Severity**: Medium\n    *   **CVE ID**: GHSA-q34m-jh98-gwm2, CVE-2024-49767 (Possible resource exhaustion when parsing file data in forms)\n    *   **Severity**: High\n*   **Jinja2 2.10**\n    *   **CVE ID**: GHSA-462w-v97r-4m45, CVE-2019-10906, PYSEC-2019-217 (sandbox escape via string formatting)\n    *   **Severity**: Critical\n    *   **CVE ID**: GHSA-cpwx-vrp4-4pq7, CVE-2025-27516 (sandbox breakout through attr filter selecting format method)\n    *   **Severity**: High\n    *   **CVE ID**: GHSA-g3rq-g295-4j3m, CVE-2020-28493, PYSEC-2021-66 (ReDoS)\n    *   **Severity**: Medium\n    *   **CVE ID**: GHSA-h5c8-rqwp-cp95, CVE-2024-22195 (HTML attribute injection via xmlattr filter)\n    *   **Severity**: Medium\n    *   **CVE ID**: GHSA-h75v-3vvj-5mfj, CVE-2024-34064 (HTML attribute injection via xmlattr filter)\n    *   **Severity**: Medium\n    *   **CVE ID**: GHSA-q2x7-8rv6-6q7h, CVE-2024-56326 (sandbox breakout through indirect reference to format method)\n    *   **Severity**: High\n*   **Urllib3 1.24.1**\n    *   **CVE ID**: GHSA-2xpw-w6gg-jr37, CVE-2025-66471 (streaming API improperly handles highly compressed data)\n    *   **Severity**: High\n    *   **CVE ID**: GHSA-34jh-p97f-mpxf, CVE-2024-37891 (Proxy-Authorization request header isn't stripped)\n    *   **Severity**: High\n    *   **CVE ID**: GHSA-38jv-5279-wg99, CVE-2026-21441 (Decompression-bomb safeguards bypassed)\n    *   **Severity**: High\n    *   **CVE ID**: GHSA-g4mx-q9vg-27p4, CVE-2023-45803, PYSEC-2023-212 (request body not stripped after redirect)\n    *   **Severity**: High\n    *   **CVE ID**: GHSA-gm62-xv2j-4w53, CVE-2025-66418 (unbounded number of links in decompression chain)\n    *   **Severity**: High\n    *   **CVE ID**: GHSA-gwvm-45gx-3cf8, CVE-2018-25091, PYSEC-2023-207 (Authorization Header forwarded on redirect)\n    *   **Severity**: Medium\n    *   **CVE ID**: GHSA-mh33-7rrq-662w, CVE-2019-11324, PYSEC-2019-133 (Improper Certificate Validation)\n    *   **Severity**: High\n    *   **CVE ID**: GHSA-pq67-6m6q-mj2v, CVE-2025-50181 (redirects not disabled when retries are disabled)\n    *   **Severity**: High\n    *   **CVE ID**: GHSA-r64q-w8jr-g9qp, CVE-2019-11236, PYSEC-2019-132 (Improper Neutralization of CRLF Sequences)\n    *   **Severity**: Medium\n    *   **CVE ID**: GHSA-v845-jxx5-vc9f, CVE-2023-43804, PYSEC-2023-192 (Cookie HTTP header isn't stripped)\n    *   **Severity**: High\n*   **Pycrypto 2.6.1**\n    *   **CVE ID**: GHSA-6528-wvf6-f6qg, CVE-2018-6594, PYSEC-2018-97 (weak ElGamal key parameters)\n    *   **Severity**: High\n    *   **CVE ID**: GHSA-cq27-v7xp-c356, CVE-2013-7459, PYSEC-2017-94 (Buffer Overflow)\n    *   **Severity**: Critical\n*   **Pillow 5.3.0** (Multiple CVEs related to image processing vulnerabilities)\n    *   **CVE ID**: GHSA-3f63-hfp8-52jq, BIT-pillow-2023-50447, CVE-2023-50447 (Arbitrary Code Execution)\n    *   **Severity**: Critical\n    *   **CVE ID**: GHSA-3wvg-mj6g-m9cv, BIT-pillow-2021-27922, CVE-2021-27922, PYSEC-2021-41 (Uncontrolled Resource Consumption)\n    *   **Severity**: High\n    *   **CVE ID**: GHSA-3xv8-3j54-hgrp, BIT-pillow-2020-10378, CVE-2020-10378, PYSEC-2020-77 (Out-of-bounds read)\n    *   **Severity**: High\n    *   **CVE ID**: GHSA-43fq-w8qq-v88h, BIT-pillow-2020-11538, CVE-2020-11538, PYSEC-2020-80 (Out-of-bounds read)\n    *   **Severity**: Critical\n    *   **CVE ID**: GHSA-44wm-f244-xhp3, BIT-pillow-2024-28219, CVE-2024-28219 (buffer overflow)\n    *   **Severity**: High\n    *   **CVE ID**: GHSA-4fx9-vc88-q2xc (Infinite loop)\n    *   **Severity**: High\n    *   **CVE ID**: GHSA-57h3-9rgr-c24m, BIT-pillow-2021-25289, CVE-2021-25289, PYSEC-2021-35 (Out of bounds write)\n    *   **Severity**: Critical\n    *   **CVE ID**: GHSA-5gm3-px64-rw72, CVE-2019-19911, PYSEC-2020-172 (Uncontrolled Resource Consumption)\n    *   **Severity**: High\n    *   **CVE ID**: GHSA-7534-mm45-c74v, BIT-pillow-2021-34552, CVE-2021-34552, PYSEC-2021-331 (Buffer Overflow)\n    *   **Severity**: Critical\n    *   **CVE ID**: GHSA-77gc-v2xv-rvvh, BIT-pillow-2021-25287, CVE-2021-25287, PYSEC-2021-137 (Out-of-bounds Read)\n    *   **Severity**: Critical"]

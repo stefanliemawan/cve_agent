@@ -1,0 +1,1864 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+================================ Human Message =================================
+
+Audit the repo 'cve_agent/demo' for Python security vulnerabilities. Focus on injection, unsafe deserialization, hardcoded secrets, and known CVEs in dependencies.
+================================== Ai Message ==================================
+
+[]
+Tool Calls:
+  list_dependencies (32d31994-23b9-41ff-a0ab-346abb233754)
+ Call ID: 32d31994-23b9-41ff-a0ab-346abb233754
+  Args:
+    repo: cve_agent/demo
+================================= Tool Message =================================
+Name: list_dependencies
+
+flask==0.12.2 (PyPI)
+werkzeug==0.14.1 (PyPI)
+jinja2==2.10 (PyPI)
+pyyaml==3.13 (PyPI)
+requests==2.19.0 (PyPI)
+urllib3==1.24.1 (PyPI)
+lxml==4.6.0 (PyPI)
+pycrypto==2.6.1 (PyPI)
+pillow==5.3.0 (PyPI)
+================================== Ai Message ==================================
+
+[]
+Tool Calls:
+  lookup_cve (0def9462-3789-4c81-b21a-3f2b49a1f37a)
+ Call ID: 0def9462-3789-4c81-b21a-3f2b49a1f37a
+  Args:
+    package: flask
+    version: 0.12.2
+    ecosystem: PyPI
+  lookup_cve (87498ad1-3c77-4c7d-995d-b35b3e1c1958)
+ Call ID: 87498ad1-3c77-4c7d-995d-b35b3e1c1958
+  Args:
+    package: werkzeug
+    version: 0.14.1
+    ecosystem: PyPI
+  lookup_cve (13c63ec6-7cf7-4f99-aabc-20ebe07c1e35)
+ Call ID: 13c63ec6-7cf7-4f99-aabc-20ebe07c1e35
+  Args:
+    package: jinja2
+    version: 2.10
+    ecosystem: PyPI
+  lookup_cve (3e217d99-e6ae-44e5-9220-2ef4deee4bcd)
+ Call ID: 3e217d99-e6ae-44e5-9220-2ef4deee4bcd
+  Args:
+    ecosystem: PyPI
+    version: 3.13
+    package: pyyaml
+  lookup_cve (bf5e71eb-50d4-47d8-948d-8456cf79fe81)
+ Call ID: bf5e71eb-50d4-47d8-948d-8456cf79fe81
+  Args:
+    package: requests
+    ecosystem: PyPI
+    version: 2.19.0
+  lookup_cve (493743fe-cf1b-4d67-b57a-aee5a3ee87bc)
+ Call ID: 493743fe-cf1b-4d67-b57a-aee5a3ee87bc
+  Args:
+    package: urllib3
+    version: 1.24.1
+    ecosystem: PyPI
+  lookup_cve (1c01d747-8f38-4761-9fac-ee7c2c796ff8)
+ Call ID: 1c01d747-8f38-4761-9fac-ee7c2c796ff8
+  Args:
+    version: 4.6.0
+    ecosystem: PyPI
+    package: lxml
+  lookup_cve (0b2fb9be-95cf-49c7-8edf-8077cd3c4580)
+ Call ID: 0b2fb9be-95cf-49c7-8edf-8077cd3c4580
+  Args:
+    package: pycrypto
+    version: 2.6.1
+    ecosystem: PyPI
+  lookup_cve (31b8ca93-50d3-46c1-af27-718da4db1495)
+ Call ID: 31b8ca93-50d3-46c1-af27-718da4db1495
+  Args:
+    ecosystem: PyPI
+    version: 5.3.0
+    package: pillow
+================================= Tool Message =================================
+Name: lookup_cve
+
+GHSA-562c-5r94-xh97, CVE-2018-1000656, PYSEC-2018-66 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H]
+Flask is vulnerable to Denial of Service via incorrect encoding of JSON data
+
+GHSA-5wv5-4vpf-pj6m, CVE-2019-1010083, PYSEC-2019-179 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H]
+Pallets Project Flask is vulnerable to Denial of Service via Unexpected memory usage
+
+GHSA-68rp-wp8r-4726, CVE-2026-27205 [CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:P/VC:L/VI:N/VA:N/SC:N/SI:N/SA:N]
+Flask session does not add `Vary: Cookie` header when accessed in some ways
+
+GHSA-m2qf-hxjv-5gpq, CVE-2023-30861, PYSEC-2023-62 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N]
+Flask vulnerable to possible disclosure of permanent session cookie due to missing Vary: Cookie header
+
+PYSEC-2018-66, CVE-2018-1000656, GHSA-562c-5r94-xh97 []
+The Pallets Project flask version Before 0.12.3 contains a CWE-20: Improper Input Validation vulnerability in flask that can result in Large amount of memory usage possibly leading to denial of service. This attack appear to be exploitable via Attacker provides JSON data in incorrect encoding. This vulnerability appears to have been fixed in 0.12.3. NOTE: this may overlap CVE-2019-1010083.
+
+PYSEC-2019-179, CVE-2019-1010083, GHSA-5wv5-4vpf-pj6m []
+The Pallets Project Flask before 1.0 is affected by: unexpected memory usage. The impact is: denial of service. The attack vector is: crafted encoded JSON data. The fixed version is: 1. NOTE: this may overlap CVE-2018-1000656.
+
+PYSEC-2023-62, CVE-2023-30861, GHSA-m2qf-hxjv-5gpq []
+Flask is a lightweight WSGI web application framework. When all of the following conditions are met, a response containing data intended for one client may be cached and subsequently sent by the proxy to other clients. If the proxy also caches `Set-Cookie` headers, it may send one client's `session` cookie to other clients. The severity depends on the application's use of the session and the proxy
+================================= Tool Message =================================
+Name: lookup_cve
+
+GHSA-29vq-49wr-vm6x, CVE-2026-27199 [CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:N/VI:N/VA:L/SC:N/SI:N/SA:N]
+ Werkzeug safe_join() allows Windows special device names
+
+GHSA-2g68-c3qc-8985, CVE-2024-34069 [CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H]
+Werkzeug debugger vulnerable to remote execution when interacting with attacker controlled domain
+
+GHSA-87hc-h4r5-73f7, CVE-2026-21860 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L]
+ Werkzeug safe_join() allows Windows special device names with compound extensions
+
+GHSA-f9vj-2wh5-fj8j, CVE-2024-49766 [CVSS:4.0/AV:N/AC:H/AT:N/PR:N/UI:N/VC:L/VI:N/VA:N/SC:N/SI:N/SA:N]
+Werkzeug safe_join not safe on Windows
+
+GHSA-gq9m-qvpx-68hc, CVE-2019-14806, PYSEC-2019-140 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N]
+Pallets Werkzeug Insufficient Entropy
+
+GHSA-hgf8-39gv-g3f2, CVE-2025-66221 [CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:N/VI:N/VA:L/SC:N/SI:N/SA:N]
+Werkzeug safe_join() allows Windows special device names
+
+GHSA-hrfv-mqp8-q5rw, CVE-2023-46136, PYSEC-2023-221 [CVSS:3.1/AV:A/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H]
+Werkzeug DoS: High resource usage when parsing multipart/form-data containing a large part with CR/LF character at the beginning
+
+GHSA-j544-7q9p-6xp8, CVE-2019-14322 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N]
+Pallets Werkzeug vulnerable to Path Traversal
+
+GHSA-px8h-6qxv-m22q, CVE-2023-23934, PYSEC-2023-57 [CVSS:3.1/AV:A/AC:H/PR:N/UI:R/S:U/C:N/I:L/A:N]
+Incorrect parsing of nameless cookies leads to __Host- cookies bypass
+
+GHSA-q34m-jh98-gwm2, CVE-2024-49767 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H]
+Werkzeug possible resource exhaustion when parsing file data in forms
+================================= Tool Message =================================
+Name: lookup_cve
+
+GHSA-462w-v97r-4m45, CVE-2019-10906, PYSEC-2019-217 [CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:N/A:N]
+Jinja2 sandbox escape via string formatting
+
+GHSA-cpwx-vrp4-4pq7, CVE-2025-27516 [CVSS:4.0/AV:L/AC:L/AT:P/PR:L/UI:P/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N]
+Jinja2 vulnerable to sandbox breakout through attr filter selecting format method
+
+GHSA-g3rq-g295-4j3m, CVE-2020-28493, PYSEC-2021-66, SNYK-PYTHON-JINJA2-1012994 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L]
+Regular Expression Denial of Service (ReDoS) in Jinja2
+
+GHSA-h5c8-rqwp-cp95, CVE-2024-22195 [CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:L/I:L/A:N]
+Jinja vulnerable to HTML attribute injection when passing user input as keys to xmlattr filter
+
+GHSA-h75v-3vvj-5mfj, CVE-2024-34064 [CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:L/I:L/A:N]
+Jinja vulnerable to HTML attribute injection when passing user input as keys to xmlattr filter
+
+GHSA-q2x7-8rv6-6q7h, CVE-2024-56326 [CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H]
+Jinja has a sandbox breakout through indirect reference to format method
+
+PYSEC-2019-217, CVE-2019-10906, GHSA-462w-v97r-4m45 []
+In Pallets Jinja before 2.10.1, str.format_map allows a sandbox escape.
+
+PYSEC-2021-66, CVE-2020-28493, GHSA-g3rq-g295-4j3m, SNYK-PYTHON-JINJA2-1012994 []
+This affects the package jinja2 from 0.0.0 and before 2.11.3. The ReDoS vulnerability is mainly due to the `_punctuation_re regex` operator and its use of multiple wildcards. The last wildcard is the most exploitable as it searches for trailing punctuation. This issue can be mitigated by Markdown to format user content instead of the urlize filter, or by implementing request timeouts and limiting 
+================================= Tool Message =================================
+Name: lookup_cve
+
+GHSA-8q59-q68h-6hv4, CVE-2020-14343, PYSEC-2021-142 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H]
+Improper Input Validation in PyYAML
+
+GHSA-rprw-h62v-c2w7, CVE-2017-18342, PYSEC-2018-49 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H]
+PyYAML insecurely deserializes YAML strings leading to arbitrary code execution
+
+PYSEC-2018-49, CVE-2017-18342, GHSA-rprw-h62v-c2w7 []
+In PyYAML before 5.1, the yaml.load() API could execute arbitrary code if used with untrusted data. The load() function has been deprecated in version 5.1 and the 'UnsafeLoader' has been introduced for backward compatibility with the function.
+
+PYSEC-2021-142, CVE-2020-14343, GHSA-8q59-q68h-6hv4 []
+A vulnerability was discovered in the PyYAML library in versions before 5.4, where it is susceptible to arbitrary code execution when it processes untrusted YAML files through the full_load method or with the FullLoader loader. Applications that use the library to process untrusted input may be vulnerable to this flaw. This flaw allows an attacker to execute arbitrary code on the system by abusing
+================================= Tool Message =================================
+Name: lookup_cve
+
+GHSA-9hjg-9r4m-mvj7, CVE-2024-47081 [CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:N/A:N]
+Requests vulnerable to .netrc credentials leak via malicious URLs
+
+GHSA-9wx4-h78v-vm56, CVE-2024-35195 [CVSS:3.1/AV:L/AC:H/PR:H/UI:R/S:U/C:H/I:H/A:N]
+Requests `Session` object does not verify requests after making first request with verify=False
+
+GHSA-gc5v-m9x4-r6x2, CVE-2026-25645 [CVSS:3.1/AV:L/AC:H/PR:L/UI:R/S:U/C:N/I:H/A:N]
+Requests has Insecure Temp File Reuse in its extract_zipped_paths() utility function
+
+GHSA-j8r2-6x86-q33q, CVE-2023-32681, PYSEC-2023-74 [CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:C/C:H/I:N/A:N]
+Unintended leak of Proxy-Authorization header in requests
+
+GHSA-x84v-xcm2-53pg, CVE-2018-18074, PYSEC-2018-28 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N]
+Insufficiently Protected Credentials in Requests
+
+PYSEC-2018-28, CVE-2018-18074, GHSA-x84v-xcm2-53pg []
+The Requests package before 2.20.0 for Python sends an HTTP Authorization header to an http URI upon receiving a same-hostname https-to-http redirect, which makes it easier for remote attackers to discover credentials by sniffing the network.
+
+PYSEC-2023-74, CVE-2023-32681, GHSA-j8r2-6x86-q33q []
+Requests is a HTTP library. Since Requests 2.3.0, Requests has been leaking Proxy-Authorization headers to destination servers when redirected to an HTTPS endpoint. This is a product of how we use `rebuild_proxies` to reattach the `Proxy-Authorization` header to requests. For HTTP connections sent through the tunnel, the proxy will identify the header in the request itself and remove it prior to f
+================================= Tool Message =================================
+Name: lookup_cve
+
+GHSA-2xpw-w6gg-jr37, CVE-2025-66471 [CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:N/VI:N/VA:H/SC:N/SI:N/SA:H]
+urllib3 streaming API improperly handles highly compressed data
+
+GHSA-34jh-p97f-mpxf, CVE-2024-37891 [CVSS:3.1/AV:N/AC:H/PR:H/UI:N/S:U/C:H/I:N/A:N]
+urllib3's Proxy-Authorization request header isn't stripped during cross-origin redirects
+
+GHSA-38jv-5279-wg99, CVE-2026-21441 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H]
+Decompression-bomb safeguards bypassed when following HTTP redirects (streaming API)
+
+GHSA-g4mx-q9vg-27p4, CVE-2023-45803, PYSEC-2023-212 [CVSS:3.1/AV:A/AC:H/PR:H/UI:N/S:U/C:H/I:N/A:N]
+urllib3's request body not stripped after redirect from 303 status changes request method to GET
+
+GHSA-gm62-xv2j-4w53, CVE-2025-66418 [CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:N/VI:N/VA:H/SC:N/SI:N/SA:H]
+urllib3 allows an unbounded number of links in the decompression chain
+
+GHSA-gwvm-45gx-3cf8, CVE-2018-25091, PYSEC-2023-207 [CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N]
+Authorization Header forwarded on redirect
+
+GHSA-mh33-7rrq-662w, CVE-2019-11324, PYSEC-2019-133 [CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N]
+Improper Certificate Validation in urllib3
+
+GHSA-pq67-6m6q-mj2v, CVE-2025-50181 [CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:U/C:H/I:N/A:N]
+urllib3 redirects are not disabled when retries are disabled on PoolManager instantiation
+
+GHSA-r64q-w8jr-g9qp, CVE-2019-11236, PYSEC-2019-132 [CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N]
+Improper Neutralization of CRLF Sequences in urllib3 library for Python
+
+GHSA-v845-jxx5-vc9f, CVE-2023-43804, PYSEC-2023-192 [CVSS:3.1/AV:N/AC:H/PR:H/UI:N/S:U/C:H/I:H/A:N]
+`Cookie` HTTP header isn't stripped on cross-origin redirects
+================================= Tool Message =================================
+Name: lookup_cve
+
+GHSA-55x5-fj6c-h6m8, CVE-2021-43818, PYSEC-2021-852 [CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:H/A:N]
+lxml's HTML Cleaner allows crafted and SVG embedded scripts to pass through
+
+GHSA-jq4v-f5q6-mjqq, CVE-2021-28957, PYSEC-2021-19 [CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N]
+lxml vulnerable to Cross-Site Scripting 
+
+GHSA-pgww-xf46-h92r, CVE-2020-27783, PYSEC-2020-62 [CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N]
+lxml vulnerable to Cross-site Scripting
+
+GHSA-vfmq-68hx-4jfw, CVE-2026-41066 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N]
+lxml: Default configuration of iterparse() and ETCompatXMLParser() allows XXE to local files
+
+GHSA-wrxv-2j5q-m38w, CVE-2022-2309, PYSEC-2022-230 [CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L]
+lxml NULL Pointer Dereference allows attackers to cause a denial of service
+
+PYSEC-2020-62, CVE-2020-27783, GHSA-pgww-xf46-h92r []
+A XSS vulnerability was discovered in python-lxml's clean module. The module's parser didn't properly imitate browsers, which caused different behaviors between the sanitizer and the user's page. A remote attacker could exploit this flaw to run arbitrary HTML/JS code.
+
+PYSEC-2021-19, CVE-2021-28957, GHSA-jq4v-f5q6-mjqq []
+An XSS vulnerability was discovered in python-lxml's clean module versions before 4.6.3. When disabling the safe_attrs_only and forms arguments, the Cleaner class does not remove the formaction attribute allowing for JS to bypass the sanitizer. A remote attacker could exploit this flaw to run arbitrary JS code on users who interact with incorrectly sanitized HTML. This issue is patched in lxml 4.6
+
+PYSEC-2021-852, CVE-2021-43818, GHSA-55x5-fj6c-h6m8 []
+lxml is a library for processing XML and HTML in the Python language. Prior to version 4.6.5, the HTML Cleaner in lxml.html lets certain crafted script content pass through, as well as script content in SVG files embedded using data URIs. Users that employ the HTML cleaner in a security relevant context should upgrade to lxml 4.6.5 to receive a patch. There are no known workarounds available.
+
+PYSEC-2022-230, CVE-2022-2309, GHSA-wrxv-2j5q-m38w []
+NULL Pointer Dereference allows attackers to cause a denial of service (or application crash). This only applies when lxml is used together with libxml2 2.9.10 through 2.9.14. libxml2 2.9.9 and earlier are not affected. It allows triggering crashes through forged input data, given a vulnerable code sequence in the application. The vulnerability is caused by the iterwalk function (also used by the 
+================================= Tool Message =================================
+Name: lookup_cve
+
+GHSA-6528-wvf6-f6qg, CVE-2018-6594, PYSEC-2018-97 [CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N]
+Pycrypto generates weak key parameters
+
+GHSA-cq27-v7xp-c356, CVE-2013-7459, PYSEC-2017-94 [CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H]
+Buffer Overflow in pycrypto
+
+PYSEC-2017-94, CVE-2013-7459, GHSA-cq27-v7xp-c356 []
+Heap-based buffer overflow in the ALGnew function in block_templace.c in Python Cryptography Toolkit (aka pycrypto) allows remote attackers to execute arbitrary code as demonstrated by a crafted iv parameter to cryptmsg.py.
+
+PYSEC-2018-97, CVE-2018-6594, GHSA-6528-wvf6-f6qg []
+lib/Crypto/PublicKey/ElGamal.py in PyCrypto through 2.6.1 generates weak ElGamal key parameters, which allows attackers to obtain sensitive information by reading ciphertext data (i.e., it does not have semantic security in face of a ciphertext-only attack). The Decisional Diffie-Hellman (DDH) assumption does not hold for PyCrypto's ElGamal implementation.
+================================= Tool Message =================================
+Name: lookup_cve
+
+GHSA-3f63-hfp8-52jq, BIT-pillow-2023-50447, CVE-2023-50447 [CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H]
+Arbitrary Code Execution in Pillow
+
+GHSA-3wvg-mj6g-m9cv, BIT-pillow-2021-27922, CVE-2021-27922, PYSEC-2021-41 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H]
+Pillow Uncontrolled Resource Consumption
+
+GHSA-3xv8-3j54-hgrp, BIT-pillow-2020-10378, CVE-2020-10378, PYSEC-2020-77 [CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:H/I:N/A:N]
+Out-of-bounds read in Pillow
+
+GHSA-43fq-w8qq-v88h, BIT-pillow-2020-11538, CVE-2020-11538, PYSEC-2020-80 [CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H]
+Out-of-bounds read in Pillow
+
+GHSA-44wm-f244-xhp3, BIT-pillow-2024-28219, CVE-2024-28219 [CVSS:3.1/AV:L/AC:H/PR:L/UI:R/S:U/C:H/I:H/A:H]
+Pillow buffer overflow vulnerability
+
+GHSA-4fx9-vc88-q2xc []
+Infinite loop in Pillow
+
+GHSA-57h3-9rgr-c24m, BIT-pillow-2021-25289, CVE-2021-25289, PYSEC-2021-35 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H]
+Out of bounds write in Pillow
+
+GHSA-5gm3-px64-rw72, CVE-2019-19911, PYSEC-2020-172 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H]
+Uncontrolled Resource Consumption in Pillow
+
+GHSA-7534-mm45-c74v, BIT-pillow-2021-34552, CVE-2021-34552, PYSEC-2021-331 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H]
+Buffer Overflow in Pillow
+
+GHSA-77gc-v2xv-rvvh, BIT-pillow-2021-25287, CVE-2021-25287, PYSEC-2021-137 [CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:H]
+Out-of-bounds Read in Pillow
+================================== Ai Message ==================================
+
+[]
+Tool Calls:
+  search_code (57516a4f-c017-4387-8d87-0f35593480b4)
+ Call ID: 57516a4f-c017-4387-8d87-0f35593480b4
+  Args:
+    repo: cve_agent/demo
+    k: 6
+    query: werkzeug safe_join
+  search_code (d86f4e53-f37c-450e-b012-b5edfebd9632)
+ Call ID: d86f4e53-f37c-450e-b012-b5edfebd9632
+  Args:
+    k: 6
+    query: yaml.load
+    repo: cve_agent/demo
+  search_code (d98c6505-cf82-4d32-b371-dc52c12d77d0)
+ Call ID: d98c6505-cf82-4d32-b371-dc52c12d77d0
+  Args:
+    repo: cve_agent/demo
+    query: lxml cleaner clean_html
+    k: 6
+  search_code (0c09a880-3d41-499f-ace1-90477d808932)
+ Call ID: 0c09a880-3d41-499f-ace1-90477d808932
+  Args:
+    repo: cve_agent/demo
+    query: jinja2 xmlattr format_map
+    k: 6
+  search_code (7ef05945-a677-4f91-923a-fce7ce5415ed)
+ Call ID: 7ef05945-a677-4f91-923a-fce7ce5415ed
+  Args:
+    k: 6
+    query: pickle.loads marshal.loads
+    repo: cve_agent/demo
+  search_code (84cf2a3d-dadb-48b8-bdbb-b32a1535eac4)
+ Call ID: 84cf2a3d-dadb-48b8-bdbb-b32a1535eac4
+  Args:
+    k: 6
+    query: subprocess os.system os.popen shell=True
+    repo: cve_agent/demo
+  search_code (45083dc5-9ee2-479c-95bf-76218e8e9b57)
+ Call ID: 45083dc5-9ee2-479c-95bf-76218e8e9b57
+  Args:
+    query: cursor.execute f-string concatenation
+    k: 6
+    repo: cve_agent/demo
+  search_code (bee65cad-bd19-467e-9058-74bf4e25b951)
+ Call ID: bee65cad-bd19-467e-9058-74bf4e25b951
+  Args:
+    query: eval exec compile
+    k: 6
+    repo: cve_agent/demo
+  search_code (3684a721-6824-4428-accd-8ea2393f1432)
+ Call ID: 3684a721-6824-4428-accd-8ea2393f1432
+  Args:
+    k: 6
+    query: render_template_string Template
+    repo: cve_agent/demo
+  search_code (b74672ad-ce52-4277-8e06-ebed269045df)
+ Call ID: b74672ad-ce52-4277-8e06-ebed269045df
+  Args:
+    k: 6
+    query: etree.fromstring xml.etree
+    repo: cve_agent/demo
+  search_code (ab4e6d4f-14df-4a1e-b897-0bd8c802c41c)
+ Call ID: ab4e6d4f-14df-4a1e-b897-0bd8c802c41c
+  Args:
+    repo: cve_agent/demo
+    query: requests urllib.request verify=False urlopen
+    k: 6
+  search_code (3332c692-7a53-4279-be05-bcc27ceb4775)
+ Call ID: 3332c692-7a53-4279-be05-bcc27ceb4775
+  Args:
+    repo: cve_agent/demo
+    k: 6
+    query: SECRET API_KEY PASSWORD TOKEN password key
+  search_code (f72ca4a7-ebe4-483c-87d0-4badaebf75e7)
+ Call ID: f72ca4a7-ebe4-483c-87d0-4badaebf75e7
+  Args:
+    k: 6
+    query: pycrypto MD5 SHA1 AES DES
+    repo: cve_agent/demo
+  search_code (ca882d3f-b3f9-42a0-ad30-064c3cca5d0d)
+ Call ID: ca882d3f-b3f9-42a0-ad30-064c3cca5d0d
+  Args:
+    repo: cve_agent/demo
+    k: 6
+    query: open Path path traversal
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:template.py:27-29 (FunctionDef render_comment) ---
+def render_comment(author, comment):
+    tmpl = _env.from_string("<div><strong>{{ author }}</strong>: {{ comment | safe }}</div>")
+    return tmpl.render(author=author, comment=comment)
+
+--- cve_agent/demo:xml_parser.py:21-23 (FunctionDef fetch_and_parse) ---
+def fetch_and_parse(url):
+    resp = requests.get(url, verify=False)  # CVE-2018-18074 + TLS verify disabled
+    return parse_feed(resp.content)
+
+--- cve_agent/demo:app.py:26-28 (FunctionDef search_route) ---
+def search_route():
+    name = request.args.get("name", "")
+    return jsonify(search_users(name))
+
+--- cve_agent/demo:template.py:11-20 (FunctionDef render_profile) ---
+def render_profile(username, bio):
+    source = f"""
+    <html>
+      <body>
+        <h1>Profile: {username}</h1>
+        <div class="bio">{bio}</div>
+      </body>
+    </html>
+    """
+    return Template(source).render()
+
+--- cve_agent/demo:xml_parser.py:12-14 (FunctionDef parse_feed) ---
+def parse_feed(raw_bytes):
+    root = etree.fromstring(raw_bytes, parser=_unsafe_parser)
+    return {child.tag: child.text for child in root}
+
+--- cve_agent/demo:app.py:61-62 (FunctionDef feed_route) ---
+def feed_route():
+    return jsonify(parse_feed(request.data))
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:deserialize.py:14-15 (FunctionDef load_config) ---
+def load_config(raw_bytes):
+    return yaml.load(raw_bytes)
+
+--- cve_agent/demo:deserialize.py:19-20 (FunctionDef load_config_full) ---
+def load_config_full(raw_bytes):
+    return yaml.load(raw_bytes, Loader=yaml.FullLoader)
+
+--- cve_agent/demo:app.py:47-49 (FunctionDef config_route) ---
+def config_route():
+    cfg = load_config(request.data)
+    return jsonify({"status": "ok", "config": cfg})
+
+--- cve_agent/demo:deserialize.py:25-26 (FunctionDef import_session) ---
+def import_session(raw_bytes):
+    return pickle.loads(raw_bytes)
+
+--- cve_agent/demo:shell.py:25-27 (FunctionDef tail_log) ---
+def tail_log(path):
+    p = subprocess.Popen("tail -n 50 " + path, shell=True, stdout=subprocess.PIPE)
+    return p.communicate()[0]
+
+--- cve_agent/demo:template.py:11-20 (FunctionDef render_profile) ---
+def render_profile(username, bio):
+    source = f"""
+    <html>
+      <body>
+        <h1>Profile: {username}</h1>
+        <div class="bio">{bio}</div>
+      </body>
+    </html>
+    """
+    return Template(source).render()
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:xml_parser.py:12-14 (FunctionDef parse_feed) ---
+def parse_feed(raw_bytes):
+    root = etree.fromstring(raw_bytes, parser=_unsafe_parser)
+    return {child.tag: child.text for child in root}
+
+--- cve_agent/demo:template.py:11-20 (FunctionDef render_profile) ---
+def render_profile(username, bio):
+    source = f"""
+    <html>
+      <body>
+        <h1>Profile: {username}</h1>
+        <div class="bio">{bio}</div>
+      </body>
+    </html>
+    """
+    return Template(source).render()
+
+--- cve_agent/demo:xml_parser.py:21-23 (FunctionDef fetch_and_parse) ---
+def fetch_and_parse(url):
+    resp = requests.get(url, verify=False)  # CVE-2018-18074 + TLS verify disabled
+    return parse_feed(resp.content)
+
+--- cve_agent/demo:template.py:27-29 (FunctionDef render_comment) ---
+def render_comment(author, comment):
+    tmpl = _env.from_string("<div><strong>{{ author }}</strong>: {{ comment | safe }}</div>")
+    return tmpl.render(author=author, comment=comment)
+
+--- cve_agent/demo:app.py:61-62 (FunctionDef feed_route) ---
+def feed_route():
+    return jsonify(parse_feed(request.data))
+
+--- cve_agent/demo:app.py:47-49 (FunctionDef config_route) ---
+def config_route():
+    cfg = load_config(request.data)
+    return jsonify({"status": "ok", "config": cfg})
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:xml_parser.py:12-14 (FunctionDef parse_feed) ---
+def parse_feed(raw_bytes):
+    root = etree.fromstring(raw_bytes, parser=_unsafe_parser)
+    return {child.tag: child.text for child in root}
+
+--- cve_agent/demo:template.py:27-29 (FunctionDef render_comment) ---
+def render_comment(author, comment):
+    tmpl = _env.from_string("<div><strong>{{ author }}</strong>: {{ comment | safe }}</div>")
+    return tmpl.render(author=author, comment=comment)
+
+--- cve_agent/demo:template.py:11-20 (FunctionDef render_profile) ---
+def render_profile(username, bio):
+    source = f"""
+    <html>
+      <body>
+        <h1>Profile: {username}</h1>
+        <div class="bio">{bio}</div>
+      </body>
+    </html>
+    """
+    return Template(source).render()
+
+--- cve_agent/demo:app.py:67-69 (FunctionDef greet_route) ---
+def greet_route():
+    name = request.args.get("name", "guest")
+    return render_template_string(f"<h1>Hello {name}</h1>")
+
+--- cve_agent/demo:app.py:61-62 (FunctionDef feed_route) ---
+def feed_route():
+    return jsonify(parse_feed(request.data))
+
+--- cve_agent/demo:db.py:20-23 (FunctionDef search_users) ---
+def search_users(name):
+    cur = _conn.cursor()
+    cur.execute("SELECT id, name FROM users WHERE name LIKE '%" + name + "%'")
+    return [{"id": r[0], "name": r[1]} for r in cur.fetchall()]
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:deserialize.py:25-26 (FunctionDef import_session) ---
+def import_session(raw_bytes):
+    return pickle.loads(raw_bytes)
+
+--- cve_agent/demo:deserialize.py:14-15 (FunctionDef load_config) ---
+def load_config(raw_bytes):
+    return yaml.load(raw_bytes)
+
+--- cve_agent/demo:deserialize.py:19-20 (FunctionDef load_config_full) ---
+def load_config_full(raw_bytes):
+    return yaml.load(raw_bytes, Loader=yaml.FullLoader)
+
+--- cve_agent/demo:xml_parser.py:21-23 (FunctionDef fetch_and_parse) ---
+def fetch_and_parse(url):
+    resp = requests.get(url, verify=False)  # CVE-2018-18074 + TLS verify disabled
+    return parse_feed(resp.content)
+
+--- cve_agent/demo:xml_parser.py:12-14 (FunctionDef parse_feed) ---
+def parse_feed(raw_bytes):
+    root = etree.fromstring(raw_bytes, parser=_unsafe_parser)
+    return {child.tag: child.text for child in root}
+
+--- cve_agent/demo:app.py:54-56 (FunctionDef import_session_route) ---
+def import_session_route():
+    session = import_session(request.data)
+    return jsonify({"restored": str(session)})
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:shell.py:25-27 (FunctionDef tail_log) ---
+def tail_log(path):
+    p = subprocess.Popen("tail -n 50 " + path, shell=True, stdout=subprocess.PIPE)
+    return p.communicate()[0]
+
+--- cve_agent/demo:shell.py:20-21 (FunctionDef check_service) ---
+def check_service(service_name):
+    os.system(f"systemctl status {service_name}")
+
+--- cve_agent/demo:shell.py:11-16 (FunctionDef run_diagnostic) ---
+def run_diagnostic(host):
+    return subprocess.check_output(
+        f"ping -c 1 {host}",
+        shell=True,
+        stderr=subprocess.STDOUT,
+    ).decode("utf-8", errors="replace")
+
+--- cve_agent/demo:xml_parser.py:21-23 (FunctionDef fetch_and_parse) ---
+def fetch_and_parse(url):
+    resp = requests.get(url, verify=False)  # CVE-2018-18074 + TLS verify disabled
+    return parse_feed(resp.content)
+
+--- cve_agent/demo:db.py:20-23 (FunctionDef search_users) ---
+def search_users(name):
+    cur = _conn.cursor()
+    cur.execute("SELECT id, name FROM users WHERE name LIKE '%" + name + "%'")
+    return [{"id": r[0], "name": r[1]} for r in cur.fetchall()]
+
+--- cve_agent/demo:app.py:33-35 (FunctionDef diagnostic_route) ---
+def diagnostic_route():
+    host = request.json.get("host", "")
+    return run_diagnostic(host)
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:template.py:11-20 (FunctionDef render_profile) ---
+def render_profile(username, bio):
+    source = f"""
+    <html>
+      <body>
+        <h1>Profile: {username}</h1>
+        <div class="bio">{bio}</div>
+      </body>
+    </html>
+    """
+    return Template(source).render()
+
+--- cve_agent/demo:db.py:20-23 (FunctionDef search_users) ---
+def search_users(name):
+    cur = _conn.cursor()
+    cur.execute("SELECT id, name FROM users WHERE name LIKE '%" + name + "%'")
+    return [{"id": r[0], "name": r[1]} for r in cur.fetchall()]
+
+--- cve_agent/demo:app.py:67-69 (FunctionDef greet_route) ---
+def greet_route():
+    name = request.args.get("name", "guest")
+    return render_template_string(f"<h1>Hello {name}</h1>")
+
+--- cve_agent/demo:db.py:12-16 (FunctionDef get_user_by_id) ---
+def get_user_by_id(user_id):
+    cur = _conn.cursor()
+    cur.execute(f"SELECT id, name, email FROM users WHERE id = {user_id}")
+    row = cur.fetchone()
+    return dict(zip(["id", "name", "email"], row)) if row else None
+
+--- cve_agent/demo:shell.py:11-16 (FunctionDef run_diagnostic) ---
+def run_diagnostic(host):
+    return subprocess.check_output(
+        f"ping -c 1 {host}",
+        shell=True,
+        stderr=subprocess.STDOUT,
+    ).decode("utf-8", errors="replace")
+
+--- cve_agent/demo:xml_parser.py:21-23 (FunctionDef fetch_and_parse) ---
+def fetch_and_parse(url):
+    resp = requests.get(url, verify=False)  # CVE-2018-18074 + TLS verify disabled
+    return parse_feed(resp.content)
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:template.py:11-20 (FunctionDef render_profile) ---
+def render_profile(username, bio):
+    source = f"""
+    <html>
+      <body>
+        <h1>Profile: {username}</h1>
+        <div class="bio">{bio}</div>
+      </body>
+    </html>
+    """
+    return Template(source).render()
+
+--- cve_agent/demo:shell.py:25-27 (FunctionDef tail_log) ---
+def tail_log(path):
+    p = subprocess.Popen("tail -n 50 " + path, shell=True, stdout=subprocess.PIPE)
+    return p.communicate()[0]
+
+--- cve_agent/demo:template.py:27-29 (FunctionDef render_comment) ---
+def render_comment(author, comment):
+    tmpl = _env.from_string("<div><strong>{{ author }}</strong>: {{ comment | safe }}</div>")
+    return tmpl.render(author=author, comment=comment)
+
+--- cve_agent/demo:shell.py:20-21 (FunctionDef check_service) ---
+def check_service(service_name):
+    os.system(f"systemctl status {service_name}")
+
+--- cve_agent/demo:db.py:20-23 (FunctionDef search_users) ---
+def search_users(name):
+    cur = _conn.cursor()
+    cur.execute("SELECT id, name FROM users WHERE name LIKE '%" + name + "%'")
+    return [{"id": r[0], "name": r[1]} for r in cur.fetchall()]
+
+--- cve_agent/demo:xml_parser.py:21-23 (FunctionDef fetch_and_parse) ---
+def fetch_and_parse(url):
+    resp = requests.get(url, verify=False)  # CVE-2018-18074 + TLS verify disabled
+    return parse_feed(resp.content)
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:template.py:11-20 (FunctionDef render_profile) ---
+def render_profile(username, bio):
+    source = f"""
+    <html>
+      <body>
+        <h1>Profile: {username}</h1>
+        <div class="bio">{bio}</div>
+      </body>
+    </html>
+    """
+    return Template(source).render()
+
+--- cve_agent/demo:template.py:27-29 (FunctionDef render_comment) ---
+def render_comment(author, comment):
+    tmpl = _env.from_string("<div><strong>{{ author }}</strong>: {{ comment | safe }}</div>")
+    return tmpl.render(author=author, comment=comment)
+
+--- cve_agent/demo:app.py:67-69 (FunctionDef greet_route) ---
+def greet_route():
+    name = request.args.get("name", "guest")
+    return render_template_string(f"<h1>Hello {name}</h1>")
+
+--- cve_agent/demo:app.py:40-42 (FunctionDef profile_route) ---
+def profile_route(username):
+    bio = request.args.get("bio", "")
+    return render_profile(username, bio)
+
+--- cve_agent/demo:app.py:26-28 (FunctionDef search_route) ---
+def search_route():
+    name = request.args.get("name", "")
+    return jsonify(search_users(name))
+
+--- cve_agent/demo:db.py:20-23 (FunctionDef search_users) ---
+def search_users(name):
+    cur = _conn.cursor()
+    cur.execute("SELECT id, name FROM users WHERE name LIKE '%" + name + "%'")
+    return [{"id": r[0], "name": r[1]} for r in cur.fetchall()]
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:xml_parser.py:12-14 (FunctionDef parse_feed) ---
+def parse_feed(raw_bytes):
+    root = etree.fromstring(raw_bytes, parser=_unsafe_parser)
+    return {child.tag: child.text for child in root}
+
+--- cve_agent/demo:xml_parser.py:21-23 (FunctionDef fetch_and_parse) ---
+def fetch_and_parse(url):
+    resp = requests.get(url, verify=False)  # CVE-2018-18074 + TLS verify disabled
+    return parse_feed(resp.content)
+
+--- cve_agent/demo:app.py:61-62 (FunctionDef feed_route) ---
+def feed_route():
+    return jsonify(parse_feed(request.data))
+
+--- cve_agent/demo:deserialize.py:14-15 (FunctionDef load_config) ---
+def load_config(raw_bytes):
+    return yaml.load(raw_bytes)
+
+--- cve_agent/demo:deserialize.py:25-26 (FunctionDef import_session) ---
+def import_session(raw_bytes):
+    return pickle.loads(raw_bytes)
+
+--- cve_agent/demo:deserialize.py:19-20 (FunctionDef load_config_full) ---
+def load_config_full(raw_bytes):
+    return yaml.load(raw_bytes, Loader=yaml.FullLoader)
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:xml_parser.py:21-23 (FunctionDef fetch_and_parse) ---
+def fetch_and_parse(url):
+    resp = requests.get(url, verify=False)  # CVE-2018-18074 + TLS verify disabled
+    return parse_feed(resp.content)
+
+--- cve_agent/demo:app.py:33-35 (FunctionDef diagnostic_route) ---
+def diagnostic_route():
+    host = request.json.get("host", "")
+    return run_diagnostic(host)
+
+--- cve_agent/demo:shell.py:11-16 (FunctionDef run_diagnostic) ---
+def run_diagnostic(host):
+    return subprocess.check_output(
+        f"ping -c 1 {host}",
+        shell=True,
+        stderr=subprocess.STDOUT,
+    ).decode("utf-8", errors="replace")
+
+--- cve_agent/demo:app.py:47-49 (FunctionDef config_route) ---
+def config_route():
+    cfg = load_config(request.data)
+    return jsonify({"status": "ok", "config": cfg})
+
+--- cve_agent/demo:app.py:61-62 (FunctionDef feed_route) ---
+def feed_route():
+    return jsonify(parse_feed(request.data))
+
+--- cve_agent/demo:app.py:26-28 (FunctionDef search_route) ---
+def search_route():
+    name = request.args.get("name", "")
+    return jsonify(search_users(name))
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:app.py:54-56 (FunctionDef import_session_route) ---
+def import_session_route():
+    session = import_session(request.data)
+    return jsonify({"restored": str(session)})
+
+--- cve_agent/demo:app.py:47-49 (FunctionDef config_route) ---
+def config_route():
+    cfg = load_config(request.data)
+    return jsonify({"status": "ok", "config": cfg})
+
+--- cve_agent/demo:template.py:11-20 (FunctionDef render_profile) ---
+def render_profile(username, bio):
+    source = f"""
+    <html>
+      <body>
+        <h1>Profile: {username}</h1>
+        <div class="bio">{bio}</div>
+      </body>
+    </html>
+    """
+    return Template(source).render()
+
+--- cve_agent/demo:app.py:26-28 (FunctionDef search_route) ---
+def search_route():
+    name = request.args.get("name", "")
+    return jsonify(search_users(name))
+
+--- cve_agent/demo:app.py:40-42 (FunctionDef profile_route) ---
+def profile_route(username):
+    bio = request.args.get("bio", "")
+    return render_profile(username, bio)
+
+--- cve_agent/demo:app.py:61-62 (FunctionDef feed_route) ---
+def feed_route():
+    return jsonify(parse_feed(request.data))
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:deserialize.py:25-26 (FunctionDef import_session) ---
+def import_session(raw_bytes):
+    return pickle.loads(raw_bytes)
+
+--- cve_agent/demo:shell.py:25-27 (FunctionDef tail_log) ---
+def tail_log(path):
+    p = subprocess.Popen("tail -n 50 " + path, shell=True, stdout=subprocess.PIPE)
+    return p.communicate()[0]
+
+--- cve_agent/demo:db.py:20-23 (FunctionDef search_users) ---
+def search_users(name):
+    cur = _conn.cursor()
+    cur.execute("SELECT id, name FROM users WHERE name LIKE '%" + name + "%'")
+    return [{"id": r[0], "name": r[1]} for r in cur.fetchall()]
+
+--- cve_agent/demo:template.py:11-20 (FunctionDef render_profile) ---
+def render_profile(username, bio):
+    source = f"""
+    <html>
+      <body>
+        <h1>Profile: {username}</h1>
+        <div class="bio">{bio}</div>
+      </body>
+    </html>
+    """
+    return Template(source).render()
+
+--- cve_agent/demo:xml_parser.py:21-23 (FunctionDef fetch_and_parse) ---
+def fetch_and_parse(url):
+    resp = requests.get(url, verify=False)  # CVE-2018-18074 + TLS verify disabled
+    return parse_feed(resp.content)
+
+--- cve_agent/demo:shell.py:11-16 (FunctionDef run_diagnostic) ---
+def run_diagnostic(host):
+    return subprocess.check_output(
+        f"ping -c 1 {host}",
+        shell=True,
+        stderr=subprocess.STDOUT,
+    ).decode("utf-8", errors="replace")
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:shell.py:25-27 (FunctionDef tail_log) ---
+def tail_log(path):
+    p = subprocess.Popen("tail -n 50 " + path, shell=True, stdout=subprocess.PIPE)
+    return p.communicate()[0]
+
+--- cve_agent/demo:app.py:33-35 (FunctionDef diagnostic_route) ---
+def diagnostic_route():
+    host = request.json.get("host", "")
+    return run_diagnostic(host)
+
+--- cve_agent/demo:shell.py:11-16 (FunctionDef run_diagnostic) ---
+def run_diagnostic(host):
+    return subprocess.check_output(
+        f"ping -c 1 {host}",
+        shell=True,
+        stderr=subprocess.STDOUT,
+    ).decode("utf-8", errors="replace")
+
+--- cve_agent/demo:app.py:67-69 (FunctionDef greet_route) ---
+def greet_route():
+    name = request.args.get("name", "guest")
+    return render_template_string(f"<h1>Hello {name}</h1>")
+
+--- cve_agent/demo:xml_parser.py:21-23 (FunctionDef fetch_and_parse) ---
+def fetch_and_parse(url):
+    resp = requests.get(url, verify=False)  # CVE-2018-18074 + TLS verify disabled
+    return parse_feed(resp.content)
+
+--- cve_agent/demo:template.py:11-20 (FunctionDef render_profile) ---
+def render_profile(username, bio):
+    source = f"""
+    <html>
+      <body>
+        <h1>Profile: {username}</h1>
+        <div class="bio">{bio}</div>
+      </body>
+    </html>
+    """
+    return Template(source).render()
+================================== Ai Message ==================================
+
+[]
+Tool Calls:
+  search_code (cafd544f-87f8-4227-b40a-7bc316eb582b)
+ Call ID: cafd544f-87f8-4227-b40a-7bc316eb582b
+  Args:
+    k: 6
+    repo: cve_agent/demo
+    query: _unsafe_parser
+  search_code (199fadb6-eeae-48a1-94b2-bb5238cdf884)
+ Call ID: 199fadb6-eeae-48a1-94b2-bb5238cdf884
+  Args:
+    k: 6
+    query: SECRET_KEY password token
+    repo: cve_agent/demo
+  search_code (14186669-9cbc-431e-aea0-87d75efa4334)
+ Call ID: 14186669-9cbc-431e-aea0-87d75efa4334
+  Args:
+    k: 6
+    repo: cve_agent/demo
+    query: import hashlib MD5 SHA1
+  search_code (844ea89b-232a-4b7c-81bb-b4483e05e5b0)
+ Call ID: 844ea89b-232a-4b7c-81bb-b4483e05e5b0
+  Args:
+    query: flask request.get_json
+    repo: cve_agent/demo
+    k: 6
+  search_code (3fd39192-d728-413e-945c-86e03f9f9de1)
+ Call ID: 3fd39192-d728-413e-945c-86e03f9f9de1
+  Args:
+    query: pycrypto Crypto
+    repo: cve_agent/demo
+    k: 6
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:xml_parser.py:12-14 (FunctionDef parse_feed) ---
+def parse_feed(raw_bytes):
+    root = etree.fromstring(raw_bytes, parser=_unsafe_parser)
+    return {child.tag: child.text for child in root}
+
+--- cve_agent/demo:xml_parser.py:21-23 (FunctionDef fetch_and_parse) ---
+def fetch_and_parse(url):
+    resp = requests.get(url, verify=False)  # CVE-2018-18074 + TLS verify disabled
+    return parse_feed(resp.content)
+
+--- cve_agent/demo:deserialize.py:19-20 (FunctionDef load_config_full) ---
+def load_config_full(raw_bytes):
+    return yaml.load(raw_bytes, Loader=yaml.FullLoader)
+
+--- cve_agent/demo:deserialize.py:14-15 (FunctionDef load_config) ---
+def load_config(raw_bytes):
+    return yaml.load(raw_bytes)
+
+--- cve_agent/demo:template.py:27-29 (FunctionDef render_comment) ---
+def render_comment(author, comment):
+    tmpl = _env.from_string("<div><strong>{{ author }}</strong>: {{ comment | safe }}</div>")
+    return tmpl.render(author=author, comment=comment)
+
+--- cve_agent/demo:deserialize.py:25-26 (FunctionDef import_session) ---
+def import_session(raw_bytes):
+    return pickle.loads(raw_bytes)
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:app.py:54-56 (FunctionDef import_session_route) ---
+def import_session_route():
+    session = import_session(request.data)
+    return jsonify({"restored": str(session)})
+
+--- cve_agent/demo:app.py:47-49 (FunctionDef config_route) ---
+def config_route():
+    cfg = load_config(request.data)
+    return jsonify({"status": "ok", "config": cfg})
+
+--- cve_agent/demo:deserialize.py:25-26 (FunctionDef import_session) ---
+def import_session(raw_bytes):
+    return pickle.loads(raw_bytes)
+
+--- cve_agent/demo:template.py:11-20 (FunctionDef render_profile) ---
+def render_profile(username, bio):
+    source = f"""
+    <html>
+      <body>
+        <h1>Profile: {username}</h1>
+        <div class="bio">{bio}</div>
+      </body>
+    </html>
+    """
+    return Template(source).render()
+
+--- cve_agent/demo:app.py:40-42 (FunctionDef profile_route) ---
+def profile_route(username):
+    bio = request.args.get("bio", "")
+    return render_profile(username, bio)
+
+--- cve_agent/demo:app.py:26-28 (FunctionDef search_route) ---
+def search_route():
+    name = request.args.get("name", "")
+    return jsonify(search_users(name))
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:deserialize.py:25-26 (FunctionDef import_session) ---
+def import_session(raw_bytes):
+    return pickle.loads(raw_bytes)
+
+--- cve_agent/demo:app.py:54-56 (FunctionDef import_session_route) ---
+def import_session_route():
+    session = import_session(request.data)
+    return jsonify({"restored": str(session)})
+
+--- cve_agent/demo:xml_parser.py:21-23 (FunctionDef fetch_and_parse) ---
+def fetch_and_parse(url):
+    resp = requests.get(url, verify=False)  # CVE-2018-18074 + TLS verify disabled
+    return parse_feed(resp.content)
+
+--- cve_agent/demo:template.py:11-20 (FunctionDef render_profile) ---
+def render_profile(username, bio):
+    source = f"""
+    <html>
+      <body>
+        <h1>Profile: {username}</h1>
+        <div class="bio">{bio}</div>
+      </body>
+    </html>
+    """
+    return Template(source).render()
+
+--- cve_agent/demo:shell.py:25-27 (FunctionDef tail_log) ---
+def tail_log(path):
+    p = subprocess.Popen("tail -n 50 " + path, shell=True, stdout=subprocess.PIPE)
+    return p.communicate()[0]
+
+--- cve_agent/demo:db.py:20-23 (FunctionDef search_users) ---
+def search_users(name):
+    cur = _conn.cursor()
+    cur.execute("SELECT id, name FROM users WHERE name LIKE '%" + name + "%'")
+    return [{"id": r[0], "name": r[1]} for r in cur.fetchall()]
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:app.py:61-62 (FunctionDef feed_route) ---
+def feed_route():
+    return jsonify(parse_feed(request.data))
+
+--- cve_agent/demo:app.py:33-35 (FunctionDef diagnostic_route) ---
+def diagnostic_route():
+    host = request.json.get("host", "")
+    return run_diagnostic(host)
+
+--- cve_agent/demo:app.py:47-49 (FunctionDef config_route) ---
+def config_route():
+    cfg = load_config(request.data)
+    return jsonify({"status": "ok", "config": cfg})
+
+--- cve_agent/demo:app.py:21-22 (FunctionDef user_route) ---
+def user_route(user_id):
+    return jsonify(get_user_by_id(user_id))
+
+--- cve_agent/demo:app.py:26-28 (FunctionDef search_route) ---
+def search_route():
+    name = request.args.get("name", "")
+    return jsonify(search_users(name))
+
+--- cve_agent/demo:app.py:54-56 (FunctionDef import_session_route) ---
+def import_session_route():
+    session = import_session(request.data)
+    return jsonify({"restored": str(session)})
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:deserialize.py:25-26 (FunctionDef import_session) ---
+def import_session(raw_bytes):
+    return pickle.loads(raw_bytes)
+
+--- cve_agent/demo:deserialize.py:14-15 (FunctionDef load_config) ---
+def load_config(raw_bytes):
+    return yaml.load(raw_bytes)
+
+--- cve_agent/demo:xml_parser.py:21-23 (FunctionDef fetch_and_parse) ---
+def fetch_and_parse(url):
+    resp = requests.get(url, verify=False)  # CVE-2018-18074 + TLS verify disabled
+    return parse_feed(resp.content)
+
+--- cve_agent/demo:xml_parser.py:12-14 (FunctionDef parse_feed) ---
+def parse_feed(raw_bytes):
+    root = etree.fromstring(raw_bytes, parser=_unsafe_parser)
+    return {child.tag: child.text for child in root}
+
+--- cve_agent/demo:template.py:27-29 (FunctionDef render_comment) ---
+def render_comment(author, comment):
+    tmpl = _env.from_string("<div><strong>{{ author }}</strong>: {{ comment | safe }}</div>")
+    return tmpl.render(author=author, comment=comment)
+
+--- cve_agent/demo:deserialize.py:19-20 (FunctionDef load_config_full) ---
+def load_config_full(raw_bytes):
+    return yaml.load(raw_bytes, Loader=yaml.FullLoader)
+================================== Ai Message ==================================
+
+[]
+Tool Calls:
+  search_code (cae1a734-6b8c-47b8-b685-c8fa70dee7b9)
+ Call ID: cae1a734-6b8c-47b8-b685-c8fa70dee7b9
+  Args:
+    query: app.run debug=True
+    k: 15
+    repo: cve_agent/demo
+  search_code (3f0ddf08-b49d-4609-8ecc-9a658816e8c0)
+ Call ID: 3f0ddf08-b49d-4609-8ecc-9a658816e8c0
+  Args:
+    query: werkzeug
+    k: 15
+    repo: cve_agent/demo
+  search_code (5e8d9878-c128-404c-a36f-5cd2f56a79f2)
+ Call ID: 5e8d9878-c128-404c-a36f-5cd2f56a79f2
+  Args:
+    query: pycrypto Crypto
+    repo: cve_agent/demo
+    k: 15
+  search_code (d470cb4e-8144-4dbf-84a2-dce43183b59d)
+ Call ID: d470cb4e-8144-4dbf-84a2-dce43183b59d
+  Args:
+    query: SECRET_KEY password
+    k: 15
+    repo: cve_agent/demo
+  search_code (1bf40300-4266-4e81-adaf-3bb56dae76e6)
+ Call ID: 1bf40300-4266-4e81-adaf-3bb56dae76e6
+  Args:
+    repo: cve_agent/demo
+    k: 15
+    query: Pillow Image PIL
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:app.py:67-69 (FunctionDef greet_route) ---
+def greet_route():
+    name = request.args.get("name", "guest")
+    return render_template_string(f"<h1>Hello {name}</h1>")
+
+--- cve_agent/demo:app.py:33-35 (FunctionDef diagnostic_route) ---
+def diagnostic_route():
+    host = request.json.get("host", "")
+    return run_diagnostic(host)
+
+--- cve_agent/demo:app.py:26-28 (FunctionDef search_route) ---
+def search_route():
+    name = request.args.get("name", "")
+    return jsonify(search_users(name))
+
+--- cve_agent/demo:app.py:47-49 (FunctionDef config_route) ---
+def config_route():
+    cfg = load_config(request.data)
+    return jsonify({"status": "ok", "config": cfg})
+
+--- cve_agent/demo:app.py:61-62 (FunctionDef feed_route) ---
+def feed_route():
+    return jsonify(parse_feed(request.data))
+
+--- cve_agent/demo:template.py:11-20 (FunctionDef render_profile) ---
+def render_profile(username, bio):
+    source = f"""
+    <html>
+      <body>
+        <h1>Profile: {username}</h1>
+        <div class="bio">{bio}</div>
+      </body>
+    </html>
+    """
+    return Template(source).render()
+
+--- cve_agent/demo:app.py:54-56 (FunctionDef import_session_route) ---
+def import_session_route():
+    session = import_session(request.data)
+    return jsonify({"restored": str(session)})
+
+--- cve_agent/demo:app.py:21-22 (FunctionDef user_route) ---
+def user_route(user_id):
+    return jsonify(get_user_by_id(user_id))
+
+--- cve_agent/demo:shell.py:11-16 (FunctionDef run_diagnostic) ---
+def run_diagnostic(host):
+    return subprocess.check_output(
+        f"ping -c 1 {host}",
+        shell=True,
+        stderr=subprocess.STDOUT,
+    ).decode("utf-8", errors="replace")
+
+--- cve_agent/demo:app.py:40-42 (FunctionDef profile_route) ---
+def profile_route(username):
+    bio = request.args.get("bio", "")
+    return render_profile(username, bio)
+
+--- cve_agent/demo:shell.py:20-21 (FunctionDef check_service) ---
+def check_service(service_name):
+    os.system(f"systemctl status {service_name}")
+
+--- cve_agent/demo:shell.py:25-27 (FunctionDef tail_log) ---
+def tail_log(path):
+    p = subprocess.Popen("tail -n 50 " + path, shell=True, stdout=subprocess.PIPE)
+    return p.communicate()[0]
+
+--- cve_agent/demo:db.py:20-23 (FunctionDef search_users) ---
+def search_users(name):
+    cur = _conn.cursor()
+    cur.execute("SELECT id, name FROM users WHERE name LIKE '%" + name + "%'")
+    return [{"id": r[0], "name": r[1]} for r in cur.fetchall()]
+
+--- cve_agent/demo:xml_parser.py:21-23 (FunctionDef fetch_and_parse) ---
+def fetch_and_parse(url):
+    resp = requests.get(url, verify=False)  # CVE-2018-18074 + TLS verify disabled
+    return parse_feed(resp.content)
+
+--- cve_agent/demo:db.py:12-16 (FunctionDef get_user_by_id) ---
+def get_user_by_id(user_id):
+    cur = _conn.cursor()
+    cur.execute(f"SELECT id, name, email FROM users WHERE id = {user_id}")
+    row = cur.fetchone()
+    return dict(zip(["id", "name", "email"], row)) if row else None
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:app.py:61-62 (FunctionDef feed_route) ---
+def feed_route():
+    return jsonify(parse_feed(request.data))
+
+--- cve_agent/demo:app.py:67-69 (FunctionDef greet_route) ---
+def greet_route():
+    name = request.args.get("name", "guest")
+    return render_template_string(f"<h1>Hello {name}</h1>")
+
+--- cve_agent/demo:app.py:26-28 (FunctionDef search_route) ---
+def search_route():
+    name = request.args.get("name", "")
+    return jsonify(search_users(name))
+
+--- cve_agent/demo:app.py:54-56 (FunctionDef import_session_route) ---
+def import_session_route():
+    session = import_session(request.data)
+    return jsonify({"restored": str(session)})
+
+--- cve_agent/demo:app.py:40-42 (FunctionDef profile_route) ---
+def profile_route(username):
+    bio = request.args.get("bio", "")
+    return render_profile(username, bio)
+
+--- cve_agent/demo:app.py:47-49 (FunctionDef config_route) ---
+def config_route():
+    cfg = load_config(request.data)
+    return jsonify({"status": "ok", "config": cfg})
+
+--- cve_agent/demo:template.py:27-29 (FunctionDef render_comment) ---
+def render_comment(author, comment):
+    tmpl = _env.from_string("<div><strong>{{ author }}</strong>: {{ comment | safe }}</div>")
+    return tmpl.render(author=author, comment=comment)
+
+--- cve_agent/demo:deserialize.py:25-26 (FunctionDef import_session) ---
+def import_session(raw_bytes):
+    return pickle.loads(raw_bytes)
+
+--- cve_agent/demo:template.py:11-20 (FunctionDef render_profile) ---
+def render_profile(username, bio):
+    source = f"""
+    <html>
+      <body>
+        <h1>Profile: {username}</h1>
+        <div class="bio">{bio}</div>
+      </body>
+    </html>
+    """
+    return Template(source).render()
+
+--- cve_agent/demo:app.py:21-22 (FunctionDef user_route) ---
+def user_route(user_id):
+    return jsonify(get_user_by_id(user_id))
+
+--- cve_agent/demo:xml_parser.py:21-23 (FunctionDef fetch_and_parse) ---
+def fetch_and_parse(url):
+    resp = requests.get(url, verify=False)  # CVE-2018-18074 + TLS verify disabled
+    return parse_feed(resp.content)
+
+--- cve_agent/demo:app.py:33-35 (FunctionDef diagnostic_route) ---
+def diagnostic_route():
+    host = request.json.get("host", "")
+    return run_diagnostic(host)
+
+--- cve_agent/demo:shell.py:25-27 (FunctionDef tail_log) ---
+def tail_log(path):
+    p = subprocess.Popen("tail -n 50 " + path, shell=True, stdout=subprocess.PIPE)
+    return p.communicate()[0]
+
+--- cve_agent/demo:db.py:20-23 (FunctionDef search_users) ---
+def search_users(name):
+    cur = _conn.cursor()
+    cur.execute("SELECT id, name FROM users WHERE name LIKE '%" + name + "%'")
+    return [{"id": r[0], "name": r[1]} for r in cur.fetchall()]
+
+--- cve_agent/demo:xml_parser.py:12-14 (FunctionDef parse_feed) ---
+def parse_feed(raw_bytes):
+    root = etree.fromstring(raw_bytes, parser=_unsafe_parser)
+    return {child.tag: child.text for child in root}
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:deserialize.py:25-26 (FunctionDef import_session) ---
+def import_session(raw_bytes):
+    return pickle.loads(raw_bytes)
+
+--- cve_agent/demo:deserialize.py:14-15 (FunctionDef load_config) ---
+def load_config(raw_bytes):
+    return yaml.load(raw_bytes)
+
+--- cve_agent/demo:xml_parser.py:21-23 (FunctionDef fetch_and_parse) ---
+def fetch_and_parse(url):
+    resp = requests.get(url, verify=False)  # CVE-2018-18074 + TLS verify disabled
+    return parse_feed(resp.content)
+
+--- cve_agent/demo:xml_parser.py:12-14 (FunctionDef parse_feed) ---
+def parse_feed(raw_bytes):
+    root = etree.fromstring(raw_bytes, parser=_unsafe_parser)
+    return {child.tag: child.text for child in root}
+
+--- cve_agent/demo:template.py:27-29 (FunctionDef render_comment) ---
+def render_comment(author, comment):
+    tmpl = _env.from_string("<div><strong>{{ author }}</strong>: {{ comment | safe }}</div>")
+    return tmpl.render(author=author, comment=comment)
+
+--- cve_agent/demo:deserialize.py:19-20 (FunctionDef load_config_full) ---
+def load_config_full(raw_bytes):
+    return yaml.load(raw_bytes, Loader=yaml.FullLoader)
+
+--- cve_agent/demo:shell.py:25-27 (FunctionDef tail_log) ---
+def tail_log(path):
+    p = subprocess.Popen("tail -n 50 " + path, shell=True, stdout=subprocess.PIPE)
+    return p.communicate()[0]
+
+--- cve_agent/demo:template.py:11-20 (FunctionDef render_profile) ---
+def render_profile(username, bio):
+    source = f"""
+    <html>
+      <body>
+        <h1>Profile: {username}</h1>
+        <div class="bio">{bio}</div>
+      </body>
+    </html>
+    """
+    return Template(source).render()
+
+--- cve_agent/demo:app.py:54-56 (FunctionDef import_session_route) ---
+def import_session_route():
+    session = import_session(request.data)
+    return jsonify({"restored": str(session)})
+
+--- cve_agent/demo:db.py:20-23 (FunctionDef search_users) ---
+def search_users(name):
+    cur = _conn.cursor()
+    cur.execute("SELECT id, name FROM users WHERE name LIKE '%" + name + "%'")
+    return [{"id": r[0], "name": r[1]} for r in cur.fetchall()]
+
+--- cve_agent/demo:shell.py:11-16 (FunctionDef run_diagnostic) ---
+def run_diagnostic(host):
+    return subprocess.check_output(
+        f"ping -c 1 {host}",
+        shell=True,
+        stderr=subprocess.STDOUT,
+    ).decode("utf-8", errors="replace")
+
+--- cve_agent/demo:app.py:61-62 (FunctionDef feed_route) ---
+def feed_route():
+    return jsonify(parse_feed(request.data))
+
+--- cve_agent/demo:app.py:40-42 (FunctionDef profile_route) ---
+def profile_route(username):
+    bio = request.args.get("bio", "")
+    return render_profile(username, bio)
+
+--- cve_agent/demo:app.py:26-28 (FunctionDef search_route) ---
+def search_route():
+    name = request.args.get("name", "")
+    return jsonify(search_users(name))
+
+--- cve_agent/demo:app.py:47-49 (FunctionDef config_route) ---
+def config_route():
+    cfg = load_config(request.data)
+    return jsonify({"status": "ok", "config": cfg})
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:app.py:54-56 (FunctionDef import_session_route) ---
+def import_session_route():
+    session = import_session(request.data)
+    return jsonify({"restored": str(session)})
+
+--- cve_agent/demo:app.py:47-49 (FunctionDef config_route) ---
+def config_route():
+    cfg = load_config(request.data)
+    return jsonify({"status": "ok", "config": cfg})
+
+--- cve_agent/demo:template.py:11-20 (FunctionDef render_profile) ---
+def render_profile(username, bio):
+    source = f"""
+    <html>
+      <body>
+        <h1>Profile: {username}</h1>
+        <div class="bio">{bio}</div>
+      </body>
+    </html>
+    """
+    return Template(source).render()
+
+--- cve_agent/demo:app.py:67-69 (FunctionDef greet_route) ---
+def greet_route():
+    name = request.args.get("name", "guest")
+    return render_template_string(f"<h1>Hello {name}</h1>")
+
+--- cve_agent/demo:app.py:40-42 (FunctionDef profile_route) ---
+def profile_route(username):
+    bio = request.args.get("bio", "")
+    return render_profile(username, bio)
+
+--- cve_agent/demo:deserialize.py:25-26 (FunctionDef import_session) ---
+def import_session(raw_bytes):
+    return pickle.loads(raw_bytes)
+
+--- cve_agent/demo:app.py:26-28 (FunctionDef search_route) ---
+def search_route():
+    name = request.args.get("name", "")
+    return jsonify(search_users(name))
+
+--- cve_agent/demo:db.py:20-23 (FunctionDef search_users) ---
+def search_users(name):
+    cur = _conn.cursor()
+    cur.execute("SELECT id, name FROM users WHERE name LIKE '%" + name + "%'")
+    return [{"id": r[0], "name": r[1]} for r in cur.fetchall()]
+
+--- cve_agent/demo:xml_parser.py:21-23 (FunctionDef fetch_and_parse) ---
+def fetch_and_parse(url):
+    resp = requests.get(url, verify=False)  # CVE-2018-18074 + TLS verify disabled
+    return parse_feed(resp.content)
+
+--- cve_agent/demo:shell.py:20-21 (FunctionDef check_service) ---
+def check_service(service_name):
+    os.system(f"systemctl status {service_name}")
+
+--- cve_agent/demo:app.py:33-35 (FunctionDef diagnostic_route) ---
+def diagnostic_route():
+    host = request.json.get("host", "")
+    return run_diagnostic(host)
+
+--- cve_agent/demo:app.py:61-62 (FunctionDef feed_route) ---
+def feed_route():
+    return jsonify(parse_feed(request.data))
+
+--- cve_agent/demo:db.py:12-16 (FunctionDef get_user_by_id) ---
+def get_user_by_id(user_id):
+    cur = _conn.cursor()
+    cur.execute(f"SELECT id, name, email FROM users WHERE id = {user_id}")
+    row = cur.fetchone()
+    return dict(zip(["id", "name", "email"], row)) if row else None
+
+--- cve_agent/demo:app.py:21-22 (FunctionDef user_route) ---
+def user_route(user_id):
+    return jsonify(get_user_by_id(user_id))
+
+--- cve_agent/demo:template.py:27-29 (FunctionDef render_comment) ---
+def render_comment(author, comment):
+    tmpl = _env.from_string("<div><strong>{{ author }}</strong>: {{ comment | safe }}</div>")
+    return tmpl.render(author=author, comment=comment)
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:deserialize.py:25-26 (FunctionDef import_session) ---
+def import_session(raw_bytes):
+    return pickle.loads(raw_bytes)
+
+--- cve_agent/demo:template.py:11-20 (FunctionDef render_profile) ---
+def render_profile(username, bio):
+    source = f"""
+    <html>
+      <body>
+        <h1>Profile: {username}</h1>
+        <div class="bio">{bio}</div>
+      </body>
+    </html>
+    """
+    return Template(source).render()
+
+--- cve_agent/demo:app.py:61-62 (FunctionDef feed_route) ---
+def feed_route():
+    return jsonify(parse_feed(request.data))
+
+--- cve_agent/demo:xml_parser.py:21-23 (FunctionDef fetch_and_parse) ---
+def fetch_and_parse(url):
+    resp = requests.get(url, verify=False)  # CVE-2018-18074 + TLS verify disabled
+    return parse_feed(resp.content)
+
+--- cve_agent/demo:app.py:67-69 (FunctionDef greet_route) ---
+def greet_route():
+    name = request.args.get("name", "guest")
+    return render_template_string(f"<h1>Hello {name}</h1>")
+
+--- cve_agent/demo:shell.py:11-16 (FunctionDef run_diagnostic) ---
+def run_diagnostic(host):
+    return subprocess.check_output(
+        f"ping -c 1 {host}",
+        shell=True,
+        stderr=subprocess.STDOUT,
+    ).decode("utf-8", errors="replace")
+
+--- cve_agent/demo:app.py:26-28 (FunctionDef search_route) ---
+def search_route():
+    name = request.args.get("name", "")
+    return jsonify(search_users(name))
+
+--- cve_agent/demo:xml_parser.py:12-14 (FunctionDef parse_feed) ---
+def parse_feed(raw_bytes):
+    root = etree.fromstring(raw_bytes, parser=_unsafe_parser)
+    return {child.tag: child.text for child in root}
+
+--- cve_agent/demo:shell.py:25-27 (FunctionDef tail_log) ---
+def tail_log(path):
+    p = subprocess.Popen("tail -n 50 " + path, shell=True, stdout=subprocess.PIPE)
+    return p.communicate()[0]
+
+--- cve_agent/demo:app.py:54-56 (FunctionDef import_session_route) ---
+def import_session_route():
+    session = import_session(request.data)
+    return jsonify({"restored": str(session)})
+
+--- cve_agent/demo:app.py:33-35 (FunctionDef diagnostic_route) ---
+def diagnostic_route():
+    host = request.json.get("host", "")
+    return run_diagnostic(host)
+
+--- cve_agent/demo:app.py:47-49 (FunctionDef config_route) ---
+def config_route():
+    cfg = load_config(request.data)
+    return jsonify({"status": "ok", "config": cfg})
+
+--- cve_agent/demo:template.py:27-29 (FunctionDef render_comment) ---
+def render_comment(author, comment):
+    tmpl = _env.from_string("<div><strong>{{ author }}</strong>: {{ comment | safe }}</div>")
+    return tmpl.render(author=author, comment=comment)
+
+--- cve_agent/demo:app.py:40-42 (FunctionDef profile_route) ---
+def profile_route(username):
+    bio = request.args.get("bio", "")
+    return render_profile(username, bio)
+
+--- cve_agent/demo:shell.py:20-21 (FunctionDef check_service) ---
+def check_service(service_name):
+    os.system(f"systemctl status {service_name}")
+================================== Ai Message ==================================
+
+[]
+Tool Calls:
+  search_code (b3d0b5bb-3844-4025-965f-58a24f5113f2)
+ Call ID: b3d0b5bb-3844-4025-965f-58a24f5113f2
+  Args:
+    k: 5
+    query: app.run
+    repo: cve_agent/demo
+  search_code (82aef402-fc2a-4777-8301-a5a1124d7703)
+ Call ID: 82aef402-fc2a-4777-8301-a5a1124d7703
+  Args:
+    query: session
+    k: 5
+    repo: cve_agent/demo
+  search_code (0075410d-0b89-4e2c-8757-d71f9ab8b488)
+ Call ID: 0075410d-0b89-4e2c-8757-d71f9ab8b488
+  Args:
+    repo: cve_agent/demo
+    k: 5
+    query: _unsafe_parser
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:app.py:33-35 (FunctionDef diagnostic_route) ---
+def diagnostic_route():
+    host = request.json.get("host", "")
+    return run_diagnostic(host)
+
+--- cve_agent/demo:app.py:67-69 (FunctionDef greet_route) ---
+def greet_route():
+    name = request.args.get("name", "guest")
+    return render_template_string(f"<h1>Hello {name}</h1>")
+
+--- cve_agent/demo:app.py:61-62 (FunctionDef feed_route) ---
+def feed_route():
+    return jsonify(parse_feed(request.data))
+
+--- cve_agent/demo:app.py:47-49 (FunctionDef config_route) ---
+def config_route():
+    cfg = load_config(request.data)
+    return jsonify({"status": "ok", "config": cfg})
+
+--- cve_agent/demo:app.py:26-28 (FunctionDef search_route) ---
+def search_route():
+    name = request.args.get("name", "")
+    return jsonify(search_users(name))
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:app.py:54-56 (FunctionDef import_session_route) ---
+def import_session_route():
+    session = import_session(request.data)
+    return jsonify({"restored": str(session)})
+
+--- cve_agent/demo:deserialize.py:25-26 (FunctionDef import_session) ---
+def import_session(raw_bytes):
+    return pickle.loads(raw_bytes)
+
+--- cve_agent/demo:db.py:20-23 (FunctionDef search_users) ---
+def search_users(name):
+    cur = _conn.cursor()
+    cur.execute("SELECT id, name FROM users WHERE name LIKE '%" + name + "%'")
+    return [{"id": r[0], "name": r[1]} for r in cur.fetchall()]
+
+--- cve_agent/demo:app.py:26-28 (FunctionDef search_route) ---
+def search_route():
+    name = request.args.get("name", "")
+    return jsonify(search_users(name))
+
+--- cve_agent/demo:app.py:47-49 (FunctionDef config_route) ---
+def config_route():
+    cfg = load_config(request.data)
+    return jsonify({"status": "ok", "config": cfg})
+================================= Tool Message =================================
+Name: search_code
+
+--- cve_agent/demo:xml_parser.py:12-14 (FunctionDef parse_feed) ---
+def parse_feed(raw_bytes):
+    root = etree.fromstring(raw_bytes, parser=_unsafe_parser)
+    return {child.tag: child.text for child in root}
+
+--- cve_agent/demo:xml_parser.py:21-23 (FunctionDef fetch_and_parse) ---
+def fetch_and_parse(url):
+    resp = requests.get(url, verify=False)  # CVE-2018-18074 + TLS verify disabled
+    return parse_feed(resp.content)
+
+--- cve_agent/demo:deserialize.py:19-20 (FunctionDef load_config_full) ---
+def load_config_full(raw_bytes):
+    return yaml.load(raw_bytes, Loader=yaml.FullLoader)
+
+--- cve_agent/demo:deserialize.py:14-15 (FunctionDef load_config) ---
+def load_config(raw_bytes):
+    return yaml.load(raw_bytes)
+
+--- cve_agent/demo:template.py:27-29 (FunctionDef render_comment) ---
+def render_comment(author, comment):
+    tmpl = _env.from_string("<div><strong>{{ author }}</strong>: {{ comment | safe }}</div>")
+    return tmpl.render(author=author, comment=comment)
+================================== Ai Message ==================================
+
+[]
+Tool Calls:
+  search_advisories (2ca7e111-a4c2-4525-ab0f-95efd4cceead)
+ Call ID: 2ca7e111-a4c2-4525-ab0f-95efd4cceead
+  Args:
+    query: Deserialization of Untrusted Data
+    k: 1
+  search_advisories (b01eabb2-78c7-4c7d-9642-44732cc130a2)
+ Call ID: b01eabb2-78c7-4c7d-9642-44732cc130a2
+  Args:
+    k: 1
+    query: Improper Neutralization of Special Elements used in an OS Command
+  search_advisories (29ebed97-2fdd-487b-b614-b4dce596b288)
+ Call ID: 29ebed97-2fdd-487b-b614-b4dce596b288
+  Args:
+    k: 1
+    query: Improper Neutralization of Special Elements used in an SQL Command
+  search_advisories (ef5636f6-043e-4d89-9b49-c68c05234cbb)
+ Call ID: ef5636f6-043e-4d89-9b49-c68c05234cbb
+  Args:
+    query: Improper Neutralization of Directives in Dynamically Evaluated Code Template Injection
+    k: 1
+  search_advisories (636821c8-ccfb-43ef-8431-6abf211e6eb2)
+ Call ID: 636821c8-ccfb-43ef-8431-6abf211e6eb2
+  Args:
+    query: Improper Restriction of XML External Entity Reference
+    k: 1
+  search_advisories (13516893-c932-4bd7-bb34-7e2a407b0b4c)
+ Call ID: 13516893-c932-4bd7-bb34-7e2a407b0b4c
+  Args:
+    k: 1
+    query: Improper Certificate Validation
+  search_advisories (1fd617be-a6c5-4d32-8c65-637722df2c80)
+ Call ID: 1fd617be-a6c5-4d32-8c65-637722df2c80
+  Args:
+    k: 1
+    query: Cross-Site Scripting
+================================= Tool Message =================================
+Name: search_advisories
+
+--- GHSA-2vj5-px25-gjrp ---
+pytorch-lightning is vulnerable to Deserialization of Untrusted Data
+
+pytorch-lightning is vulnerable to Deserialization of Untrusted Data.
+================================= Tool Message =================================
+Name: search_advisories
+
+--- CWE-78 ---
+CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')
+
+The product constructs all or part of an OS command using externally-influenced input from an upstream component, but it does not neutralize or incorrectly neutralizes special elements that could modify the intended OS command when it is sent to a downstream component.
+
+This weakness can lead to a vulnerability in environments in which the attacker does not have direct access to the operating system, such as in web applications. Alternately, if the weakness occurs in a privileged program, it could allow the attacker to specify commands that normally would not be accessible, or to call alternate commands with privileges that the attacker does not have. The problem is exacerbated if the compromised process does not follow the principle of least privilege, because the attacker-controlled commands may run with special system privileges that increases the amount of damage.
+            There are at least two subtypes of OS command injection:
+               
+				 The application intends to execute a single, fixed program that is under its own control. It intends to use externally-supplied inputs as arguments to that program. For example, the program might use system("nslookup [HOSTNAME]") to run nslookup and allow the user to supply a HOSTNAME, which is used as an argument. Attackers cannot prevent nslookup from executing. However, if the program does not remove command separators from the HOSTNAME argument, attackers could place the separators into the arguments, which allows them to execute their own program after nslookup has finished executing.
+				 The application accepts an input that it uses to fully select which program to run, as well as which commands to use. The application simply redirects this entire command to the operating system. For example, the program might use "exec([COMMAND])" to execute the [COMMAND] that was supplied by the user. If the COMMAND is under attacker control, then the attacker can execute arbitrary commands or programs. If the command is being executed using functions like exec() and CreateProcess(), the attacker might not be able to combine multiple commands together in the same line.
+               
+            From a weakness standpoint, these variants represent distinct programmer errors. In the first variant, the programmer clearly intends that input from untrusted parties will be part of the arguments in the command to be executed. In the second variant, the programmer does not intend for the command to be accessible to any untrusted party, but the programmer probably has not accounted for alternate ways in which malicious attackers can provide input.
+
+Consequences:
+- Attackers could execute unauthorized operating system commands, which could then be used to disable the product, or read and modify data for which the attacker does not have permissions to access directly. Since the targeted application is directly executing the commands instead of the attacker, any malicious activities may appear to come from the application or the application's owner.
+
+Mitigations:
+- If at all possible, use library calls rather than external processes to recreate the desired functionality.
+- Run the code in a "jail" or similar sandbox environment that enforces strict boundaries between the process and the operating system. This may effectively restrict which files can be accessed in a particular directory or which commands can be executed by the software.
+                  OS-level examples include the Unix chroot jail, AppArmor, and SELinux. In general, managed code may provide some protection. For example, java.io.FilePermission in the Java SecurityManager allows the software to specify restrictions on file operations.
+                  This may not be a feasible solution, and it only limits the impact to the operating system; the rest of the application may still be subject to compromise.
+                  Be careful to avoid CWE-243 and other weaknesses related to jails.
+- For any data that will be used to generate a command to be executed, keep as much of that data out of external control as possible. For example, in web applications, this may require storing the data locally in the session's state instead of sending it out to the client in a hidden form field.
+- For any security checks that are performed on the client side, ensure that these checks are duplicated on the server side, in order to avoid CWE-602. Attackers can bypass the client-side checks by modifying values after the checks have been performed, or by changing the client to remove the client-side checks entirely. Then, these modified values would be submitted to the server.
+- Use a vetted library or framework that does not allow this weakness to occur or provides constructs that make this weakness easier to avoid.
+                  For example, consider using the ESAPI Encoding control [REF-45] or a similar tool, library, or framework. These will help the programmer encode outputs in a manner less prone to error.
+- While it is risky to use dynamically-generated query strings, code, or commands that mix control and data together, sometimes it may be unavoidable. Properly quote arguments and escape any special characters within those arguments. The most conservative approach is to escape or filter all characters that do not pass an extremely strict allowlist (such as everything that is not alphanumeric or white space). If some special characters are still needed, such as white space, wrap each argument in quotes after the escaping/filtering step. Be careful of argument injection (CWE-88).
+- If the program to be executed allows arguments to be specified within an input file or from standard input, then consider using that mode to pass arguments instead of the command line.
+- If available, use structured mechanisms that automatically enforce the separation between data and code. These mechanisms may be able to provide the relevant quoting, encoding, and validation automatically, instead of relying on the developer to provide this capability at every point where output is generated.
+                  Some languages offer multiple functions that can be used to invoke commands. Where possible, identify any function that invokes a command shell using a single string, and replace it with a function that requires individual arguments. These functions typically perform appropriate quoting and filtering of arguments. For example, in C, the system() function accepts a string that contains the entire command to be executed, whereas execl(), execve(), and others require an array of strings, one for each argument. In Windows, CreateProcess() only accepts one command at a time. In Perl, if system() is provided with an array of arguments, then it will quote each of the arguments.
+- Assume all input is malicious. Use an "accept known good" input validation strategy, i.e., use a list of acceptable inputs that strictly conform to specifications. Reject any input that does not strictly conform to specifications, or transform it into something that does.
+                  When performing input validation, consider all potentially relevant properties, including length, type of input, the full range of acceptable values, missing or extra inputs, syntax, consistency across related fields, and conformance to business rules. As an example of business rule logic, "boat" may be syntactically valid because it only contains alphanumeric characters, but it is not valid if the input is only expected to contain colors such as "red" or "blue."
+                  Do not rely exclusively on looking for malicious or malformed inputs.  This is likely to miss at least one undesirable input, especially if the code's environment changes. This can give attackers enough room to bypass the intended validation. However, denylists can be useful for detecting potential attacks or determining which inputs are so ma
+================================= Tool Message =================================
+Name: search_advisories
+
+--- CWE-89 ---
+CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')
+
+The product constructs all or part of an SQL command using externally-influenced input from an upstream component, but it does not neutralize or incorrectly neutralizes special elements that could modify the intended SQL command when it is sent to a downstream component. Without sufficient removal or quoting of SQL syntax in user-controllable inputs, the generated SQL query can cause those inputs to be interpreted as SQL instead of ordinary user data.
+
+Consequences:
+- Adversaries could execute system commands, typically by changing the SQL statement to redirect output to a file that can then be executed.
+- Since SQL databases generally hold sensitive data, loss of confidentiality is a frequent problem with SQL injection vulnerabilities.
+- If poor SQL commands are used to check user names and passwords or perform other kinds of authentication, it may be possible to connect to the product as another user with no previous knowledge of the password.
+- If authorization information is held in a SQL database, it may be possible to change this information through the successful exploitation of a SQL injection vulnerability.
+- Just as it may be possible to read sensitive information, it is also possible to modify or even delete this information with a SQL injection attack.
+
+Mitigations:
+- Use a vetted library or framework that does not allow this weakness to occur or provides constructs that make this weakness easier to avoid [REF-1482].
+                  For example, consider using persistence layers such as Hibernate or Enterprise Java Beans, which can provide significant protection against SQL injection if used properly.
+- If available, use structured mechanisms that automatically enforce the separation between data and code. These mechanisms may be able to provide the relevant quoting, encoding, and validation automatically, instead of relying on the developer to provide this capability at every point where output is generated.
+                  Process SQL queries using prepared statements, parameterized queries, or stored procedures. These features should accept parameters or variables and support strong typing. Do not dynamically construct and execute query strings within these features using "exec" or similar functionality, since this may re-introduce the possibility of SQL injection. [REF-867]
+- Run your code using the lowest privileges that are required to accomplish the necessary tasks [REF-76]. If possible, create isolated accounts with limited privileges that are only used for a single task. That way, a successful attack will not immediately give the attacker access to the rest of the software or its environment. For example, database applications rarely need to run as the database administrator, especially in day-to-day operations.
+                  Specifically, follow the principle of least privilege when creating user accounts to a SQL database. The database users should only have the minimum privileges necessary to use their account. If the requirements of the system indicate that a user can read and modify their own data, then limit their privileges so they cannot read/write others' data. Use the strictest permissions possible on all database objects, such as execute-only for stored procedures.
+- For any security checks that are performed on the client side, ensure that these checks are duplicated on the server side, in order to avoid CWE-602. Attackers can bypass the client-side checks by modifying values after the checks have been performed, or by changing the client to remove the client-side checks entirely. Then, these modified values would be submitted to the server.
+- While it is risky to use dynamically-generated query strings, code, or commands that mix control and data together, sometimes it may be unavoidable. Properly quote arguments and escape any special characters within those arguments. The most conservative approach is to escape or filter all characters that do not pass an extremely strict allowlist (such as everything that is not alphanumeric or white space). If some special characters are still needed, such as white space, wrap each argument in quotes after the escaping/filtering step. Be careful of argument injection (CWE-88).
+                  Instead of building a new implementation, such features may be available in the database or programming language. For example, the Oracle DBMS_ASSERT package can check or enforce that parameters have certain properties that make them less vulnerable to SQL injection. For MySQL, the mysql_real_escape_string() API function is available in both C and PHP.
+- Assume all input is malicious. Use an "accept known good" input validation strategy, i.e., use a list of acceptable inputs that strictly conform to specifications. Reject any input that does not strictly conform to specifications, or transform it into something that does.
+                  When performing input validation, consider all potentially relevant properties, including length, type of input, the full range of acceptable values, missing or extra inputs, syntax, consistency across related fields, and conformance to business rules. As an example of business rule logic, "boat" may be syntactically valid because it only contains alphanumeric characters, but it is not valid if the input is only expected to contain colors such as "red" or "blue."
+                  Do not rely exclusively on looking for malicious or malformed inputs.  This is likely to miss at least one undesirable input, especially if the code's environment changes. This can give attackers enough room to bypass the intended validation. However, denylists can be useful for detecting potential attacks or determining which inputs are so malformed that they should be rejected outright.
+                  When constructing SQL query strings, use stringent allowlists that limit the character set based on the expected value of the parameter in the request. This will indirectly limit the scope of an attack, but this technique is less important than proper output encoding and escaping.
+                  Note that proper output encoding, escaping, and quoting is the most effective solution for preventing SQL injection, although input validation may provide some defense-in-depth. This is because it effectively limits what will appear in output. Input validation will not always prevent SQL injection, especially if you are required to support free-form text fields that could contain arbitrary characters. For example, the name "O'Reilly" would likely pass the validation step, since it is a common last name in the English language. However, it cannot be directly inserted into the database because it contains the "'" apostrophe character, which would need to be escaped or otherwise handled. In this case, stripping the apostrophe might reduce the risk of SQL injection, but it would produce incorrect behavior because the wrong name would be recorded.
+                  When feasible, it may be safest to disallow meta-characters entirely, instead of escaping them. This will provide some defense in depth. After the data is entered into the database, later processes may neglect to escape meta-characters before use, and you may not have control over those processes.
+- When the set of acceptable objects, such as filenames or URLs, is limited or known, create a mapping from a set of fixed input values (such as numeric IDs) to the actual filenames or URLs, and reject all other inputs.
+- Ensure that error messages only contain minimal details that are useful to the intended audience and no one else. The messages need to strike the balance between being too cryptic (which can confuse users) or being too detailed (which may reveal more than intended). The messages should not reveal the methods that were used to determine the error. Attackers can use detailed information to refine or optimize their 
+================================= Tool Message =================================
+Name: search_advisories
+
+--- CWE-96 ---
+CWE-96: Improper Neutralization of Directives in Statically Saved Code ('Static Code Injection')
+
+The product receives input from an upstream component, but it does not neutralize or incorrectly neutralizes code syntax before inserting the input into an executable resource, such as a library, configuration file, or template.
+
+Consequences:
+- The injected code could access restricted data / files.
+- In some cases, injectable code controls authentication; this may lead to a remote vulnerability.
+- Injected code can access resources that the attacker is directly prevented from accessing.
+- Code injection attacks can lead to loss of data integrity in nearly all cases as the control-plane data injected is always incidental to data recall or writing. Additionally, code injection can often result in the execution of arbitrary code.
+- Often the actions performed by injected control code are unlogged.
+
+Mitigations:
+- Assume all input is malicious. Use an "accept known good" input validation strategy, i.e., use a list of acceptable inputs that strictly conform to specifications. Reject any input that does not strictly conform to specifications, or transform it into something that does.
+                  When performing input validation, consider all potentially relevant properties, including length, type of input, the full range of acceptable values, missing or extra inputs, syntax, consistency across related fields, and conformance to business rules. As an example of business rule logic, "boat" may be syntactically valid because it only contains alphanumeric characters, but it is not valid if the input is only expected to contain colors such as "red" or "blue."
+                  Do not rely exclusively on looking for malicious or malformed inputs.  This is likely to miss at least one undesirable input, especially if the code's environment changes. This can give attackers enough room to bypass the intended validation. However, denylists can be useful for detecting potential attacks or determining which inputs are so malformed that they should be rejected outright.
+- Perform proper output validation and escaping to neutralize all code syntax from data written to code files.
+================================= Tool Message =================================
+Name: search_advisories
+
+--- GHSA-32r8-54hf-c9p3 ---
+unstructured XML External Entity (XXE)
+
+unstructured v.0.14.2 and before is vulnerable to XML External Entity (XXE) via the XMLParser.
+================================= Tool Message =================================
+Name: search_advisories
+
+--- GHSA-3g2p-7c6p-vj8c ---
+Apache Qpid Python client Improper certificate validation
+
+The Python client in Apache Qpid before 2.2 does not verify that the server hostname matches a domain name in the subject's Common Name (CN) or subjectAltName field of the X.509 certificate, which allows man-in-the-middle attackers to spoof SSL servers via an arbitrary valid certificate.
+================================= Tool Message =================================
+Name: search_advisories
+
+--- CWE-79 ---
+CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')
+
+The product does not neutralize or incorrectly neutralizes user-controllable input before it is placed in output that is used as a web page that is served to other users.
+
+There are many variants of cross-site scripting, characterized by a variety of terms or involving different attack topologies. However, they all indicate the same fundamental weakness: improper neutralization of dangerous input between the adversary and a victim.
+
+Consequences:
+- The most common attack performed with cross-site scripting involves the disclosure of private information stored in user cookies, such as session information. Typically, a malicious user will craft a client-side script, which -- when parsed by a web browser -- performs some activity on behalf of the victim to an attacker-controlled system (such as sending all site cookies to a given E-mail address). This could be especially dangerous to the site if the victim has administrator privileges to manage that site. This script will be loaded and run by each user visiting the web site. Since the site requesting to run the script has access to the cookies in question, the malicious script does also.
+- In some circumstances it may be possible to run arbitrary code on a victim's computer when cross-site scripting is combined with other flaws, for example, "drive-by hacking."
+- The consequence of an XSS attack is the same regardless of whether it is stored or reflected. The difference is in how the payload arrives at the server. XSS can cause a variety of problems for the end user that range in severity from an annoyance to complete account compromise. Some cross-site scripting vulnerabilities can be exploited to manipulate or steal cookies, create requests that can be mistaken for those of a valid user, compromise confidential information, or execute malicious code on the end user systems for a variety of nefarious purposes. Other damaging attacks include the disclosure of end user files, installation of Trojan horse programs, redirecting the user to some other page or site, running "Active X" controls (under Microsoft Internet Explorer) from sites that a user perceives as trustworthy, and modifying presentation of content.
+
+Mitigations:
+- Use a vetted library or framework that does not allow this weakness to occur or provides constructs that make this weakness easier to avoid [REF-1482].
+                  Examples of libraries and frameworks that make it easier to generate properly encoded output include Microsoft's Anti-XSS library, the OWASP ESAPI Encoding module, and Apache Wicket.
+- Understand the context in which your data will be used and the encoding that will be expected. This is especially important when transmitting data between different components, or when generating outputs that can contain multiple encodings at the same time, such as web pages or multi-part mail messages. Study all expected communication protocols and data representations to determine the required encoding strategies.
+                  For any data that will be output to another web page, especially any data that was received from external inputs, use the appropriate encoding on all non-alphanumeric characters.
+                  Parts of the same output document may require different encodings, which will vary depending on whether the output is in the:
+                     
+                        HTML body
+                        Element attributes (such as src="XYZ")
+                        URIs
+                        JavaScript sections
+                        Cascading Style Sheets and style property
+                     
+                  etc. Note that HTML Entity Encoding is only appropriate for the HTML body.
+                  Consult the XSS Prevention Cheat Sheet [REF-724] for more details on the types of encoding and escaping that are needed.
+- Understand all the potential areas where untrusted inputs can enter your software: parameters or arguments, cookies, anything read from the network, environment variables, reverse DNS lookups, query results, request headers, URL components, e-mail, files, filenames, databases, and any external systems that provide data to the application. Remember that such inputs may be obtained indirectly through API calls.
+- For any security checks that are performed on the client side, ensure that these checks are duplicated on the server side, in order to avoid CWE-602. Attackers can bypass the client-side checks by modifying values after the checks have been performed, or by changing the client to remove the client-side checks entirely. Then, these modified values would be submitted to the server.
+- If available, use structured mechanisms that automatically enforce the separation between data and code. These mechanisms may be able to provide the relevant quoting, encoding, and validation automatically, instead of relying on the developer to provide this capability at every point where output is generated.
+- Use and specify an output encoding that can be handled by the downstream component that is reading the output. Common encodings include ISO-8859-1, UTF-7, and UTF-8. When an encoding is not specified, a downstream component may choose a different encoding, either by assuming a default encoding or automatically inferring which encoding is being used, which can be erroneous. When the encodings are inconsistent, the downstream component might treat some character or byte sequences as special, even if they are not special in the original encoding. Attackers might then be able to exploit this discrepancy and conduct injection attacks; they even might be able to bypass protection mechanisms that assume the original encoding is also being used by the downstream component.
+                  The problem of inconsistent output encodings often arises in web pages. If an encoding is not specified in an HTTP header, web browsers often guess about which encoding is being used. This can open up the browser to subtle XSS attacks.
+- With Struts, write all data from form beans with the bean's filter attribute set to true.
+- To help mitigate XSS attacks against the user's session cookie, set the session cookie to be HttpOnly. In browsers that support the HttpOnly feature (such as more recent versions of Internet Explorer and Firefox), this attribute can prevent the user's session cookie from being accessible to malicious client-side scripts that use document.cookie. This is not a complete solution, since HttpOnly is not supported by all browsers. More importantly, XmlHttpRequest and other powerful browser technologies provide read access to HTTP headers, including the Set-Cookie header in which the HttpOnly flag is set.
+- Assume all input is malicious. Use an "accept known good" input validation strategy, i.e., use a list of acceptable inputs that strictly conform to specifications. Reject any input that does not strictly conform to specifications, or transform it into something that does.
+                  When performing input validation, consider all potentially relevant properties, including length, type of input, the full range of acceptable values, missing or extra inputs, syntax, consistency across related fields, and conformance to business rules. As an example of business rule logic, "boat" may be syntactically valid because it only contains alphanumeric characters, but it is not valid if the input is only expected to contain colors such as "red" or "blue."
+                  Do not rely exclusively on looking for malicious or malformed inputs.  This is likely to miss at least one undesirable input, especially if the code's environment changes. This can give attackers enough room to bypass the intended validation. However, denylists can be useful for detecting potential attacks or determining which inputs are so malformed that they should be rejected outright.
+                  When dynamically constructing 
+================================== Ai Message ==================================
+
+[{'type': 'text', 'text': '# Python Security Audit Report for `cve_agent/demo`\n\n## Executive Summary\nA comprehensive security audit of the `cve_agent/demo` repository was performed. The analysis involved examining the project\'s dependency tree against the OSV.dev vulnerability database and conducting a deep semantic code review to identify insecure coding patterns. \n\nThe audit identified multiple **Critical** and **High** severity vulnerabilities in both the custom application logic and outdated dependencies. The findings include OS Command Injection, SQL Injection, Server-Side Template Injection (SSTI), Unsafe Deserialization, and XML External Entity (XXE) vulnerabilities. Immediate remediation is required.\n\n---\n\n## 🛑 CONFIRMED: Vulnerable Dependency Usage\n\nThe following known vulnerabilities (CVEs) in third-party packages are actively exploitable in the codebase due to the application calling the vulnerable APIs.\n\n| ID | Package/Severity | File:Line | Vulnerability Snippet | Recommended Fix |\n|---|---|---|---|---|\n| **CVE-2018-1000656**<br>CVE-2019-1010083 | `flask==0.12.2`<br>High | `app.py:34` | `request.json.get("host", "")` | Upgrade Flask to `>= 1.0`. The current version is vulnerable to Denial of Service via incorrect encoding of JSON data. |\n| **CVE-2018-18074** | `requests==2.19.0`<br>High | `xml_parser.py:22` | `requests.get(url, verify=False)` | Upgrade `requests` to `>= 2.20.0`. The old version insecurely leaks `Authorization` headers across redirects. |\n| **CVE-2017-18342**<br>CVE-2020-14343 | `pyyaml==3.13`<br>Critical | `deserialize.py:15`<br>`deserialize.py:20` | `yaml.load(raw_bytes)`<br>`Loader=yaml.FullLoader` | Upgrade `pyyaml` to `>= 5.4` and replace `yaml.load()` / `FullLoader` with the secure `yaml.safe_load()`. |\n\n---\n\n## 🛑 CONFIRMED: Custom Code Vulnerabilities\n\nThe following novel security issues were discovered in the repository\'s custom code implementation.\n\n| ID | Severity | File:Line | Vulnerability Snippet | Recommended Fix |\n|---|---|---|---|---|\n| **CWE-78**<br>(OS Command Injection) | Critical | `shell.py:12` | `subprocess.check_output(f"ping -c 1 {host}", shell=True)` | Remove `shell=True` and pass arguments as a strict list: `["ping", "-c", "1", host]`. |\n| **CWE-78**<br>(OS Command Injection) | Critical | `shell.py:21` | `os.system(f"systemctl status {service_name}")` | Use `subprocess.run(["systemctl", "status", service_name])` without shell invocation. |\n| **CWE-78**<br>(OS Command Injection) | Critical | `shell.py:26` | `subprocess.Popen("tail -n 50 " + path, shell=True)` | Pass arguments securely as an array: `["tail", "-n", "50", path]` and set `shell=False`. |\n| **CWE-89**<br>(SQL Injection) | Critical | `db.py:14` | `cur.execute(f"SELECT ... WHERE id = {user_id}")` | Use parameterized queries to bind data safely: `cur.execute("... id = ?", (user_id,))`. |\n| **CWE-89**<br>(SQL Injection) | Critical | `db.py:22` | `cur.execute("... LIKE \'%" + name + "%\'")` | Use parameterized queries with bound wildcards: `cur.execute("... LIKE ?", (f"%{name}%",))`. |\n| **CWE-96**<br>(Template Injection) | Critical | `app.py:69` | `render_template_string(f"<h1>Hello {name}</h1>")` | Pass user input as Jinja context variables: `render_template_string("<h1>Hello {{ name }}</h1>", name=name)`. |\n| **CWE-96**<br>(Template Injection) | Critical | `template.py:12` | `source = f"<html>...{username}..."`<br>`return Template(source).render()` | Never inject user input into the raw template source before parsing. Provide inputs during the `.render(username=username)` step. |\n| **CWE-502**<br>(Unsafe Deserialization)| Critical | `deserialize.py:26` | `pickle.loads(raw_bytes)` | Do not use `pickle` for untrusted data. Use a secure data format like JSON (`json.loads()`). |\n| **CWE-611**<br>(XXE) | High | `xml_parser.py:13` | `etree.fromstring(raw_bytes, parser=_unsafe_parser)` | Disable external entity resolution on the parser (`resolve_entities=False`) or use `defusedxml.lxml`. |\n| **CWE-295**<br>(Improper TLS Validation)| High | `xml_parser.py:22` | `requests.get(url, verify=False)` | Remove the `verify=False` flag to ensure the application verifies the TLS certificates of upstream servers. |\n| **CWE-79**<br>(Cross-Site Scripting) | Medium | `template.py:28` | `tmpl = ... ("... {{ comment \\| safe }}")` | Remove the `\\| safe` Jinja2 filter to ensure user comments are securely HTML-escaped. |\n\n---\n\n## 🛡️ UNREACHED: Non-Exploitable Dependency Vulnerabilities\n\nThe following CVEs are present in the installed versions of the dependencies but are categorized as **Unreached**. The application does not use the specific vulnerable functions, rendering them non-exploitable in the current state. However, upgrading these packages is strongly recommended to prevent future regressions.\n\n| CVE ID | Package | Severity | Summary |\n|---|---|---|---|\n| **CVE-2019-14322** | `werkzeug` | High | Path traversal via `safe_join`. (The app does not import or use `safe_join`). |\n| **CVE-2024-34069** | `werkzeug` | High | Remote Code Execution via Werkzeug Debugger. (The app does not use `app.run(debug=True)` or `DebuggedApplication`). |\n| **CVE-2019-10906** | `jinja2` | High | Sandbox escape via `str.format_map`. (The app does not utilize the format string vulnerability within Jinja logic). |\n| **CVE-2021-43818** | `lxml` | High | XSS bypass in HTML Cleaner. (The application parses XML but does not utilize `lxml.html.clean`). |\n| **CVE-2021-27922** | `pillow` | High | Out-of-bounds reads and memory corruption. (The `pillow` dependency is declared but never imported or utilized). |\n| **CVE-2013-7459** | `pycrypto` | High | Buffer overflows and weak entropy vulnerabilities in PyCrypto. (The library is not imported anywhere). |\n| **CVE-2023-43804** | `urllib3` | High | Cookie header leaks on cross-origin redirects. (No direct interaction with proxy/cookie redirects in `urllib3`). |', 'extras': {'signature': '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'}}]
